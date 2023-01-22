@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import * as React from "react";
 import * as RN from "react-native";
-import { styles, useDash } from "../../dash.config";
+import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
 import { Icon } from "../icon";
 

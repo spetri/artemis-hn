@@ -10,12 +10,12 @@ import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
-import { Preferences, usePreferences } from "./screens/preferences";
-import { AskStack, HomeStack, JobsStack, ShowStack, Tab } from "./screens/routers";
-import { Stories } from "./screens/stories";
-import { Thread } from "./screens/thread";
-import { User } from "./screens/user";
-import { BrowserModal } from "./screens/browser-modal"
+import { Preferences, usePreferences } from "./src/screens/preferences";
+import { AskStack, HomeStack, JobsStack, ShowStack, Tab } from "./src/screens/routers";
+import { Stories } from "./src/screens/stories";
+import { Thread } from "./src/screens/thread";
+import { User } from "./src/screens/user";
+import { BrowserModal } from "./src/screens/browser-modal"
 
 registerRootComponent(App);
 

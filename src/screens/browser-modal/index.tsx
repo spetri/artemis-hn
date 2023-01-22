@@ -10,7 +10,7 @@ import {
   import type { WebViewNavigation } from "react-native-webview";
   import { WebView } from "react-native-webview";
 import { Icon } from "../../components/icon";
-import { responsiveSize, styles, useDash } from "../../dash.config";
+import { responsiveSize, styles, useDash } from "../../../dash.config";
 
 import { StackParamList } from "../routers";
   

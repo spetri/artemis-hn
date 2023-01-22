@@ -5,7 +5,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import * as React from "react";
 import * as RN from "react-native";
 import { Icon } from "../icon";
-import { styles, useDash } from "../../dash.config";
+import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
 
 export function NavigableHeader({ title, actions }: NavigableHeaderProps) {

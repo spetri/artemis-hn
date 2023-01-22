@@ -4,8 +4,6 @@ import type {
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import * as htmlEntities from "html-entities";
-import React from "react";
-import * as RN from "react-native";
 import type {
   MixedStyleRecord,
   RenderersProps,
@@ -15,13 +13,16 @@ import useSWR from "swr";
 
 import { Icon } from "../../components/icon";
 import { Skeleton } from "../../components/skeleton";
-import { styles, useDash } from "../../dash.config";
+import { styles, useDash } from "../../../dash.config";
 import { useMetadata } from "../../hooks/use-metadata";
 import { useParents } from "../../hooks/use-parents";
 import { HackerNewsStory, HackerNewsJob, HackerNewsPoll, HackerNewsAsk, HackerNewsComment } from "../../types/hn-api";
 import { ago } from "../../utils/ago";
 import { pluralize } from "../../utils/pluralize";
 import { StackParamList } from "../routers";
+import { HACKER_NEWS_API } from "../../constants/api";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Text, Image, FlatList, RefreshControl, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View, ViewStyle, ImageStyle, TextStyle, TextProps } from "react-native";
 
 export function Thread({ route }: ThreadProps) {
   const { id } = route.params;
@@ -32,7 +33,7 @@ export function Thread({ route }: ThreadProps) {
     | HackerNewsAsk
     | HackerNewsComment
   >(
-    id === -1 ? null : `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
+    id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
     (key) =>
       fetch(key, {
         method: "GET",
@@ -59,20 +60,20 @@ function StoryThread({
   onRefresh(): unknown;
 }) {
   const { theme } = useDash();
-  const dimensions = RN.useWindowDimensions();
-  const [didMount, setDidMount] = React.useState(false);
+  const dimensions = useWindowDimensions();
+  const [didMount, setDidMount] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const url = React.useMemo(
+  const url = useMemo(
     () => ("url" in data && data.url ? new URL(data.url) : undefined),
     [data]
   );
   const metadata = useMetadata(url);
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       setDidMount(true);
     }
   }, [data]);
-  const htmlRenderersProps = React.useMemo<Partial<RenderersProps>>(
+  const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
     () => ({
       a: {
         onPress(_, url) {
@@ -83,12 +84,12 @@ function StoryThread({
     [navigation]
   );
 
-  const htmlTagStyles = React.useMemo<MixedStyleRecord>(
+  const htmlTagStyles = useMemo<MixedStyleRecord>(
     () => ({ a: link() }),
     [theme]
   );
 
-  const htmlSource = React.useMemo(
+  const htmlSource = useMemo(
     () =>
       "text" in data && {
         html: linkify(data.text),
@@ -96,24 +97,24 @@ function StoryThread({
     [data]
   );
 
-  const listHeaderComponent = React.useCallback(
+  const listHeaderComponent = useCallback(
     () =>
       !data ? null : (
-        <RN.View>
+        <View>
           {metadata?.image ? (
-            <React.Fragment>
-              <RN.View style={floatingHeader()}>
-                <RN.SafeAreaView>
-                  <RN.TouchableOpacity
+            <>
+              <View style={floatingHeader()}>
+                <SafeAreaView>
+                  <TouchableOpacity
                     style={backButton()}
                     onPress={() => navigation.goBack()}
                   >
                     <Icon name="chevron-left" size={18} color="textAccent" />
-                  </RN.TouchableOpacity>
-                </RN.SafeAreaView>
-              </RN.View>
+                  </TouchableOpacity>
+                </SafeAreaView>
+              </View>
 
-              <RN.TouchableWithoutFeedback
+              <TouchableWithoutFeedback
                 onPress={() =>
                   data &&
                   url &&
@@ -123,27 +124,27 @@ function StoryThread({
                   })
                 }
               >
-                <RN.Image
+                <Image
                   style={storyImage()}
                   source={{ uri: metadata?.image }}
                 />
-              </RN.TouchableWithoutFeedback>
-            </React.Fragment>
+              </TouchableWithoutFeedback>
+            </>
           ) : (
-            <RN.SafeAreaView>
-              <RN.View style={header()}>
-                <RN.TouchableOpacity
+            <SafeAreaView>
+              <View style={header()}>
+                <TouchableOpacity
                   style={backButton()}
                   onPress={() => navigation.goBack()}
                 >
                   <Icon name="chevron-left" size={18} color="textAccent" />
-                </RN.TouchableOpacity>
-              </RN.View>
-            </RN.SafeAreaView>
+                </TouchableOpacity>
+              </View>
+            </SafeAreaView>
           )}
 
           {metadata && url && (
-            <RN.TouchableWithoutFeedback
+            <TouchableWithoutFeedback
               onPress={() =>
                 navigation.navigate("BrowserModal", {
                   title: metadata.applicationName || url.hostname,
@@ -151,24 +152,24 @@ function StoryThread({
                 })
               }
             >
-              <RN.View style={hostContainerStyle()}>
-                <RN.Image
+              <View style={hostContainerStyle()}>
+                <Image
                   style={favicon()}
                   source={{ uri: metadata.favicon }}
                 />
 
-                <RN.Text
+                <Text
                   style={hostname()}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
                   {metadata.applicationName || url.host.replace(/^www\./, "")}
-                </RN.Text>
-              </RN.View>
-            </RN.TouchableWithoutFeedback>
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
           )}
 
-          <RN.TouchableWithoutFeedback
+          <TouchableWithoutFeedback
             onPress={() =>
               data &&
               url &&
@@ -178,10 +179,10 @@ function StoryThread({
               })
             }
           >
-            <RN.Text numberOfLines={4} adjustsFontSizeToFit style={title()}>
+            <Text numberOfLines={4} adjustsFontSizeToFit style={title()}>
               {data.title}
-            </RN.Text>
-          </RN.TouchableWithoutFeedback>
+            </Text>
+          </TouchableWithoutFeedback>
 
           {htmlSource && (
             <RenderHTML
@@ -197,30 +198,30 @@ function StoryThread({
             />
           )}
 
-          <RN.View style={storyByLine()}>
-            <RN.TouchableWithoutFeedback
+          <View style={storyByLine()}>
+            <TouchableWithoutFeedback
               onPress={() => navigation.navigate("User", { id: data.by })}
             >
-              <RN.Text style={byStyle()}>@{data.by}</RN.Text>
-            </RN.TouchableWithoutFeedback>
-            <RN.Text style={agoStyle()}>
+              <Text style={byStyle()}>@{data.by}</Text>
+            </TouchableWithoutFeedback>
+            <Text style={agoStyle()}>
               {ago.format(new Date(data.time * 1000), "mini")}
-            </RN.Text>
-          </RN.View>
+            </Text>
+          </View>
 
           {data.type !== "job" &&
             (data.score || ("descendants" in data && data.descendants > 0)) && (
-              <RN.Text style={subtitle()}>
-                {data.score && <RN.Text style={score()}>⇧{data.score}</RN.Text>}
+              <Text style={subtitle()}>
+                {data.score && <Text style={score()}>⇧{data.score}</Text>}
                 {"descendants" in data && (
-                  <React.Fragment>
+                  <>
                     {" "}
                     &bull; {pluralize(data.descendants, "comment")}
-                  </React.Fragment>
+                  </>
                 )}
-              </RN.Text>
+              </Text>
             )}
-        </RN.View>
+        </View>
       ),
     [
       data,
@@ -234,16 +235,16 @@ function StoryThread({
     ]
   );
 
-  const refreshControl = React.useMemo(
+  const refreshControl = useMemo(
     () => (
-      <RN.RefreshControl refreshing={!data && didMount} onRefresh={onRefresh} />
+      <RefreshControl refreshing={!data && didMount} onRefresh={onRefresh} />
     ),
     [data, didMount, onRefresh]
   );
 
   return (
-    <RN.View style={container()}>
-      <RN.FlatList
+    <View style={container()}>
+      <FlatList
         ListHeaderComponent={listHeaderComponent}
         refreshControl={refreshControl}
         data={!data ? fauxFlatComments : "kids" in data ? data.kids : []}
@@ -255,7 +256,7 @@ function StoryThread({
         renderItem={renderItem}
         style={container()}
       />
-    </RN.View>
+    </View>
   );
 }
 
@@ -270,14 +271,14 @@ function CommentThread({
   const parents = useParents(data.parent);
   const parentComments = parents.data ?? [];
   const parentStory = parentComments[0];
-  const dimensions = RN.useWindowDimensions();
-  const [didMount, setDidMount] = React.useState(false);
+  const dimensions = useWindowDimensions();
+  const [didMount, setDidMount] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const [containerHeight, setContainerHeight] = React.useState<number>(0);
-  const [mainHeight, setMainHeight] = React.useState<number>(0);
-  const listRef = React.useRef<RN.FlatList>(null);
+  const [containerHeight, setContainerHeight] = useState<number>(0);
+  const [mainHeight, setMainHeight] = useState<number>(0);
+  const listRef = useRef<FlatList>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && containerHeight && mainHeight && listRef.current && !didMount) {
       listRef.current.scrollToOffset({
         offset: containerHeight - mainHeight - 64,
@@ -286,7 +287,7 @@ function CommentThread({
     }
   }, [didMount, data, containerHeight, mainHeight]);
 
-  const htmlRenderersProps = React.useMemo<Partial<RenderersProps>>(
+  const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
     () => ({
       a: {
         onPress(_, url) {
@@ -297,19 +298,19 @@ function CommentThread({
     [navigation]
   );
 
-  const htmlTagStyles = React.useMemo<MixedStyleRecord>(
+  const htmlTagStyles = useMemo<MixedStyleRecord>(
     () => ({ a: link() }),
     [theme]
   );
 
-  const htmlSource = React.useMemo(
+  const htmlSource = useMemo(
     () =>
       "text" in data && {
         html: linkify(data.text),
       },
     [data]
   );
-  const parentStoryHtml = React.useMemo(
+  const parentStoryHtml = useMemo(
     () =>
       parentStory &&
       "text" in parentStory &&
@@ -317,37 +318,37 @@ function CommentThread({
     [parentStory]
   );
 
-  const listHeaderComponent = React.useCallback(
+  const listHeaderComponent = useCallback(
     () =>
       !data || !parentStory ? null : (
-        <RN.View
+        <View
           onLayout={(event) => {
             const layout = event.nativeEvent.layout;
             setContainerHeight(layout.height);
           }}
         >
-          <RN.SafeAreaView>
-            <RN.View style={header()}>
-              <RN.TouchableOpacity
+          <SafeAreaView>
+            <View style={header()}>
+              <TouchableOpacity
                 style={backButton()}
                 onPress={() => navigation.goBack()}
               >
                 <Icon name="chevron-left" size={18} color="textAccent" />
-              </RN.TouchableOpacity>
-            </RN.View>
-          </RN.SafeAreaView>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
 
-          <RN.TouchableWithoutFeedback
+          <TouchableWithoutFeedback
             onPress={() =>
               navigation.push("Thread", {
                 id: parentStory.id,
               })
             }
           >
-            <RN.Text numberOfLines={4} adjustsFontSizeToFit style={title()}>
+            <Text numberOfLines={4} adjustsFontSizeToFit style={title()}>
               {parentStory.title}
-            </RN.Text>
-          </RN.TouchableWithoutFeedback>
+            </Text>
+          </TouchableWithoutFeedback>
 
           {parentStoryHtml && (
             <RenderHTML
@@ -374,24 +375,24 @@ function CommentThread({
             />
           ))}
 
-          <RN.View
+          <View
             style={parentCommentContainer()}
             onLayout={(event) => {
               const layout = event.nativeEvent.layout;
               setMainHeight(layout.height);
             }}
           >
-            <RN.View style={parentCommentMarker()} />
-            <RN.View style={byLine}>
-              <RN.TouchableWithoutFeedback
+            <View style={parentCommentMarker()} />
+            <View style={byLine}>
+              <TouchableWithoutFeedback
                 onPress={() => navigation.navigate("User", { id: data.by })}
               >
-                <RN.Text style={byStyle()}>@{data.by}</RN.Text>
-              </RN.TouchableWithoutFeedback>
-              <RN.Text style={agoStyle()}>
+                <Text style={byStyle()}>@{data.by}</Text>
+              </TouchableWithoutFeedback>
+              <Text style={agoStyle()}>
                 {ago.format(new Date(data.time * 1000), "mini")}
-              </RN.Text>
-            </RN.View>
+              </Text>
+            </View>
 
             {htmlSource && (
               <RenderHTML
@@ -406,8 +407,8 @@ function CommentThread({
                 enableExperimentalMarginCollapsing
               />
             )}
-          </RN.View>
-        </RN.View>
+          </View>
+        </View>
       ),
     [
       data,
@@ -421,16 +422,16 @@ function CommentThread({
     ]
   );
 
-  const refreshControl = React.useMemo(
+  const refreshControl = useMemo(
     () => (
-      <RN.RefreshControl refreshing={!data && didMount} onRefresh={onRefresh} />
+      <RefreshControl refreshing={!data && didMount} onRefresh={onRefresh} />
     ),
     [data, didMount, onRefresh]
   );
 
   return (
-    <RN.View style={container()}>
-      <RN.FlatList
+    <View style={container()}>
+      <FlatList
         ListHeaderComponent={listHeaderComponent}
         refreshControl={refreshControl}
         data={!data ? fauxFlatComments : "kids" in data ? data.kids : []}
@@ -443,7 +444,7 @@ function CommentThread({
         style={container()}
         ref={listRef}
       />
-    </RN.View>
+    </View>
   );
 }
 
@@ -461,7 +462,7 @@ function keyExtractor(item: number, index: number) {
   return item === -1 ? index.toString() : item.toString();
 }
 
-const ParentComment = React.memo<{
+const ParentComment = memo<{
   comment: HackerNewsComment;
   contentWidth: number;
   htmlRenderersProps: Partial<RenderersProps>;
@@ -474,7 +475,7 @@ const ParentComment = React.memo<{
   htmlTagStyles,
   navigation,
 }) {
-  const htmlSource = React.useMemo(
+  const htmlSource = useMemo(
     () => ({
       html: linkify(comment.text),
     }),
@@ -482,26 +483,26 @@ const ParentComment = React.memo<{
   );
 
   return (
-    <RN.View style={parentCommentContainer()}>
-      <RN.View style={parentCommentMarker()} />
-      <RN.View style={byLine}>
-        <RN.TouchableWithoutFeedback
+    <View style={parentCommentContainer()}>
+      <View style={parentCommentMarker()} />
+      <View style={byLine}>
+        <TouchableWithoutFeedback
           onPress={() => navigation.navigate("User", { id: comment.by })}
         >
-          <RN.Text style={byStyle()}>@{comment.by}</RN.Text>
-        </RN.TouchableWithoutFeedback>
-        <RN.TouchableWithoutFeedback
+          <Text style={byStyle()}>@{comment.by}</Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
           onPress={() =>
             navigation.push("Thread", {
               id: comment.id,
             })
           }
         >
-          <RN.Text style={agoStyle()}>
+          <Text style={agoStyle()}>
             {ago.format(new Date(comment.time * 1000), "mini")}
-          </RN.Text>
-        </RN.TouchableWithoutFeedback>
-      </RN.View>
+          </Text>
+        </TouchableWithoutFeedback>
+      </View>
 
       <RenderHTML
         contentWidth={contentWidth}
@@ -514,28 +515,28 @@ const ParentComment = React.memo<{
         enableExperimentalGhostLinesPrevention
         enableExperimentalMarginCollapsing
       />
-    </RN.View>
+    </View>
   );
 });
 
-const Comment = React.memo<{ id: number; index: number; depth: number }>(
+const Comment = memo<{ id: number; index: number; depth: number }>(
   function Comment({ id, depth }) {
     const { theme } = useDash();
     const comment = useSWR<HackerNewsComment>(
       id === -1
         ? null
-        : `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
+        : `${HACKER_NEWS_API}/item/${id}.json`,
       (key) =>
         fetch(key, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         }).then((res) => res.json())
     );
-    const dimensions = RN.useWindowDimensions();
-    const [showingReplies, setShowingReplies] = React.useState(false);
+    const dimensions = useWindowDimensions();
+    const [showingReplies, setShowingReplies] = useState(false);
     const navigation =
       useNavigation<NativeStackNavigationProp<StackParamList>>();
-    const htmlRenderersProps = React.useMemo<Partial<RenderersProps>>(
+    const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
       () => ({
         a: {
           onPress(_, url) {
@@ -546,12 +547,12 @@ const Comment = React.memo<{ id: number; index: number; depth: number }>(
       [navigation]
     );
 
-    const htmlTagStyles = React.useMemo<MixedStyleRecord>(
+    const htmlTagStyles = useMemo<MixedStyleRecord>(
       () => ({ a: link(), pre: pre() }),
       [theme]
     );
 
-    const htmlSource = React.useMemo(
+    const htmlSource = useMemo(
       () =>
         comment.data && {
           html: linkify(comment.data.text),
@@ -561,9 +562,9 @@ const Comment = React.memo<{ id: number; index: number; depth: number }>(
 
     if (!comment.data) {
       return (
-        <RN.View>
+        <View>
           <Skeleton />
-        </RN.View>
+        </View>
       );
     }
 
@@ -574,26 +575,26 @@ const Comment = React.memo<{ id: number; index: number; depth: number }>(
     const data = comment.data;
 
     return (
-      <React.Fragment>
-        <RN.View style={commentContainer(depth)}>
-          <RN.View style={byLine}>
-            <RN.TouchableWithoutFeedback
+      <>
+        <View style={commentContainer(depth)}>
+          <View style={byLine}>
+            <TouchableWithoutFeedback
               onPress={() => navigation.navigate("User", { id: data.by })}
             >
-              <RN.Text style={byStyle()}>@{data.by}</RN.Text>
-            </RN.TouchableWithoutFeedback>
-            <RN.TouchableWithoutFeedback
+              <Text style={byStyle()}>@{data.by}</Text>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
               onPress={() =>
                 navigation.push("Thread", {
                   id: data.id,
                 })
               }
             >
-              <RN.Text style={agoStyle()}>
+              <Text style={agoStyle()}>
                 {ago.format(new Date(data.time * 1000), "mini")}
-              </RN.Text>
-            </RN.TouchableWithoutFeedback>
-          </RN.View>
+              </Text>
+            </TouchableWithoutFeedback>
+          </View>
 
           {htmlSource && (
             <RenderHTML
@@ -609,16 +610,16 @@ const Comment = React.memo<{ id: number; index: number; depth: number }>(
             />
           )}
 
-          <RN.TouchableWithoutFeedback
+          <TouchableWithoutFeedback
             onPress={() => {
               setShowingReplies((current) => !current);
             }}
           >
-            <RN.Text style={replies()}>
+            <Text style={replies()}>
               {pluralize(data.kids?.length ?? 0, "reply", "replies")}
-            </RN.Text>
-          </RN.TouchableWithoutFeedback>
-        </RN.View>
+            </Text>
+          </TouchableWithoutFeedback>
+        </View>
 
         {showingReplies &&
           data.kids &&
@@ -626,18 +627,18 @@ const Comment = React.memo<{ id: number; index: number; depth: number }>(
           data.kids.map((id, index) => (
             <Comment key={id} id={id} index={index} depth={depth + 1} />
           ))}
-      </React.Fragment>
+      </>
     );
   },
   (prev, next) => prev.id === next.id
 );
 
-const container = styles.one<RN.ViewStyle>((t) => ({
+const container = styles.one<ViewStyle>((t) => ({
   flex: 1,
   backgroundColor: t.color.bodyBg,
 }));
 
-const commentContainer = styles.lazy<number, RN.ViewStyle>((depth) => (t) => ({
+const commentContainer = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   padding: t.space.lg,
   borderTopWidth: t.borderWidth.hairline,
   borderTopColor: t.color.accent,
@@ -650,7 +651,7 @@ const commentContainer = styles.lazy<number, RN.ViewStyle>((depth) => (t) => ({
     : {}),
 }));
 
-const parentCommentContainer = styles.one<RN.ViewStyle>((t) => ({
+const parentCommentContainer = styles.one<ViewStyle>((t) => ({
   padding: t.space.lg,
   paddingTop: 0,
   marginLeft: t.space.md,
@@ -658,7 +659,7 @@ const parentCommentContainer = styles.one<RN.ViewStyle>((t) => ({
   borderLeftColor: t.color.primary,
 }));
 
-const parentCommentMarker = styles.one<RN.ViewStyle>((t) => ({
+const parentCommentMarker = styles.one<ViewStyle>((t) => ({
   position: "absolute",
   left: -5,
   top: 0,
@@ -668,7 +669,7 @@ const parentCommentMarker = styles.one<RN.ViewStyle>((t) => ({
   backgroundColor: t.color.primary,
 }));
 
-const header = styles.one<RN.ViewStyle>((t) => ({
+const header = styles.one<ViewStyle>((t) => ({
   flexDirection: "row",
   alignItems: "center",
   width: "100%",
@@ -676,14 +677,14 @@ const header = styles.one<RN.ViewStyle>((t) => ({
   paddingLeft: t.space.lg,
 }));
 
-const floatingHeader = styles.one<RN.ViewStyle>((t) => ({
+const floatingHeader = styles.one<ViewStyle>((t) => ({
   position: "absolute",
   left: t.space.lg,
   top: t.space.lg,
   zIndex: 10,
 }));
 
-const backButton = styles.one<RN.ViewStyle>((t) => ({
+const backButton = styles.one<ViewStyle>((t) => ({
   alignItems: "center",
   justifyContent: "center",
   width: 18 * (t.type.size.base / 16) + t.space.sm * 2,
@@ -693,7 +694,7 @@ const backButton = styles.one<RN.ViewStyle>((t) => ({
   backgroundColor: t.color.accentLight,
 }));
 
-const title = styles.one<RN.TextStyle>((t) => ({
+const title = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.xl,
   fontWeight: "900",
@@ -702,7 +703,7 @@ const title = styles.one<RN.TextStyle>((t) => ({
   paddingBottom: t.space.md,
 }));
 
-const subtitle = styles.one<RN.TextStyle>((t) => ({
+const subtitle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.xs,
   fontWeight: "600",
@@ -710,17 +711,17 @@ const subtitle = styles.one<RN.TextStyle>((t) => ({
   paddingTop: t.space.md,
 }));
 
-const score = styles.one<RN.TextStyle>((t) => ({
+const score = styles.one<TextStyle>((t) => ({
   color: t.color.primary,
 }));
 
-const storyImage = styles.one<RN.ImageStyle>((t) => ({
+const storyImage = styles.one<ImageStyle>((t) => ({
   width: "100%",
   height: 240,
   marginBottom: t.space.md,
 }));
 
-const hostContainerStyle = styles.one<RN.ViewStyle>((t) => ({
+const hostContainerStyle = styles.one<ViewStyle>((t) => ({
   width: "100%",
   flexDirection: "row",
   alignItems: "center",
@@ -730,14 +731,14 @@ const hostContainerStyle = styles.one<RN.ViewStyle>((t) => ({
   paddingBottom: t.space.md,
 }));
 
-const favicon = styles.one<RN.ImageStyle>((t) => ({
+const favicon = styles.one<ImageStyle>((t) => ({
   width: 20,
   height: 20,
   borderRadius: t.radius.md,
   marginRight: t.space.sm,
 }));
 
-const hostname = styles.one<RN.TextStyle>((t) => ({
+const hostname = styles.one<TextStyle>((t) => ({
   flex: 1,
   width: "100%",
   color: t.color.textAccent,
@@ -766,7 +767,7 @@ const commentContent = styles.one((t) => ({
   fontWeight: "300",
 }));
 
-const storyByLine = styles.one<RN.ViewStyle>((t) => ({
+const storyByLine = styles.one<ViewStyle>((t) => ({
   width: "100%",
   flexDirection: "row",
   justifyContent: "space-between",
@@ -775,13 +776,13 @@ const storyByLine = styles.one<RN.ViewStyle>((t) => ({
   paddingBottom: t.space.md,
 }));
 
-const byLine: RN.ViewStyle = {
+const byLine: ViewStyle = {
   width: "100%",
   flexDirection: "row",
   justifyContent: "space-between",
 };
 
-const byStyle = styles.one<RN.TextStyle>((t) => ({
+const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   fontWeight: "300",
@@ -790,7 +791,7 @@ const byStyle = styles.one<RN.TextStyle>((t) => ({
   paddingLeft: 0,
 }));
 
-const replies = styles.one<RN.TextStyle>((t) => ({
+const replies = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   fontWeight: "300",
@@ -800,7 +801,7 @@ const replies = styles.one<RN.TextStyle>((t) => ({
   width: "100%",
 }));
 
-const agoStyle = styles.one<RN.TextStyle>((t) => ({
+const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   fontWeight: "300",
@@ -822,7 +823,7 @@ const pre = styles.one((t) => ({
   fontSize: t.type.size["2xs"],
 }));
 
-const htmlDefaultTextProps: RN.TextProps = {
+const htmlDefaultTextProps: TextProps = {
   selectable: true,
 };
 

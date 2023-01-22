@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as RN from "react-native";
-import { styles, useDash } from "../../dash.config";
+import { useDash, styles } from "../../../dash.config";
 
 export function Skeleton(props: SkeletonProps) {
   useDash();

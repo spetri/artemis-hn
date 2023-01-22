@@ -1,4 +1,5 @@
 import useSWR, { useSWRConfig } from "swr";
+import { HACKER_NEWS_API } from "../constants/api";
 import { HackerNewsAsk, HackerNewsComment, HackerNewsPoll, HackerNewsStory } from "../types/hn-api";
 
 export function useParents(firstParent?: number | null) {
@@ -13,7 +14,7 @@ export function useParents(firstParent?: number | null) {
     firstParent === void 0 || firstParent === null
       ? null
       : [
-          `https://hacker-news.firebaseio.com/v0/item/${firstParent}.json`,
+          `${HACKER_NEWS_API}/item/${firstParent}.json`,
           "parents",
         ],
     async (key) => {
@@ -33,12 +34,12 @@ export function useParents(firstParent?: number | null) {
       ] = [next as any];
       let foundStory = next.type === "story" || next.type === "poll";
       cache.set(
-        `https://hacker-news.firebaseio.com/v0/item/${firstParent}.json`,
+        `${HACKER_NEWS_API}/item/${firstParent}.json`,
         next
       );
 
       while (!foundStory) {
-        const key = `https://hacker-news.firebaseio.com/v0/item/${next.parent}.json`;
+        const key = `${HACKER_NEWS_API}/item/${next.parent}.json`;
         next =
           cache.get(key) ??
           (await fetch(key, {

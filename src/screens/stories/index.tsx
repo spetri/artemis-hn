@@ -1,24 +1,22 @@
 import 'react-native-url-polyfill/auto';
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import * as React from "react";
-import * as RN from "react-native";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { View, LogBox, RefreshControl, FlatList, ViewStyle } from "react-native";
 import useSWR from "swr";
 import { LogoHeader } from "../../components/logo-header";
 import { StoryCard } from "../../components/story-card";
-import { useDash, styles } from "../../dash.config";
+import { useDash, styles } from "../../../dash.config";
 
 import { StackParamList } from "../routers";
+import { HACKER_NEWS_API } from '../../constants/api';
 
 export function Stories(props: StoriesProps) {
   useDash();
   const { filter } = props.route.params;
-  const [didMount, setDidMount] = React.useState(false);
+  const [didMount, setDidMount] = useState(false);
 
-  /**
-   * @see https://github.com/HackerNews/API
-   */
   const stories = useSWR<number[]>(
-    `https://hacker-news.firebaseio.com/v0/${filter}stories.json`,
+    `${HACKER_NEWS_API}/${filter}stories.json`,
     (key) =>
       fetch(key, {
         method: "GET",
@@ -26,24 +24,24 @@ export function Stories(props: StoriesProps) {
       }).then((res) => res.json())
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (stories.data) {
       setDidMount(true);
     }
   }, [stories.data]);
 
-  React.useEffect(() => {
-    RN.LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+  useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
   }, []);
 
-  const flatListData = React.useMemo(
+  const flatListData = useMemo(
     () => stories.data?.slice(5),
     [stories.data]
   );
 
-  const listHeaderComponent = React.useCallback(() => {
+  const listHeaderComponent = useCallback(() => {
     return (
-      <React.Fragment>
+      <>
         <LogoHeader
           title={
             filter === "show"
@@ -55,16 +53,16 @@ export function Stories(props: StoriesProps) {
               : "HN"
           }
         />
-        <RN.View style={listStyle}>
+        <View style={listStyle}>
           {(stories.data ?? fauxStories).slice(0, 5).map(renderItem)}
-        </RN.View>
-      </React.Fragment>
+        </View>
+      </>
     );
   }, [stories.data, filter]);
 
-  const refreshControl = React.useMemo(
+  const refreshControl = useMemo(
     () => (
-      <RN.RefreshControl
+      <RefreshControl
         refreshing={!stories.data && didMount}
         onRefresh={() => stories.mutate()}
       />
@@ -73,7 +71,7 @@ export function Stories(props: StoriesProps) {
   );
 
   return (
-    <RN.FlatList
+    <FlatList
       ListHeaderComponent={listHeaderComponent}
       refreshControl={refreshControl}
       data={flatListData ?? fauxFlatStories}
@@ -105,13 +103,13 @@ function renderFlatListItem({ item, index }: { item: number; index: number }) {
   );
 }
 
-const container = styles.one<RN.ViewStyle>((t) => ({
+const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: "100%",
   width: "100%",
 }));
 
-const listStyle: RN.ViewStyle = {
+const listStyle: ViewStyle = {
   flexDirection: "row",
   flexWrap: "wrap",
 };

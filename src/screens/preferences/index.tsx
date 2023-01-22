@@ -4,21 +4,21 @@ import Slider from "@react-native-community/slider";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
-import * as React from "react";
-import * as RN from "react-native";
 import { NavigableHeader } from "../../components/navigable-header";
-import { useDash, createTypeSystem, colorSystem, styles } from "../../dash.config";
+import { useDash, createTypeSystem, colorSystem, styles } from "../../../dash.config";
 
 import { StackParamList } from "../routers";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { Text, SafeAreaView, ScrollView, TextStyle, TouchableOpacity, useColorScheme, useWindowDimensions, View, ViewStyle, Switch } from "react-native";
 
 export function Preferences(props: PreferencesProps) {
   const { tokens } = useDash();
-  const [baseTypeSize, setBaseTypeSize] = React.useState<number | undefined>(
+  const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(
     undefined
   );
   const [preferences, loadPreferences] = usePreferences();
-  const colorScheme = RN.useColorScheme();
-  const dimensions = RN.useWindowDimensions();
+  const colorScheme = useColorScheme();
+  const dimensions = useWindowDimensions();
 
   const [, setStorage_] = useAsync(async (preferences: PreferencesType) => {
     const data = Object.entries({
@@ -29,14 +29,14 @@ export function Preferences(props: PreferencesProps) {
     await loadPreferences();
   });
 
-  const setStorage = React.useCallback(
+  const setStorage = useCallback(
     (settings: Partial<PreferencesType>) => {
       setStorage_({ ...defaultPreferences, ...preferences?.data, ...settings });
     },
     [setStorage_, preferences?.data]
   );
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (
       preferences.status === "success" &&
       preferences.data &&
@@ -46,7 +46,7 @@ export function Preferences(props: PreferencesProps) {
     }
   }, [preferences, setStorage]);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (baseTypeSize) {
       setStorage({
         baseTypeSize,
@@ -55,7 +55,7 @@ export function Preferences(props: PreferencesProps) {
   }, [baseTypeSize]);
 
   return (
-    <RN.SafeAreaView style={container()}>
+    <SafeAreaView style={container()}>
       <NavigableHeader
         title="Preferences"
         actions={{
@@ -71,17 +71,17 @@ export function Preferences(props: PreferencesProps) {
           },
         }}
       />
-      <RN.ScrollView style={preferencesContainer()}>
-        <RN.View style={preferenceGroup()}>
-          <RN.View style={preferenceLabelContainer()}>
-            <RN.Text style={preferenceLabel()}>Color</RN.Text>
-            <RN.Text style={preferenceDescription()}>
+      <ScrollView style={preferencesContainer()}>
+        <View style={preferenceGroup()}>
+          <View style={preferenceLabelContainer()}>
+            <Text style={preferenceLabel()}>Color</Text>
+            <Text style={preferenceDescription()}>
               Sets the primary color used throughout the app
-            </RN.Text>
-          </RN.View>
-          <RN.View style={colorSwatches()}>
+            </Text>
+          </View>
+          <View style={colorSwatches()}>
             {primaryColors.map((color) => (
-              <RN.TouchableOpacity
+              <TouchableOpacity
                 key={color}
                 onPress={() => {
                   setStorage({
@@ -89,24 +89,24 @@ export function Preferences(props: PreferencesProps) {
                   });
                 }}
               >
-                <RN.View
+                <View
                   style={colorSwatch({
                     color,
                     size: (dimensions.width - 112) / 4,
                     selected: color === preferences.data?.primaryColor,
                   })}
                 />
-              </RN.TouchableOpacity>
+              </TouchableOpacity>
             ))}
-          </RN.View>
-        </RN.View>
+          </View>
+        </View>
 
-        <RN.View style={preferenceGroup()}>
-          <RN.View style={preferenceRow("center")}>
-            <RN.View style={preferenceLabelContainer()}>
-              <RN.Text style={preferenceLabel()}>Text size</RN.Text>
-            </RN.View>
-            <RN.View style={sliderContainer}>
+        <View style={preferenceGroup()}>
+          <View style={preferenceRow("center")}>
+            <View style={preferenceLabelContainer()}>
+              <Text style={preferenceLabel()}>Text size</Text>
+            </View>
+            <View style={sliderContainer}>
               <Slider
                 style={slider}
                 minimumValue={12}
@@ -117,27 +117,27 @@ export function Preferences(props: PreferencesProps) {
                 minimumTrackTintColor="#FFFFFF"
                 maximumTrackTintColor="#000000"
               />
-            </RN.View>
-          </RN.View>
-        </RN.View>
+            </View>
+          </View>
+        </View>
 
-        <RN.View style={preferenceGroup()}>
-          <RN.View style={preferenceRow("start")}>
-            <RN.View style={preferenceLabelContainer()}>
-              <RN.Text style={preferenceLabel()}>Dark mode</RN.Text>
-              <RN.Text style={preferenceDescription()}>
+        <View style={preferenceGroup()}>
+          <View style={preferenceRow("start")}>
+            <View style={preferenceLabelContainer()}>
+              <Text style={preferenceLabel()}>Dark mode</Text>
+              <Text style={preferenceDescription()}>
                 By default we use your system preferences{" "}
                 {preferences.data?.colorScheme && (
-                  <RN.Text
+                  <Text
                     style={resetToDefault()}
                     onPress={() => setStorage({ colorScheme: undefined })}
                   >
                     Reset
-                  </RN.Text>
+                  </Text>
                 )}
-              </RN.Text>
-            </RN.View>
-            <RN.Switch
+              </Text>
+            </View>
+            <Switch
               value={
                 preferences.data?.colorScheme === "dark" ||
                 (preferences.data?.colorScheme === undefined &&
@@ -153,23 +153,23 @@ export function Preferences(props: PreferencesProps) {
                 });
               }}
             />
-          </RN.View>
-        </RN.View>
+          </View>
+        </View>
 
-        <RN.Text style={version()}>
+        <Text style={version()}>
           v{Application.nativeBuildVersion}{" "}
           {Updates.updateId && (
-            <React.Fragment>&bull; {Updates.updateId}</React.Fragment>
+            <>&bull; {Updates.updateId}</>
           )}
-        </RN.Text>
-      </RN.ScrollView>
-    </RN.SafeAreaView>
+        </Text>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 export function usePreferences() {
   const { setTheme, insertThemes, insertTokens } = useDash();
-  const colorScheme = RN.useColorScheme();
+  const colorScheme = useColorScheme();
   const [storage, loadStorage] = useAsync(async () => {
     const keys = await AsyncStorage.getAllKeys();
     const values = await AsyncStorage.multiGet(keys);
@@ -185,18 +185,18 @@ export function usePreferences() {
     return data as { data: PreferencesType; version: string };
   });
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     loadStorage();
   }, []);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const theme = storage.value?.data.colorScheme ?? colorScheme;
     if (theme) {
       setTheme(theme);
     }
   }, [storage.value?.data.colorScheme, colorScheme]);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const baseTypeSize = storage.value?.data.baseTypeSize;
     if (baseTypeSize) {
       insertTokens({
@@ -205,7 +205,7 @@ export function usePreferences() {
     }
   }, [storage.value?.data.baseTypeSize]);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const primaryColor = storage.value?.data.primaryColor;
     if (primaryColor) {
       insertThemes({
@@ -215,7 +215,7 @@ export function usePreferences() {
     }
   }, [storage.value?.data.primaryColor]);
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     const { value, ...rest } = storage;
     return [
       { ...rest, data: value?.data, version: value?.version },
@@ -255,25 +255,25 @@ export type PreferencesType = {
   baseTypeSize: number;
 };
 
-const container = styles.one<RN.ViewStyle>((t) => ({
+const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: "100%",
   width: "100%",
 }));
 
-const preferencesContainer = styles.one<RN.ViewStyle>((t) => ({
+const preferencesContainer = styles.one<ViewStyle>((t) => ({
   paddingTop: t.space.lg,
   width: "100%",
 }));
 
-const slider: RN.ViewStyle = { width: "100%", height: 40 };
-const sliderContainer: RN.ViewStyle = {
+const slider: ViewStyle = { width: "100%", height: 40 };
+const sliderContainer: ViewStyle = {
   width: "100%",
   flexGrow: 1,
   flexShrink: 1,
 };
 
-const preferenceGroup = styles.one<RN.ViewStyle>((t) => ({
+const preferenceGroup = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.accentLight,
   padding: t.space.lg,
   margin: t.space.lg,
@@ -281,14 +281,14 @@ const preferenceGroup = styles.one<RN.ViewStyle>((t) => ({
   borderRadius: t.radius.xl,
 }));
 
-const preferenceLabel = styles.one<RN.TextStyle>((t) => ({
+const preferenceLabel = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.base,
   fontWeight: "700",
   width: "100%",
 }));
 
-const preferenceDescription = styles.one<RN.TextStyle>((t) => ({
+const preferenceDescription = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
   fontWeight: "400",
@@ -296,14 +296,14 @@ const preferenceDescription = styles.one<RN.TextStyle>((t) => ({
   marginTop: t.space.sm,
 }));
 
-const preferenceRow = styles.lazy<"center" | "start", RN.ViewStyle>(
+const preferenceRow = styles.lazy<"center" | "start", ViewStyle>(
   (variant) => () => ({
     flexDirection: "row",
     alignItems: variant === "center" ? "center" : "flex-start",
   })
 );
 
-const preferenceLabelContainer = styles.one<RN.ViewStyle>((t) => ({
+const preferenceLabelContainer = styles.one<ViewStyle>((t) => ({
   flexDirection: "column",
   flexGrow: 1,
   flexShrink: 1,
@@ -312,7 +312,7 @@ const preferenceLabelContainer = styles.one<RN.ViewStyle>((t) => ({
   marginRight: t.space.lg,
 }));
 
-const colorSwatches = styles.one<RN.ViewStyle>((t) => ({
+const colorSwatches = styles.one<ViewStyle>((t) => ({
   flexDirection: "row",
   flexWrap: "wrap",
   justifyContent: "space-between",
@@ -321,7 +321,7 @@ const colorSwatches = styles.one<RN.ViewStyle>((t) => ({
 
 const colorSwatch = styles.lazy<
   { color: string; size: number; selected: boolean },
-  RN.ViewStyle
+  ViewStyle
 >(({ color, size, selected }) => (t) => ({
   width: size,
   height: size,
@@ -332,12 +332,12 @@ const colorSwatch = styles.lazy<
   borderRadius: t.radius.primary,
 }));
 
-const resetToDefault = styles.one<RN.TextStyle>((t) => ({
+const resetToDefault = styles.one<TextStyle>((t) => ({
   color: t.color.primary,
   fontWeight: "500",
 }));
 
-const version = styles.one<RN.TextStyle>((t) => ({
+const version = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   textAlign: "center",
   marginBottom: t.space["2xl"],

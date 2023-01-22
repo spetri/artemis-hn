@@ -1,27 +1,28 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import * as htmlEntities from "html-entities";
-import * as React from "react";
-import * as RN from "react-native";
+import { memo } from "react";
+import { Image, ImageStyle, Text, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import stripTags from "striptags";
 import useSWR from "swr";
 
-import { styles, useDash } from "../../dash.config";
+import { styles, useDash } from "../../../dash.config";
 import { ago } from "../../utils/ago";
 import { pluralize } from "../../utils/pluralize";
-import { HackerNewsAsk, HackerNewsComment, HackerNewsItem, HackerNewsJob, HackerNewsPoll, HackerNewsStory } from "../../types/hn-api";
-import { Skeleton } from "../skeleton";
 import { useMetadata } from "../../hooks/use-metadata";
 import { useParents } from "../../hooks/use-parents";
 import { StackParamList } from "../../screens/routers";
+import { HackerNewsAsk, HackerNewsComment, HackerNewsItem, HackerNewsJob, HackerNewsPoll, HackerNewsStory } from "../../types/hn-api";
+import { Skeleton } from "../skeleton";
+import { HACKER_NEWS_API } from "../../constants/api";
 
-export const StoryCard = React.memo(
+export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
     const story = useSWR<HackerNewsItem>(
       id === -1
         ? null
-        : `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
+        : `${HACKER_NEWS_API}/item/${id}.json`,
       (key) =>
         fetch(key, {
           method: "GET",
@@ -31,9 +32,9 @@ export const StoryCard = React.memo(
 
     if (!story.data) {
       return (
-        <RN.View style={storyContainer(index)}>
+        <View style={storyContainer(index)}>
           <Skeleton style={storySkeleton(index)} />
-        </RN.View>
+        </View>
       );
     }
 
@@ -64,16 +65,16 @@ function Story({ data, index }: { data: HackerNewsStory; index: number }) {
 
   if (!metadata) {
     return (
-      <RN.View style={storyContainer(index)}>
+      <View style={storyContainer(index)}>
         <Skeleton style={storySkeleton(index)} />
-      </RN.View>
+      </View>
     );
   }
 
   return (
-    <RN.View style={storyContainer(index)}>
+    <View style={storyContainer(index)}>
       {metadata?.image ? (
-        <RN.TouchableWithoutFeedback
+        <TouchableWithoutFeedback
           onPress={() =>
             navigation.push("BrowserModal", {
               title: data.title,
@@ -81,14 +82,14 @@ function Story({ data, index }: { data: HackerNewsStory; index: number }) {
             })
           }
         >
-          <RN.Image
+          <Image
             style={storyImage(index)}
             source={{ uri: metadata?.image }}
           />
-        </RN.TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
       ) : null}
 
-      <RN.TouchableWithoutFeedback
+      <TouchableWithoutFeedback
         onPress={() =>
           navigation.push("BrowserModal", {
             title: metadata.applicationName || url.hostname,
@@ -96,16 +97,16 @@ function Story({ data, index }: { data: HackerNewsStory; index: number }) {
           })
         }
       >
-        <RN.View style={hostContainerStyle}>
-          <RN.Image style={favicon()} source={{ uri: metadata.favicon }} />
+        <View style={hostContainerStyle}>
+          <Image style={favicon()} source={{ uri: metadata.favicon }} />
 
-          <RN.Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
+          <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
             {metadata.applicationName || url.host.replace(/^www\./, "")}
-          </RN.Text>
-        </RN.View>
-      </RN.TouchableWithoutFeedback>
+          </Text>
+        </View>
+      </TouchableWithoutFeedback>
 
-      <RN.TouchableWithoutFeedback
+      <TouchableWithoutFeedback
         onPress={() =>
           navigation.push("BrowserModal", {
             title: data.title,
@@ -113,7 +114,7 @@ function Story({ data, index }: { data: HackerNewsStory; index: number }) {
           })
         }
       >
-        <RN.Text
+        <Text
           style={storyTitle(index)}
           adjustsFontSizeToFit
           numberOfLines={
@@ -125,33 +126,33 @@ function Story({ data, index }: { data: HackerNewsStory; index: number }) {
           }
         >
           {data.title}
-        </RN.Text>
-      </RN.TouchableWithoutFeedback>
+        </Text>
+      </TouchableWithoutFeedback>
 
-      <RN.View>
-        <RN.View style={byLine}>
-          <RN.TouchableWithoutFeedback
+      <View>
+        <View style={byLine}>
+          <TouchableWithoutFeedback
             onPress={() => navigation.push("User", { id: data.by })}
           >
-            <RN.Text style={byStyle()}>@{data.by}</RN.Text>
-          </RN.TouchableWithoutFeedback>
-          <RN.Text style={agoStyle()}>
+            <Text style={byStyle()}>@{data.by}</Text>
+          </TouchableWithoutFeedback>
+          <Text style={agoStyle()}>
             {ago.format(new Date(data.time * 1000), "mini")}
-          </RN.Text>
-        </RN.View>
+          </Text>
+        </View>
 
-        <RN.Text style={footerText()}>
-          <RN.Text style={score()}>⇧{data.score}</RN.Text> &bull;{" "}
-          <RN.TouchableWithoutFeedback
+        <Text style={footerText()}>
+          <Text style={score()}>⇧{data.score}</Text> &bull;{" "}
+          <TouchableWithoutFeedback
             onPress={() => navigation.push("Thread", { id: data.id })}
           >
-            <RN.Text style={commentsStyle}>
+            <Text style={commentsStyle}>
               {pluralize(data.descendants, "comment")}
-            </RN.Text>
-          </RN.TouchableWithoutFeedback>
-        </RN.Text>
-      </RN.View>
-    </RN.View>
+            </Text>
+          </TouchableWithoutFeedback>
+        </Text>
+      </View>
+    </View>
   );
 }
 
@@ -162,16 +163,16 @@ function JobStory({ data, index }: { data: HackerNewsJob; index: number }) {
 
   if (!metadata) {
     return (
-      <RN.View style={storyContainer(index)}>
+      <View style={storyContainer(index)}>
         <Skeleton style={storySkeleton(index)} />
-      </RN.View>
+      </View>
     );
   }
 
   return (
-    <RN.View style={storyContainer(index)}>
+    <View style={storyContainer(index)}>
       {url && metadata?.image ? (
-        <RN.TouchableWithoutFeedback
+        <TouchableWithoutFeedback
           onPress={() =>
             navigation.push("BrowserModal", {
               title: data.title,
@@ -179,15 +180,15 @@ function JobStory({ data, index }: { data: HackerNewsJob; index: number }) {
             })
           }
         >
-          <RN.Image
+          <Image
             style={storyImage(index)}
             source={{ uri: metadata?.image }}
           />
-        </RN.TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
       ) : null}
 
       {url && (
-        <RN.TouchableWithoutFeedback
+        <TouchableWithoutFeedback
           onPress={() =>
             navigation.push("BrowserModal", {
               title: metadata.applicationName || url.hostname,
@@ -195,17 +196,17 @@ function JobStory({ data, index }: { data: HackerNewsJob; index: number }) {
             })
           }
         >
-          <RN.View style={hostContainerStyle}>
-            <RN.Image style={favicon()} source={{ uri: metadata.favicon }} />
+          <View style={hostContainerStyle}>
+            <Image style={favicon()} source={{ uri: metadata.favicon }} />
 
-            <RN.Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
+            <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
               {metadata.applicationName || url.host.replace(/^www\./, "")}
-            </RN.Text>
-          </RN.View>
-        </RN.TouchableWithoutFeedback>
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
       )}
 
-      <RN.TouchableWithoutFeedback
+      <TouchableWithoutFeedback
         onPress={() => {
           if (url) {
             navigation.push("BrowserModal", {
@@ -219,7 +220,7 @@ function JobStory({ data, index }: { data: HackerNewsJob; index: number }) {
           }
         }}
       >
-        <RN.Text
+        <Text
           style={storyTitle(index)}
           adjustsFontSizeToFit
           numberOfLines={
@@ -231,11 +232,11 @@ function JobStory({ data, index }: { data: HackerNewsJob; index: number }) {
           }
         >
           {data.title}
-        </RN.Text>
-      </RN.TouchableWithoutFeedback>
+        </Text>
+      </TouchableWithoutFeedback>
 
       {data.text && (
-        <RN.TouchableWithoutFeedback
+        <TouchableWithoutFeedback
           onPress={() => {
             if (url) {
               navigation.push("BrowserModal", {
@@ -249,25 +250,25 @@ function JobStory({ data, index }: { data: HackerNewsJob; index: number }) {
             }
           }}
         >
-          <RN.Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
+          <Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
             {stripTags(htmlEntities.decode(data.text), [], " ")}
-          </RN.Text>
-        </RN.TouchableWithoutFeedback>
+          </Text>
+        </TouchableWithoutFeedback>
       )}
 
-      <RN.View>
-        <RN.View style={byLine}>
-          <RN.TouchableWithoutFeedback
+      <View>
+        <View style={byLine}>
+          <TouchableWithoutFeedback
             onPress={() => navigation.push("User", { id: data.by })}
           >
-            <RN.Text style={byStyle()}>@{data.by}</RN.Text>
-          </RN.TouchableWithoutFeedback>
-          <RN.Text style={agoStyle()}>
+            <Text style={byStyle()}>@{data.by}</Text>
+          </TouchableWithoutFeedback>
+          <Text style={agoStyle()}>
             {ago.format(new Date(data.time * 1000), "mini")}
-          </RN.Text>
-        </RN.View>
-      </RN.View>
-    </RN.View>
+          </Text>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -275,61 +276,61 @@ function AskStory({ data, index }: { data: HackerNewsAsk; index: number }) {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
   return (
-    <RN.View style={storyContainer(index)}>
-      <RN.TouchableWithoutFeedback
+    <View style={storyContainer(index)}>
+      <TouchableWithoutFeedback
         onPress={() =>
           navigation.push("Thread", {
             id: data.id,
           })
         }
       >
-        <RN.Text
+        <Text
           style={storyTitle(index)}
           adjustsFontSizeToFit
           numberOfLines={index === 0 ? 5 : 7}
         >
           {data.title}
-        </RN.Text>
-      </RN.TouchableWithoutFeedback>
+        </Text>
+      </TouchableWithoutFeedback>
 
       {data.text && (
-        <RN.TouchableWithoutFeedback
+        <TouchableWithoutFeedback
           onPress={() =>
             navigation.push("Thread", {
               id: data.id,
             })
           }
         >
-          <RN.Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
+          <Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
             {stripTags(htmlEntities.decode(data.text), [], " ")}
-          </RN.Text>
-        </RN.TouchableWithoutFeedback>
+          </Text>
+        </TouchableWithoutFeedback>
       )}
 
-      <RN.View>
-        <RN.View style={byLine}>
-          <RN.TouchableWithoutFeedback
+      <View>
+        <View style={byLine}>
+          <TouchableWithoutFeedback
             onPress={() => navigation.push("User", { id: data.by })}
           >
-            <RN.Text style={byStyle()}>@{data.by}</RN.Text>
-          </RN.TouchableWithoutFeedback>
-          <RN.Text style={agoStyle()}>
+            <Text style={byStyle()}>@{data.by}</Text>
+          </TouchableWithoutFeedback>
+          <Text style={agoStyle()}>
             {ago.format(new Date(data.time * 1000), "mini")}
-          </RN.Text>
-        </RN.View>
+          </Text>
+        </View>
 
-        <RN.Text style={footerText()}>
-          <RN.Text style={score()}>⇧{data.score}</RN.Text> &bull;{" "}
-          <RN.TouchableWithoutFeedback
+        <Text style={footerText()}>
+          <Text style={score()}>⇧{data.score}</Text> &bull;{" "}
+          <TouchableWithoutFeedback
             onPress={() => navigation.push("Thread", { id: data.id })}
           >
-            <RN.Text style={commentsStyle}>
+            <Text style={commentsStyle}>
               {pluralize(data.descendants, "comment")}
-            </RN.Text>
-          </RN.TouchableWithoutFeedback>
-        </RN.Text>
-      </RN.View>
-    </RN.View>
+            </Text>
+          </TouchableWithoutFeedback>
+        </Text>
+      </View>
+    </View>
   );
 }
 
@@ -349,80 +350,80 @@ function CommentStory({
 
   if (!parents.data) {
     return (
-      <RN.View style={storyContainer(index)}>
+      <View style={storyContainer(index)}>
         <Skeleton style={storySkeleton(index)} />
-      </RN.View>
+      </View>
     );
   }
   const parentData = parents.data[0];
 
   return (
-    <RN.View style={storyContainer(index)}>
-      <RN.TouchableWithoutFeedback
+    <View style={storyContainer(index)}>
+      <TouchableWithoutFeedback
         onPress={() =>
           navigation.push("Thread", {
             id: parentData.id,
           })
         }
       >
-        <RN.Text style={commentStoryTitle()}>{parentData.title}</RN.Text>
-      </RN.TouchableWithoutFeedback>
-      <RN.TouchableWithoutFeedback
+        <Text style={commentStoryTitle()}>{parentData.title}</Text>
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
         onPress={() =>
           navigation.push("Thread", {
             id: data.id,
           })
         }
       >
-        <RN.Text
+        <Text
           ellipsizeMode="tail"
           style={commentStoryText()}
           numberOfLines={4}
         >
           {stripTags(htmlEntities.decode(data.text), [], " ")}
-        </RN.Text>
-      </RN.TouchableWithoutFeedback>
+        </Text>
+      </TouchableWithoutFeedback>
 
-      <RN.View style={byLine}>
-        <RN.TouchableWithoutFeedback
+      <View style={byLine}>
+        <TouchableWithoutFeedback
           onPress={() =>
             navigation.push("Thread", {
               id: data.id,
             })
           }
         >
-          <RN.Text style={byStyle()}>
+          <Text style={byStyle()}>
             {pluralize(data.kids?.length ?? 0, "reply", "replies")}
-          </RN.Text>
-        </RN.TouchableWithoutFeedback>
-        <RN.Text style={agoStyle()}>
+          </Text>
+        </TouchableWithoutFeedback>
+        <Text style={agoStyle()}>
           {ago.format(new Date(data.time * 1000), "mini")}
-        </RN.Text>
-      </RN.View>
-    </RN.View>
+        </Text>
+      </View>
+    </View>
   );
 }
 
-const storyContainer = styles.lazy<number, RN.ViewStyle>((index) => (t) => ({
+const storyContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
   width: index === 0 || index > 4 ? "100%" : "50%",
   padding: t.space.lg,
   paddingTop: index === 0 ? t.space.xl : index < 5 ? t.space.md : t.space.lg,
   paddingBottom: index === 0 ? t.space.xl : index < 5 ? t.space.lg : t.space.lg,
 }));
 
-const storySkeleton = styles.lazy<number, RN.ViewStyle>((index) => (t) => ({
+const storySkeleton = styles.lazy<number, ViewStyle>((index) => (t) => ({
   width: "100%",
   height: index === 0 || index > 4 ? 172 : 96,
   marginBottom: t.space.md,
   borderRadius: t.radius.secondary,
 }));
 
-const score = styles.one<RN.TextStyle>((t) => ({
+const score = styles.one<TextStyle>((t) => ({
   color: t.color.primary,
   fontWeight: "700",
 }));
 
-const storyImage = styles.lazy<number, RN.ImageStyle>(
+const storyImage = styles.lazy<number, ImageStyle>(
   (index: number) => (t) => ({
     width: "100%",
     height: index === 0 || index > 4 ? 172 : 96,
@@ -431,20 +432,20 @@ const storyImage = styles.lazy<number, RN.ImageStyle>(
   })
 );
 
-const hostContainerStyle: RN.ViewStyle = {
+const hostContainerStyle: ViewStyle = {
   width: "100%",
   flexDirection: "row",
   alignItems: "center",
 };
 
-const favicon = styles.one<RN.ImageStyle>((t) => ({
+const favicon = styles.one<ImageStyle>((t) => ({
   width: t.type.size.base,
   height: t.type.size.base,
   borderRadius: t.radius.md,
   marginRight: t.space.sm,
 }));
 
-const hostname = styles.one<RN.TextStyle>((t) => ({
+const hostname = styles.one<TextStyle>((t) => ({
   flex: 1,
   width: "100%",
   color: t.color.textAccent,
@@ -452,7 +453,7 @@ const hostname = styles.one<RN.TextStyle>((t) => ({
   fontWeight: "300",
 }));
 
-const storyTitle = styles.lazy<number, RN.TextStyle>(
+const storyTitle = styles.lazy<number, TextStyle>(
   (index: number) => (t) => ({
     color: t.color.textPrimary,
     fontSize: t.type.size[index === 0 ? "6xl" : index < 5 ? "base" : "sm"],
@@ -463,7 +464,7 @@ const storyTitle = styles.lazy<number, RN.TextStyle>(
   })
 );
 
-const storyText = styles.one<RN.TextStyle>((t) => ({
+const storyText = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
   fontWeight: "400",
@@ -472,7 +473,7 @@ const storyText = styles.one<RN.TextStyle>((t) => ({
   paddingBottom: t.space.sm,
 }));
 
-const commentStoryTitle = styles.one<RN.TextStyle>((t) => ({
+const commentStoryTitle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
   fontWeight: "700",
@@ -481,7 +482,7 @@ const commentStoryTitle = styles.one<RN.TextStyle>((t) => ({
   paddingBottom: t.space.sm,
 }));
 
-const commentStoryText = styles.one<RN.TextStyle>((t) => ({
+const commentStoryText = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.xs,
   fontWeight: "400",
@@ -490,13 +491,13 @@ const commentStoryText = styles.one<RN.TextStyle>((t) => ({
   paddingBottom: t.space.sm,
 }));
 
-const byLine: RN.ViewStyle = {
+const byLine: ViewStyle = {
   width: "100%",
   flexDirection: "row",
   justifyContent: "space-between",
 };
 
-const byStyle = styles.one<RN.TextStyle>((t) => ({
+const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   fontWeight: "300",
@@ -505,16 +506,16 @@ const byStyle = styles.one<RN.TextStyle>((t) => ({
   paddingLeft: 0,
 }));
 
-const agoStyle = styles.one<RN.TextStyle>((t) => ({
+const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   fontWeight: "300",
 }));
 
-const footerText = styles.one<RN.TextStyle>((t) => ({
+const footerText = styles.one<TextStyle>((t) => ({
   fontWeight: "600",
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
 }));
 
-const commentsStyle: RN.TextStyle = { fontWeight: "300" };
+const commentsStyle: TextStyle = { fontWeight: "300" };
