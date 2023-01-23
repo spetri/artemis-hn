@@ -9,7 +9,7 @@ import { useMetadata } from "../../../hooks/use-metadata";
 import { StackParamList } from "../../../screens/routers";
 import { HackerNewsJob } from "../../../types/hn-api";
 import { ago } from "../../../utils/ago";
-import { Skeleton } from "../../skeleton";
+import { Skeleton } from "../../Skeleton";
 
 type JobsStory = {
   data: HackerNewsJob;

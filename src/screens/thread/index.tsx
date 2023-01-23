@@ -11,8 +11,8 @@ import type {
 import RenderHTML from "react-native-render-html";
 import useSWR from "swr";
 
-import { Icon } from "../../components/icon";
-import { Skeleton } from "../../components/skeleton";
+import { Icon } from "../../components/Icon";
+import { Skeleton } from "../../components/Skeleton";
 import { styles, useDash } from "../../../dash.config";
 import { useMetadata } from "../../hooks/use-metadata";
 import { useParents } from "../../hooks/use-parents";

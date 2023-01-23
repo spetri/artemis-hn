@@ -3,7 +3,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState, useEffect, useMemo, useCallback, FC } from "react";
 import { View, LogBox, RefreshControl, FlatList, ViewStyle } from "react-native";
 import useSWR from "swr";
-import { LogoHeader } from "../../components/logo-header";
+import { LogoHeader } from "../../components/LogoHeader";
 import { StoryCard } from "../../components/StoryCard";
 import { useDash, styles } from "../../../dash.config";
 import { StackParamList } from "../routers";

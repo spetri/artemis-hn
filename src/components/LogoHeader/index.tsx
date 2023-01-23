@@ -3,7 +3,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Text, SafeAreaView, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
-import { Icon } from "../icon";
+import { Icon } from "../Icon";
 
 export function LogoHeader({ title }: LogoHeaderProps) {
   useDash();

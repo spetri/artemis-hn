@@ -2,7 +2,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import type { ActionSheetProps } from "@expo/react-native-action-sheet";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Icon } from "../icon";
+import { Icon } from "../Icon";
 import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
 import { Text, SafeAreaView, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";

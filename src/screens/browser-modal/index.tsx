@@ -9,7 +9,7 @@ import {
   import * as RN from "react-native";
   import type { WebViewNavigation } from "react-native-webview";
   import { WebView } from "react-native-webview";
-import { Icon } from "../../components/icon";
+import { Icon } from "../../components/Icon";
 import { responsiveSize, styles, useDash } from "../../../dash.config";
 
 import { StackParamList } from "../routers";

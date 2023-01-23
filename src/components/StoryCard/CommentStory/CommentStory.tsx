@@ -9,7 +9,7 @@ import { ago } from "../../../utils/ago";
 import { styles } from "../../../../dash.config";
 import { pluralize } from "../../../utils/pluralize";
 import { useParents } from "../../../hooks/use-parents";
-import { Skeleton } from "../../skeleton";
+import { Skeleton } from "../../Skeleton";
 import { FC } from "react";
 
 type CommentStoryProps = {

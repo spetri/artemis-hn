@@ -3,8 +3,8 @@ import { View, ViewStyle } from "react-native";
 import useSWR from "swr";
 
 import { styles, useDash } from "../../../dash.config";
-import { HackerNewsItem, HackerNewsPoll } from "../../types/hn-api";
-import { Skeleton } from "../skeleton";
+import { HackerNewsAsk, HackerNewsItem, HackerNewsPoll } from "../../types/hn-api";
+import { Skeleton } from "../Skeleton";
 import { HACKER_NEWS_API } from "../../constants/api";
 import { JobStory } from "./JobStory/JobStory";
 import { AskStory } from "./AskStory/AskStory";
@@ -39,7 +39,7 @@ export const StoryCard = memo(
 
     return (!("url" in story.data) || story.data.url === undefined) &&
       story.data.type === "story" ? (
-      <AskStory data={(story as any).data} index={index} />
+      <AskStory data={(story.data as HackerNewsAsk)} index={index} />
     ) : story.data.type === "job" ? (
       <JobStory data={story.data} index={index} />
     ) : story.data.type === "comment" ? (

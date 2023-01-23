@@ -4,7 +4,7 @@ import Slider from "@react-native-community/slider";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
-import { NavigableHeader } from "../../components/navigable-header";
+import { NavigableHeader } from "../../components/NavigableHeader";
 import { useDash, createTypeSystem, colorSystem, styles } from "../../../dash.config";
 
 import { StackParamList } from "../routers";
