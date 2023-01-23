@@ -1,20 +1,29 @@
-import * as React from "react";
-import * as RN from "react-native";
+
+import { FC, useLayoutEffect, useState } from "react";
+import { Animated, ViewStyle } from "react-native";
 import { useDash, styles } from "../../../dash.config";
 
-export function Skeleton(props: SkeletonProps) {
-  useDash();
-  const [fadeAnim] = React.useState(() => new RN.Animated.Value(0));
+type SkeletonProps = {
+  variant?: SkeletonVariant;
+  style?: ViewStyle
+};
 
-  React.useLayoutEffect(() => {
-    const animation = RN.Animated.loop(
-      RN.Animated.sequence([
-        RN.Animated.timing(fadeAnim, {
+export type SkeletonVariant = "text" | "rect" | "circle";
+
+
+export const Skeleton: FC<SkeletonProps> = (props) => {
+  useDash();
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+
+  useLayoutEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(fadeAnim, {
           toValue: 0.5,
           duration: 670,
           useNativeDriver: true,
         }),
-        RN.Animated.timing(fadeAnim, {
+        Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 670,
           useNativeDriver: true,
@@ -25,7 +34,7 @@ export function Skeleton(props: SkeletonProps) {
   }, [fadeAnim]);
 
   return (
-    <RN.Animated.View
+    <Animated.View
       {...props}
       style={[
         skeleton(props.variant ?? "rect"),
@@ -36,7 +45,7 @@ export function Skeleton(props: SkeletonProps) {
   );
 }
 
-const skeleton = styles.lazy<SkeletonVariant, RN.ViewStyle>(
+const skeleton = styles.lazy<SkeletonVariant, ViewStyle>(
   (variant = "rect") =>
     (t) => ({
       backgroundColor: t.color.accent,
@@ -44,14 +53,3 @@ const skeleton = styles.lazy<SkeletonVariant, RN.ViewStyle>(
       borderRadius: variant === "circle" ? t.radius.full : t.radius.secondary,
     })
 );
-
-export interface SkeletonProps {
-  /**
-   * Variant of the skeleton.
-   *
-   * @default "rect"
-   */
-  variant?: SkeletonVariant;
-}
-
-export type SkeletonVariant = "text" | "rect" | "circle";

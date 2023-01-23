@@ -6,62 +6,20 @@ export type HackerNewsItem =
   | HackerNewsPoll;
 
 export type HackerNewsItemBase = {
-  /**
-   * The item's unique id
-   */
-  id: number;
-  /**
-   * The username of the item's author.
-   */
-  by: string;
-  /**
-   * In the case of stories or polls, the total comment count.
-   */
-  descendants: number;
-  /**
-   * The ids of the item's comments, in ranked display order.
-   */
-  kids?: number[];
-  /**
-   * A list of related pollopts, in display order.
-   */
-  parts: number[];
-  /**
-   * The story's score, or the votes for a pollopt.
-   */
-  score: number;
-  /**
-   * Creation date of the item, in Unix Time.
-   */
-  time: number;
-  /**
-   * The title of the story, poll or job.
-   */
-  title: string;
-  /**
-   * The comment, story, or poll text. HTML.
-   */
-  text: string;
-  /**
-   * The comment's parent: either another comment or the relevant story
-   */
-  parent: number;
-  /**
-   * The pollopt's associated poll.
-   */
-  poll: number;
-  /**
-   * The URL of the story.
-   */
-  url: string;
-  /**
-   * `true` if the item is deleted.
-   */
-  deleted: boolean;
-  /**
-   * `true` if the item is dead.
-   */
-  dead: boolean;
+  id: number; // The item's unique id
+  by: string; // The username of the item's author.
+  descendants: number; // In the case of stories or polls, the total comment count.
+  kids?: number[]; // The ids of the item's comments, in ranked display order.
+  parts: number[]; // A list of related pollopts, in display order.
+  score: number; // The story's score, or the votes for a pollopt.
+  time: number; // Creation date of the item, in Unix Time.
+  title: string; // The title of the story, poll or job.
+  text: string; // The comment, story, or poll text. HTML.
+  parent: number; // The comment's parent: either another comment or the relevant story
+  poll: number; // The pollopt's associated poll.
+  url: string; // The URL of the story.
+  deleted: boolean; // `true` if the item is deleted.
+  dead: boolean; // `true` if the item is dead.
 };
 
 export type HackerNewsStory = Pick<
@@ -130,8 +88,8 @@ export type HackerNewsJob = Pick<
 export type HackerNewsPoll = Pick<
   HackerNewsItemBase,
   | "by"
-  | "descendants"
   | "id"
+  | "descendants"
   | "kids"
   | "parts"
   | "score"
@@ -160,26 +118,11 @@ export type HackerNewsPollOpt = Pick<
 };
 
 export type HackerNewsUser = {
-  /**
-   * The user's unique username. Case-sensitive. Required.
-   */
-  id: string;
-  /**
-   * The user's optional self-description. HTML.
-   */
-  about: string;
-  /**
-   * Creation date of the user, in Unix Time.
-   */
-  created: number;
-  /**
-   * The user's karma.
-   */
-  karma: number;
-  /**
-   * List of the user's stories, polls and comments.
-   */
-  submitted: number[];
+  id: string; // The user's unique username. Case-sensitive. Required.
+  about: string; // The user's optional self-description. HTML.
+  created: number; // Creation date of the user, in Unix Time.
+  karma: number; // The user's karma.
+  submitted: number[]; // List of the user's stories, polls and comments.
 };
 
 export type StoryFilters = "top" | "new" | "best" | "show" | "ask" | "job";

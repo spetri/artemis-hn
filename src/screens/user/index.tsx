@@ -2,7 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import useSWR from 'swr';
 import { NavigableHeader } from '../../components/navigable-header';
-import { StoryCard } from '../../components/story-card';
+import { StoryCard } from '../../components/StoryCard';
 import { styles, useDash } from '../../../dash.config';
 import { HackerNewsUser } from '../../types/hn-api';
 import { StackParamList } from '../routers';

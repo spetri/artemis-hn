@@ -4,8 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
 import * as Updates from "expo-updates";
-import * as React from "react";
-import * as RN from "react-native";
 import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
@@ -16,6 +14,8 @@ import { Stories } from "./src/screens/stories";
 import { Thread } from "./src/screens/thread";
 import { User } from "./src/screens/user";
 import { BrowserModal } from "./src/screens/browser-modal"
+import { useLayoutEffect } from "react";
+import { Text, AppState, Pressable, SafeAreaView, TextStyle, View, ViewStyle } from "react-native";
 
 registerRootComponent(App);
 
@@ -28,7 +28,7 @@ function App() {
   enableScreens(true);
 
   // Enables OTA updates
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const listener = Updates.addListener(async (update) => {
       if (update.type === Updates.UpdateEventType.UPDATE_AVAILABLE) {
         await Updates.fetchUpdateAsync();
@@ -49,7 +49,7 @@ function App() {
           return true;
         },
         initFocus(callback) {
-          let appState = RN.AppState.currentState;
+          let appState = AppState.currentState;
 
           const onAppStateChange = (nextAppState: typeof appState) => {
             /* If it's resuming from background or inactive mode to active one */
@@ -63,7 +63,7 @@ function App() {
           };
 
           // Subscribe to the app state change events
-          const listener = RN.AppState.addEventListener(
+          const listener = AppState.addEventListener(
             "change",
             onAppStateChange
           );
@@ -100,7 +100,7 @@ function Tabs() {
   usePreferences();
 
   return (
-    <RN.View style={sceneContainer()}>
+    <View style={sceneContainer()}>
       <Tab.Navigator
         detachInactiveScreens
         sceneContainerStyle={sceneContainer()}
@@ -112,11 +112,11 @@ function Tabs() {
         <Tab.Screen name="Ask" component={AskScreens} />
         <Tab.Screen name="Jobs" component={JobsScreens} />
       </Tab.Navigator>
-    </RN.View>
+    </View>
   );
 }
 
-const sceneContainer = styles.one<RN.ViewStyle>((t) => ({
+const sceneContainer = styles.one<ViewStyle>((t) => ({
   height: "100%",
   width: "100%",
   backgroundColor: t.color.bodyBg,
@@ -137,7 +137,7 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
   useDash();
 
   return (
-    <RN.SafeAreaView style={tabBar()}>
+    <SafeAreaView style={tabBar()}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -150,7 +150,7 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
         const isFocused = state.index === index;
 
         return (
-          <RN.Pressable
+          <Pressable
             key={route.name}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
@@ -178,15 +178,15 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
             }}
             style={tabBarTab(isFocused)}
           >
-            <RN.Text style={tabBarLabel(isFocused)}>{label as any}</RN.Text>
-          </RN.Pressable>
+            <Text style={tabBarLabel(isFocused)}>{label as any}</Text>
+          </Pressable>
         );
       })}
-    </RN.SafeAreaView>
+    </SafeAreaView>
   );
 }
 
-const tabBar = styles.one<RN.ViewStyle>((t) => ({
+const tabBar = styles.one<ViewStyle>((t) => ({
   flexDirection: "row",
   width: "100%",
   backgroundColor: t.color.headerBg,
@@ -194,7 +194,7 @@ const tabBar = styles.one<RN.ViewStyle>((t) => ({
   borderTopColor: t.color.accent,
 }));
 
-const tabBarLabel = styles.lazy<boolean, RN.TextStyle>((isFocused) => (t) => ({
+const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
   color: isFocused ? t.color.primary : t.color.textAccent,
   fontSize: t.type.size.sm,
   fontWeight: "700",
@@ -202,7 +202,7 @@ const tabBarLabel = styles.lazy<boolean, RN.TextStyle>((isFocused) => (t) => ({
   textAlign: "center",
 }));
 
-const tabBarTab = styles.lazy<boolean, RN.ViewStyle>((isFocused) => (t) => ({
+const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
   borderTopColor: isFocused ? t.color.primary : t.color.headerBg,
   borderTopWidth: 4,
   flex: 1,

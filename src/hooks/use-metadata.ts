@@ -1,11 +1,11 @@
 import { parse as parseHtml } from "node-html-parser";
-import * as React from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import useSWR from "swr";
 import memoize from "trie-memoize";
 
 export function useMetadata(url: URL | undefined) {
-  const [timedOut, setTimedOut] = React.useState(false);
-  const didUnsubscribe = React.useRef(false);
+  const [timedOut, setTimedOut] = useState(false);
+  const didUnsubscribe = useRef(false);
   const html = useSWR(
     url?.host ? url.toString() : null,
     (key) =>
@@ -22,7 +22,7 @@ export function useMetadata(url: URL | undefined) {
     }
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
       if (html.data || html.error) {
         return;
@@ -39,7 +39,7 @@ export function useMetadata(url: URL | undefined) {
   const parsedHtml =
     typeof html.data === "string" ? parse(html.data) : html.data;
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     if (
       !url?.host ||
       html.error ||

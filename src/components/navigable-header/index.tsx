@@ -2,11 +2,10 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import type { ActionSheetProps } from "@expo/react-native-action-sheet";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import * as React from "react";
-import * as RN from "react-native";
 import { Icon } from "../icon";
 import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
+import { Text, SafeAreaView, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 
 export function NavigableHeader({ title, actions }: NavigableHeaderProps) {
   useDash();
@@ -14,21 +13,21 @@ export function NavigableHeader({ title, actions }: NavigableHeaderProps) {
   const actionSheet = useActionSheet();
 
   return (
-    <RN.SafeAreaView style={headerContainer()}>
-      <RN.View style={header()}>
-        <RN.TouchableOpacity
+    <SafeAreaView style={headerContainer()}>
+      <View style={header()}>
+        <TouchableOpacity
           style={navButton("visible")}
           onPress={() => navigation.goBack()}
         >
           <Icon name="chevron-left" color="textAccent" size={18} />
-        </RN.TouchableOpacity>
+        </TouchableOpacity>
 
-        <RN.Text style={titleStyle()} ellipsizeMode="tail">
+        <Text style={titleStyle()} ellipsizeMode="tail">
           {title}
-        </RN.Text>
+        </Text>
 
         {actions ? (
-          <RN.TouchableOpacity
+          <TouchableOpacity
             style={navButton("visible")}
             onPress={() => {
               actionSheet.showActionSheetWithOptions(
@@ -38,20 +37,20 @@ export function NavigableHeader({ title, actions }: NavigableHeaderProps) {
             }}
           >
             <Icon name="more-horizontal" color="textAccent" size={18} />
-          </RN.TouchableOpacity>
+          </TouchableOpacity>
         ) : (
-          <RN.View style={navButton("hidden")} />
+          <View style={navButton("hidden")} />
         )}
-      </RN.View>
-    </RN.SafeAreaView>
+      </View>
+    </SafeAreaView>
   );
 }
 
-const headerContainer = styles.one<RN.ViewStyle>((t) => ({
+const headerContainer = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.headerBg,
 }));
 
-const header = styles.one<RN.ViewStyle>((t) => ({
+const header = styles.one<ViewStyle>((t) => ({
   flexDirection: "row",
   width: "100%",
   justifyContent: "space-between",
@@ -65,7 +64,7 @@ const header = styles.one<RN.ViewStyle>((t) => ({
   borderBottomColor: t.color.accent,
 }));
 
-const navButton = styles.lazy<"hidden" | "visible", RN.ViewStyle>(
+const navButton = styles.lazy<"hidden" | "visible", ViewStyle>(
   (visibilty) => (t) => ({
     alignItems: "center",
     justifyContent: "center",
@@ -77,7 +76,7 @@ const navButton = styles.lazy<"hidden" | "visible", RN.ViewStyle>(
   })
 );
 
-const titleStyle = styles.one<RN.TextStyle>((t) => ({
+const titleStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.sm,
   fontWeight: "700",

@@ -1,19 +1,22 @@
 import 'react-native-url-polyfill/auto';
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, FC } from "react";
 import { View, LogBox, RefreshControl, FlatList, ViewStyle } from "react-native";
 import useSWR from "swr";
 import { LogoHeader } from "../../components/logo-header";
-import { StoryCard } from "../../components/story-card";
+import { StoryCard } from "../../components/StoryCard";
 import { useDash, styles } from "../../../dash.config";
-
 import { StackParamList } from "../routers";
 import { HACKER_NEWS_API } from '../../constants/api';
 
-export function Stories(props: StoriesProps) {
+type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">
+
+export const Stories: FC<StoriesProps> = (props) => {
   useDash();
   const { filter } = props.route.params;
   const [didMount, setDidMount] = useState(false);
+  const fauxStories = Array.from<number>({ length: 12 }).fill(-1);
+  const fauxFlatStories = Array.from<number>({ length: 3 }).fill(-1);
 
   const stories = useSWR<number[]>(
     `${HACKER_NEWS_API}/${filter}stories.json`,
@@ -23,6 +26,21 @@ export function Stories(props: StoriesProps) {
         headers: { "Content-Type": "application/json" },
       }).then((res) => res.json())
   );
+
+
+const keyExtractor = (item: number, index: number) => {
+  return item === -1 ? index.toString() : item.toString();
+}
+
+const renderItem = (item: number, index: number) => {
+  return <StoryCard key={item === -1 ? index : item} index={index} id={item} />;
+}
+
+const renderFlatListItem = ({ item, index }: { item: number; index: number }) => {
+  return (
+    <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
+  );
+}
 
   useEffect(() => {
     if (stories.data) {
@@ -86,23 +104,6 @@ export function Stories(props: StoriesProps) {
   );
 }
 
-const fauxStories = Array.from<number>({ length: 12 }).fill(-1);
-const fauxFlatStories = Array.from<number>({ length: 3 }).fill(-1);
-
-function keyExtractor(item: number, index: number) {
-  return item === -1 ? index.toString() : item.toString();
-}
-
-function renderItem(item: number, index: number) {
-  return <StoryCard key={item === -1 ? index : item} index={index} id={item} />;
-}
-
-function renderFlatListItem({ item, index }: { item: number; index: number }) {
-  return (
-    <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
-  );
-}
-
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: "100%",
@@ -113,6 +114,3 @@ const listStyle: ViewStyle = {
   flexDirection: "row",
   flexWrap: "wrap",
 };
-
-export interface StoriesProps
-  extends NativeStackScreenProps<StackParamList, "Stories"> {}

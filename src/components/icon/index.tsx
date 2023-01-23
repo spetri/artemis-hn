@@ -1,8 +1,8 @@
 import { Feather } from "@expo/vector-icons";
-import * as React from "react";
+import { memo } from "react";
 import { useDash, responsiveSize, AppColors } from "../../../dash.config";
 
-export const Icon = React.memo(function Icon(props: IconProps) {
+export const Icon = memo(function Icon(props: IconProps) {
   const { color, type } = useDash().tokens;
   return (
     <Feather
