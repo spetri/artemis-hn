@@ -1,9 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import {
   Image,
   ImageStyle,
+  Pressable,
   Text,
   TextStyle,
   TouchableWithoutFeedback,
@@ -41,7 +43,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       <View style={imageColumn(index)}>
         {/* image */}
         {metadata?.image ? (
-          <TouchableWithoutFeedback
+          <Pressable
             onPress={() =>
               navigation.push("BrowserModal", {
                 title: data.title,
@@ -53,11 +55,11 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
               style={storyImage(index)}
               source={{ uri: metadata?.image }}
             />
-          </TouchableWithoutFeedback>
+          </Pressable>
         ) : (
           <>
             {/* url */}
-            <TouchableWithoutFeedback
+            <Pressable
               onPress={() =>
                 navigation.push("BrowserModal", {
                   title: metadata.applicationName || url.hostname,
@@ -65,7 +67,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                 })
               }
             >
-              <View style={hostContainerStyle}>
+              <View>
                 <Image
                   style={storyImage(index)}
                   source={{ uri: metadata.favicon }}
@@ -75,66 +77,43 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                   {metadata.applicationName || url.host.replace(/^www\./, "")}
                 </Text> */}
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </>
         )}
       </View>
+      <Pressable onPress={() => navigation.push("Thread", { id: data.id })}>
+        <View style={bodyColumn(index)}>
+          {/* titles */}
+          <Text style={storyTitle(index)}>{data.title}</Text>
 
-      <View style={bodyColumn(index)}>
-        {/* titles */}
-        <TouchableWithoutFeedback
-          onPress={() =>
-            navigation.push("BrowserModal", {
-              title: data.title,
-              url: url.toString(),
-            })
-          }
-        >
-          <Text
-            style={storyTitle(index)}
-            adjustsFontSizeToFit
-            numberOfLines={
-              index === 0 && !metadata.image
-                ? 5
-                : index < 5 && metadata.image
-                ? 4
-                : 7
-            }
-          >
-            {data.title}
-          </Text>
-        </TouchableWithoutFeedback>
-
-        {/* secondary info */}
-        <View>
-          <Text style={footerText()}>
-            <TouchableWithoutFeedback
-              onPress={() => navigation.push("User", { id: data.by })}
-            >
-              <>
-                <Text style={byStyle()}>@{data.by}</Text> &bull;{" "}
-              </>
-            </TouchableWithoutFeedback>
-            <Text style={score()}>⇧{data.score}</Text> &bull;{" "}
-            <TouchableWithoutFeedback
-              onPress={() => navigation.push("Thread", { id: data.id })}
-            >
+          {/* secondary info */}
+          <View>
+            <Text style={footerText()}>
+              <Pressable
+                onPress={() => navigation.push("User", { id: data.by })}
+              >
+                <Text style={byStyle()}>{data.by}</Text>
+              </Pressable>
+              &bull;{" "}
+              <Text>
+                <Icon size={13} name="arrow-up" />
+                {data.score}
+              </Text>{" "}
+              &bull;{" "}
               <Text style={commentsStyle}>
-                {pluralize(data.descendants, "comment")} &bull;{" "}
+                <Icon size={13} name="ios-chatbubble-outline" />
+                {data.descendants} &bull;{" "}
               </Text>
-            </TouchableWithoutFeedback>
-            <Text style={agoStyle()}>
-              {ago.format(new Date(data.time * 1000), "mini")}
+              <Text>{ago.format(new Date(data.time * 1000), "mini")}</Text>
             </Text>
-          </Text>
+          </View>
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 };
 
 const storyContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
-  // width: index === 0 || index > 4 ? "100%" : "50%",
   display: "flex",
   flexDirection: "row",
   height: 90,
@@ -158,6 +137,7 @@ const bodyColumn = styles.lazy<number, ViewStyle>((index) => (t) => ({
   flexDirection: "column",
   height: "100%",
   justifyContent: "space-around",
+  flexWrap: "wrap",
 }));
 
 const storySkeleton = styles.lazy<number, ViewStyle>((index) => (t) => ({
@@ -173,47 +153,22 @@ const storyImage = styles.lazy<number, ImageStyle>((index: number) => (t) => ({
   borderRadius: 4,
 }));
 
-const score = styles.one<TextStyle>((t) => ({
-  color: t.color.primary,
-  fontWeight: "700",
-}));
-
-const hostContainerStyle: ViewStyle = {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-};
-
-const hostname = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  fontSize: t.type.size["2xs"],
-  fontWeight: "300",
-}));
-
 const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
   color: t.color.textPrimary,
-  //   fontSize: t.type.size[index === 0 ? "6xl" : index < 5 ? "base" : "sm"],
-  fontWeight: index === 0 ? "900" : index < 5 ? "800" : "700",
-  letterSpacing: index < 4 ? t.type.tracking.tighter : t.type.tracking.tight,
+  flexWrap: "wrap",
 }));
-
-const byLine: ViewStyle = {};
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size["2xs"],
   fontWeight: "300",
-}));
-
-const agoStyle = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  fontSize: t.type.size["2xs"],
-  fontWeight: "300",
+  display: "flex",
 }));
 
 const footerText = styles.one<TextStyle>((t) => ({
-  fontWeight: "600",
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
+  display: "flex",
+  alignItems: "center",
 }));
 
 const commentsStyle: TextStyle = { fontWeight: "300" };
