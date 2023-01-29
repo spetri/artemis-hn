@@ -3,21 +3,23 @@ import { View, ViewStyle } from "react-native";
 import useSWR from "swr";
 
 import { styles, useDash } from "../../../dash.config";
-import { HackerNewsAsk, HackerNewsItem, HackerNewsPoll } from "../../types/hn-api";
+import {
+  HackerNewsAsk,
+  HackerNewsItem,
+  HackerNewsPoll,
+} from "../../types/hn-api";
 import { Skeleton } from "../Skeleton";
 import { HACKER_NEWS_API } from "../../constants/api";
 import { JobStory } from "./JobStory/JobStory";
 import { AskStory } from "./AskStory/AskStory";
 import { CommentStory } from "./CommentStory/CommentStory";
-import { Story } from "./Story/Story";
+import { MinimalStory } from "./MinimalStory/MinimalStory";
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
     const story = useSWR<HackerNewsItem>(
-      id === -1
-        ? null
-        : `${HACKER_NEWS_API}/item/${id}.json`,
+      id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
       (key) =>
         fetch(key, {
           method: "GET",
@@ -39,7 +41,7 @@ export const StoryCard = memo(
 
     return (!("url" in story.data) || story.data.url === undefined) &&
       story.data.type === "story" ? (
-      <AskStory data={(story.data as HackerNewsAsk)} index={index} />
+      <AskStory data={story.data as HackerNewsAsk} index={index} />
     ) : story.data.type === "job" ? (
       <JobStory data={story.data} index={index} />
     ) : story.data.type === "comment" ? (
@@ -47,7 +49,7 @@ export const StoryCard = memo(
     ) : story.data.type === "poll" ? (
       <PollStory data={story.data} index={index} />
     ) : (
-      <Story data={story.data} index={index} />
+      <MinimalStory data={story.data} index={index} />
     );
   },
   (prev, next) => prev.id === next.id && prev.index === next.index
