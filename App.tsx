@@ -9,13 +9,29 @@ import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
 import { Preferences, usePreferences } from "./src/screens/preferences";
-import { AskStack, HomeStack, JobsStack, ShowStack, Tab } from "./src/screens/routers";
+import {
+  AskStack,
+  HomeStack,
+  JobsStack,
+  SettingsStack,
+  ShowStack,
+  Tab,
+} from "./src/screens/routers";
 import { Stories } from "./src/screens/stories";
 import { Thread } from "./src/screens/thread";
 import { User } from "./src/screens/user";
-import { BrowserModal } from "./src/screens/browser-modal"
+import { BrowserModal } from "./src/screens/browser-modal";
 import { useLayoutEffect } from "react";
-import { Text, AppState, Pressable, SafeAreaView, TextStyle, View, ViewStyle } from "react-native";
+import {
+  Text,
+  AppState,
+  Pressable,
+  SafeAreaView,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 registerRootComponent(App);
 
@@ -107,10 +123,56 @@ function Tabs() {
         screenOptions={{ headerShown: false }}
         tabBar={TabBar}
       >
-        <Tab.Screen name="Home" component={HomeScreens} />
-        <Tab.Screen name="Show" component={ShowScreens} />
-        <Tab.Screen name="Ask" component={AskScreens} />
-        <Tab.Screen name="Jobs" component={JobsScreens} />
+        <Tab.Screen
+          name="Home"
+          component={HomeScreens}
+          options={{
+            tabBarLabel: "Home",
+            tabBarIcon: () => {
+              return <Icon name="logo-snapchat" size={25} />;
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Show"
+          component={ShowScreens}
+          options={{
+            tabBarLabel: "Show",
+            tabBarIcon: () => {
+              return <Icon name="logo-snapchat" size={25} />;
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Ask"
+          component={AskScreens}
+          options={{
+            tabBarLabel: "Ask",
+            tabBarIcon: () => {
+              return <Icon name="logo-snapchat" size={25} />;
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Jobs"
+          component={JobsScreens}
+          options={{
+            tabBarLabel: "Jobs",
+            tabBarIcon: () => {
+              return <Icon name="logo-snapchat" size={25} />;
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={SettingsScreens}
+          options={{
+            tabBarLabel: "Settings",
+            tabBarIcon: () => {
+              return <Icon name="settings-outline" size={25} />;
+            },
+          }}
+        />
       </Tab.Navigator>
     </View>
   );
@@ -178,7 +240,17 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
             }}
             style={tabBarTab(isFocused)}
           >
-            <Text style={tabBarLabel(isFocused)}>{label as any}</Text>
+            <View style={{ display: "flex", flexDirection: "column" }}>
+              <Text style={tabBarLabel(isFocused)}>
+                {!!options.tabBarIcon &&
+                  options.tabBarIcon({
+                    focused: true,
+                    color: "blue",
+                    size: 13,
+                  })}
+              </Text>
+              <Text style={navigationText()}>{label as any}</Text>
+            </View>
           </Pressable>
         );
       })}
@@ -306,3 +378,21 @@ function JobsScreens() {
     </JobsStack.Navigator>
   );
 }
+
+function SettingsScreens() {
+  return (
+    <SettingsStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <SettingsStack.Screen name="Preferences" component={Preferences} />
+    </SettingsStack.Navigator>
+  );
+}
+
+const navigationText = styles.one<TextStyle>((t) => ({
+  color: t.color.textPrimary,
+  fontSize: 11,
+  marginTop: 3,
+}));

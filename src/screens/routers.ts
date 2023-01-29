@@ -6,6 +6,7 @@ export const HomeStack = createNativeStackNavigator<StackParamList>();
 export const ShowStack = createNativeStackNavigator<StackParamList>();
 export const AskStack = createNativeStackNavigator<StackParamList>();
 export const JobsStack = createNativeStackNavigator<StackParamList>();
+export const SettingsStack = createNativeStackNavigator<StackParamList>();
 export const Tab = createBottomTabNavigator<TabParamList>();
 
 export type StackParamList = {
@@ -21,4 +22,5 @@ export type TabParamList = {
   Show: undefined;
   Ask: undefined;
   Jobs: undefined;
+  Settings: undefined;
 };
