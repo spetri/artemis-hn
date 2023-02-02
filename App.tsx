@@ -11,11 +11,12 @@ import { DashProvider, styles, useDash } from "./dash.config";
 import { Preferences, usePreferences } from "./src/screens/preferences";
 import {
   AskStack,
-  HomeStack,
+  AllStack,
   JobsStack,
   SettingsStack,
   ShowStack,
   Tab,
+  HomeStack,
 } from "./src/screens/routers";
 import { Stories } from "./src/screens/stories";
 import { Thread } from "./src/screens/thread";
@@ -32,6 +33,7 @@ import {
   ViewStyle,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { Home } from "./src/screens/home";
 
 registerRootComponent(App);
 
@@ -134,6 +136,16 @@ function Tabs() {
           }}
         />
         <Tab.Screen
+          name="All"
+          component={AllScreens}
+          options={{
+            tabBarLabel: "All",
+            tabBarIcon: () => {
+              return <Icon name="logo-snapchat" size={25} />;
+            },
+          }}
+        />
+        <Tab.Screen
           name="Show"
           component={ShowScreens}
           options={{
@@ -177,12 +189,6 @@ function Tabs() {
     </View>
   );
 }
-
-const sceneContainer = styles.one<ViewStyle>((t) => ({
-  height: "100%",
-  width: "100%",
-  backgroundColor: t.color.bodyBg,
-}));
 
 function TabBar({ state, descriptors, navigation, insets }: BottomTabBarProps) {
   return (
@@ -258,31 +264,6 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
   );
 }
 
-const tabBar = styles.one<ViewStyle>((t) => ({
-  flexDirection: "row",
-  width: "100%",
-  backgroundColor: t.color.headerBg,
-  borderTopWidth: t.borderWidth.hairline,
-  borderTopColor: t.color.accent,
-}));
-
-const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
-  color: isFocused ? t.color.primary : t.color.textAccent,
-  fontSize: t.type.size.sm,
-  fontWeight: "700",
-  margin: 0,
-  textAlign: "center",
-}));
-
-const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
-  borderTopColor: isFocused ? t.color.primary : t.color.headerBg,
-  borderTopWidth: 4,
-  flex: 1,
-  padding: t.space.md,
-  justifyContent: "center",
-  alignItems: "center",
-}));
-
 function HomeScreens() {
   return (
     <HomeStack.Navigator
@@ -291,6 +272,11 @@ function HomeScreens() {
       }}
     >
       <HomeStack.Screen
+        name="Topics"
+        component={Home}
+        initialParams={{ filter: "home" }}
+      />
+      <AllStack.Screen
         name="Stories"
         component={Stories}
         initialParams={{ filter: "top" }}
@@ -304,6 +290,30 @@ function HomeScreens() {
         <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
       </HomeStack.Group>
     </HomeStack.Navigator>
+  );
+}
+
+function AllScreens() {
+  return (
+    <AllStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <AllStack.Screen
+        name="Stories"
+        component={Stories}
+        initialParams={{ filter: "top" }}
+      />
+      <AllStack.Screen name="User" component={User} />
+      <AllStack.Screen name="Thread" component={Thread} />
+      <AllStack.Screen name="Preferences" component={Preferences} />
+      <AllStack.Group
+        screenOptions={{ headerShown: false, presentation: "modal" }}
+      >
+        <AllStack.Screen name="BrowserModal" component={BrowserModal} />
+      </AllStack.Group>
+    </AllStack.Navigator>
   );
 }
 
@@ -395,4 +405,35 @@ const navigationText = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: 11,
   marginTop: 3,
+}));
+
+const tabBar = styles.one<ViewStyle>((t) => ({
+  flexDirection: "row",
+  width: "100%",
+  backgroundColor: t.color.headerBg,
+  borderTopWidth: t.borderWidth.hairline,
+  borderTopColor: t.color.accent,
+}));
+
+const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
+  color: isFocused ? t.color.primary : t.color.textAccent,
+  fontSize: t.type.size.sm,
+  fontWeight: "700",
+  margin: 0,
+  textAlign: "center",
+}));
+
+const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
+  borderTopColor: isFocused ? t.color.primary : t.color.headerBg,
+  borderTopWidth: 4,
+  flex: 1,
+  padding: t.space.md,
+  justifyContent: "center",
+  alignItems: "center",
+}));
+
+const sceneContainer = styles.one<ViewStyle>((t) => ({
+  height: "100%",
+  width: "100%",
+  backgroundColor: t.color.bodyBg,
 }));

@@ -1,6 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Text, SafeAreaView, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import {
+  Text,
+  SafeAreaView,
+  TextStyle,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from "react-native";
 import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
 import { Icon } from "../Icon";
@@ -26,13 +33,6 @@ export function LogoHeader({ title }: LogoHeaderProps) {
           </TouchableWithoutFeedback>
           <Text style={currentDate()}>{date}</Text>
         </View>
-        <TouchableWithoutFeedback
-          onPress={() => navigation.push("Preferences", {})}
-        >
-          <View style={settingsButton()}>
-            <Icon name="settings" color="textAccent" size={18} />
-          </View>
-        </TouchableWithoutFeedback>
       </View>
     </SafeAreaView>
   );

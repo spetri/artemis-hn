@@ -3,6 +3,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import {
+  Dimensions,
   Image,
   ImageStyle,
   Pressable,
@@ -17,7 +18,6 @@ import { useMetadata } from "../../../hooks/use-metadata";
 import { StackParamList } from "../../../screens/routers";
 import { HackerNewsStory } from "../../../types/hn-api";
 import { Skeleton } from "../../Skeleton";
-import { pluralize } from "../../../utils/pluralize";
 import { ago } from "../../../utils/ago";
 
 type MinimalStoryProps = {
@@ -83,10 +83,11 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       </View>
       <Pressable onPress={() => navigation.push("Thread", { id: data.id })}>
         <View style={bodyColumn(index)}>
-          {/* titles */}
-          <Text style={storyTitle(index)}>{data.title}</Text>
-
-          {/* secondary info */}
+          <View>
+            <Text style={storyTitle(index)} numberOfLines={4}>
+              {data.title}
+            </Text>
+          </View>
           <View>
             <Text style={footerText()}>
               <Pressable
@@ -117,10 +118,9 @@ const storyContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
   display: "flex",
   flexDirection: "row",
   height: 90,
-  width: "100%",
-  borderStyle: "solid",
-  borderColor: "#000",
-  borderWidth: 1,
+  width: Dimensions.get("window").width,
+  borderBottomColor: t.color.accent,
+  borderBottomWidth: t.borderWidth.hairline,
 }));
 
 const imageColumn = styles.lazy<number, ViewStyle>((index) => (t) => ({
@@ -136,12 +136,19 @@ const bodyColumn = styles.lazy<number, ViewStyle>((index) => (t) => ({
   display: "flex",
   flexDirection: "column",
   height: "100%",
+  width: Dimensions.get("window").width,
   justifyContent: "space-around",
+  flex: 1,
+}));
+
+const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
+  color: t.color.textPrimary,
+  display: "flex",
   flexWrap: "wrap",
 }));
 
 const storySkeleton = styles.lazy<number, ViewStyle>((index) => (t) => ({
-  width: "100%",
+  width: Dimensions.get("window").width,
   height: index === 0 || index > 4 ? 172 : 96,
   marginBottom: t.space.md,
   borderRadius: t.radius.secondary,
@@ -151,11 +158,6 @@ const storyImage = styles.lazy<number, ImageStyle>((index: number) => (t) => ({
   width: 55,
   height: 55,
   borderRadius: 4,
-}));
-
-const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
-  color: t.color.textPrimary,
-  flexWrap: "wrap",
 }));
 
 const byStyle = styles.one<TextStyle>((t) => ({

@@ -125,4 +125,11 @@ export type HackerNewsUser = {
   submitted: number[]; // List of the user's stories, polls and comments.
 };
 
-export type StoryFilters = "top" | "new" | "best" | "show" | "ask" | "job";
+export type StoryFilters =
+  | "home"
+  | "top"
+  | "new"
+  | "best"
+  | "show"
+  | "ask"
+  | "job";

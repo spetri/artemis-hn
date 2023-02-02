@@ -1,15 +1,21 @@
-import 'react-native-url-polyfill/auto';
+import "react-native-url-polyfill/auto";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState, useEffect, useMemo, useCallback, FC } from "react";
-import { View, LogBox, RefreshControl, FlatList, ViewStyle } from "react-native";
+import {
+  View,
+  LogBox,
+  RefreshControl,
+  FlatList,
+  ViewStyle,
+} from "react-native";
 import useSWR from "swr";
 import { LogoHeader } from "../../components/LogoHeader";
 import { StoryCard } from "../../components/StoryCard";
 import { useDash, styles } from "../../../dash.config";
 import { StackParamList } from "../routers";
-import { HACKER_NEWS_API } from '../../constants/api';
+import { HACKER_NEWS_API } from "../../constants/api";
 
-type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">
+type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">;
 
 export const Stories: FC<StoriesProps> = (props) => {
   useDash();
@@ -27,20 +33,27 @@ export const Stories: FC<StoriesProps> = (props) => {
       }).then((res) => res.json())
   );
 
+  const keyExtractor = (item: number, index: number) => {
+    return item === -1 ? index.toString() : item.toString();
+  };
 
-const keyExtractor = (item: number, index: number) => {
-  return item === -1 ? index.toString() : item.toString();
-}
+  const renderItem = (item: number, index: number) => {
+    return (
+      <StoryCard key={item === -1 ? index : item} index={index} id={item} />
+    );
+  };
 
-const renderItem = (item: number, index: number) => {
-  return <StoryCard key={item === -1 ? index : item} index={index} id={item} />;
-}
-
-const renderFlatListItem = ({ item, index }: { item: number; index: number }) => {
-  return (
-    <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
-  );
-}
+  const renderFlatListItem = ({
+    item,
+    index,
+  }: {
+    item: number;
+    index: number;
+  }) => {
+    return (
+      <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
+    );
+  };
 
   useEffect(() => {
     if (stories.data) {
@@ -52,10 +65,7 @@ const renderFlatListItem = ({ item, index }: { item: number; index: number }) =>
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
   }, []);
 
-  const flatListData = useMemo(
-    () => stories.data?.slice(5),
-    [stories.data]
-  );
+  const flatListData = useMemo(() => stories.data?.slice(5), [stories.data]);
 
   const listHeaderComponent = useCallback(() => {
     return (
@@ -102,7 +112,7 @@ const renderFlatListItem = ({ item, index }: { item: number; index: number }) =>
       style={container()}
     />
   );
-}
+};
 
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
