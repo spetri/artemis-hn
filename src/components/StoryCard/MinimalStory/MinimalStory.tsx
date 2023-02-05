@@ -51,7 +51,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       </View>
     );
   };
-
+  console.log(metadata);
   return (
     <View style={storyContainer(index)}>
       <View style={imageColumn(index)}>
@@ -84,10 +84,6 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                   style={storyImage(index)}
                   source={{ uri: metadata.favicon }}
                 />
-
-                {/* <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
-                  {metadata.applicationName || url.host.replace(/^www\./, "")}
-                </Text> */}
               </View>
             </Pressable>
           </>
@@ -98,6 +94,11 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
           <View style={storyTitle(index)}>
             <Text style={storyTitle(index)} numberOfLines={4}>
               {data.title}
+              <View>
+                <Text style={appName()} numberOfLines={1} ellipsizeMode="tail">
+                  ({metadata.applicationName || url.host.replace(/^www\./, "")})
+                </Text>
+              </View>
             </Text>
           </View>
           <View style={footerText()}>
@@ -194,6 +195,13 @@ const byStyle = styles.one<TextStyle>((t) => ({
   marginRight: 5,
 }));
 
+const appName = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
+  fontSize: 12,
+  fontWeight: "300",
+  marginLeft: 5,
+}));
+
 const footerText = styles.one<TextStyle>((t) => ({
   display: "flex",
   flexDirection: "row",
@@ -211,5 +219,5 @@ const restText = styles.one<TextStyle>((t) => ({
 const restIcon = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: 12,
-  marginHorizontal: 3,
+  marginHorizontal: 4,
 }));

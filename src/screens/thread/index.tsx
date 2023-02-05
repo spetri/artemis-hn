@@ -816,9 +816,9 @@ const byStyle = styles.one<TextStyle>((t) => ({
 }));
 
 const replies = styles.one<any>((t, depth) => ({
-  color: t.color.textAccent,
+  color: t.color.lightBlue300,
   fontSize: t.type.size["2xs"],
-  fontWeight: "300",
+  fontWeight: "700",
   padding: t.space.sm,
   paddingTop: t.space.md,
   paddingLeft: 0,
