@@ -41,6 +41,7 @@ registerRootComponent(App);
 Sentry.init({
   dsn: "https://74d59fdf426b4fd1a90f85ef738b23f5@o1049868.ingest.sentry.io/6031164",
   environment: process.env.STAGE ?? "development",
+  enableInExpoDevelopment: true,
 });
 
 function App() {

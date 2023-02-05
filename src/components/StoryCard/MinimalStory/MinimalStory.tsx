@@ -1,6 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import IoniconIcon from "react-native-vector-icons/Ionicons";
-import EntypoIcon from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import {
@@ -14,7 +13,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { styles } from "../../../../dash.config";
+import { styles, useDash } from "../../../../dash.config";
 import { useMetadata } from "../../../hooks/use-metadata";
 import { StackParamList } from "../../../screens/routers";
 import { HackerNewsStory } from "../../../types/hn-api";
@@ -30,6 +29,9 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const url = new URL(data.url);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
+  const {
+    tokens: { color },
+  } = useDash();
 
   if (!metadata) {
     return (
@@ -39,10 +41,20 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     );
   }
 
+  const iconName = ({ size, name, color }, text) => {
+    return (
+      <View>
+        <Text style={restIcon()}>
+          <IoniconIcon size={size} name={name} color={color} />
+          <Text>{text}</Text>
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <View style={storyContainer(index)}>
       <View style={imageColumn(index)}>
-        {/* image */}
         {metadata?.image ? (
           <Pressable
             onPress={() =>
@@ -59,7 +71,6 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
           </Pressable>
         ) : (
           <>
-            {/* url */}
             <Pressable
               onPress={() =>
                 navigation.push("BrowserModal", {
@@ -90,26 +101,38 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
             </Text>
           </View>
           <View style={footerText()}>
-            <Pressable onPress={() => navigation.push("User", { id: data.by })}>
-              <Text style={byStyle()}>{data.by}</Text>
-            </Pressable>
-            <Text style={restText()}>
-              <Text>
-                <IoniconIcon size={13} name="arrow-up" />
-                {data.score}
-              </Text>
-              <EntypoIcon name="dot-single" size={10}></EntypoIcon>
-              <Text style={commentsStyle}>
-                <IoniconIcon
-                  size={13}
-                  name="ios-chatbubble-outline"
-                  style={chatIcon}
-                />
-                {data.descendants}
-              </Text>
-              <EntypoIcon name="dot-single" size={10}></EntypoIcon>
-              <Text>{ago.format(new Date(data.time * 1000), "mini")}</Text>
-            </Text>
+            <View>
+              <Pressable
+                onPress={() => navigation.push("User", { id: data.by })}
+              >
+                <Text style={byStyle()}>{data.by}</Text>
+              </Pressable>
+            </View>
+            <View style={restText()}>
+              {iconName(
+                {
+                  size: 13,
+                  name: "md-arrow-up-outline",
+                  color: color.textAccent,
+                },
+                data.score
+              )}
+              <View>
+                {iconName(
+                  {
+                    size: 13,
+                    name: "chatbubbles-outline",
+                    color: color.textAccent,
+                  },
+                  data.descendants
+                )}
+              </View>
+              <View>
+                <Text style={restIcon()}>
+                  {ago.format(new Date(data.time * 1000), "mini")}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       </Pressable>
@@ -178,15 +201,15 @@ const footerText = styles.one<TextStyle>((t) => ({
   alignItems: "center",
 }));
 
-const chatIcon = {
-  transform: [{ scaleX: -1 }],
-};
-
 const restText = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   display: "flex",
   alignItems: "center",
+  flexDirection: "row",
 }));
 
-const commentsStyle: TextStyle = { fontWeight: "300" };
+const restIcon = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
+  fontSize: 12,
+  marginHorizontal: 3,
+}));
