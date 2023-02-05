@@ -4,39 +4,41 @@ import {
   Text,
   SafeAreaView,
   TextStyle,
-  TouchableWithoutFeedback,
   View,
   ViewStyle,
+  Pressable,
+  Dimensions,
 } from "react-native";
 import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
-import { Icon } from "../Icon";
+import Icon from "react-native-vector-icons/Ionicons";
 
-export function LogoHeader({ title }: LogoHeaderProps) {
+export type LogoHeaderProps = {
+  title: string;
+};
+
+export const LogoHeader = ({ title }: LogoHeaderProps) => {
   useDash();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const date = new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(new Date());
-
+  const {
+    tokens: { color },
+  } = useDash();
   return (
     <SafeAreaView style={headerContainer()}>
       <View style={header()}>
-        <View>
-          <TouchableWithoutFeedback>
-            <View style={logoContainer()}>
-              <View style={logoMark()} />
-              <Text style={logoType()}>{title}</Text>
-            </View>
-          </TouchableWithoutFeedback>
-          <Text style={currentDate()}>{date}</Text>
+        <View style={logoContainer()}>
+          {navigation.canGoBack() && (
+            <Pressable style={icon()} onPress={() => navigation.goBack()}>
+              <Icon name="chevron-back" color={"white"} size={18} />
+            </Pressable>
+          )}
+          <Text style={headerText()}>{title}</Text>
+          <Text style={rightItem()}></Text>
         </View>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const headerContainer = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.headerBg,
@@ -44,14 +46,10 @@ const headerContainer = styles.one<ViewStyle>((t) => ({
 
 const header = styles.one<ViewStyle>((t) => ({
   flexDirection: "row",
-  width: "100%",
-  justifyContent: "space-between",
-  alignItems: "flex-start",
+  width: Dimensions.get("window").width,
   backgroundColor: t.color.headerBg,
-  paddingTop: t.space.md,
-  paddingBottom: t.space.md,
-  paddingRight: t.space.lg,
-  paddingLeft: t.space.lg,
+  paddingVertical: t.space.md,
+  paddingHorizontal: t.space.lg,
   borderBottomWidth: t.borderWidth.hairline,
   borderBottomColor: t.color.accent,
 }));
@@ -59,39 +57,20 @@ const header = styles.one<ViewStyle>((t) => ({
 const logoContainer = styles.one<ViewStyle>({
   flexDirection: "row",
   flexWrap: "nowrap",
-  alignItems: "center",
-  justifyContent: "flex-start",
-  width: "100%",
+  display: "flex",
+  width: Dimensions.get("window").width - 50,
 });
 
-const logoMark = styles.one<ViewStyle>((t) => ({
-  width: t.type.size.lg,
-  height: t.type.size.lg,
-  borderRadius: t.radius.md * (t.type.size.base / 16),
-  marginRight: t.space.sm,
-  borderColor: t.color.primary,
-  borderWidth: 4 * (t.type.size.base / 16),
+const icon = styles.one<ViewStyle>((t) => ({
+  flex: 1,
+  justifyContent: "center",
 }));
 
-const logoType = styles.one<TextStyle>((t) => ({
+const headerText = styles.one<TextStyle>((t) => ({
   fontSize: t.type.size.lg,
   color: t.color.textPrimary,
   fontWeight: "900",
+  alignItems: "center",
 }));
 
-const currentDate = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.headerBg,
-  fontSize: t.type.size["lg"],
-  lineHeight: t.type.size["lg"] * 1.15,
-  fontWeight: "900",
-  color: t.color.textAccent,
-}));
-
-const settingsButton = styles.one<ViewStyle>((t) => ({
-  padding: t.space.sm,
-  paddingRight: 0,
-}));
-
-export interface LogoHeaderProps {
-  title: string;
-}
+const rightItem = styles.one<any>((t) => ({ flex: 1 }));

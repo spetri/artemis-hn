@@ -16,15 +16,13 @@ export type StackParamList = {
   User: { id: string };
   BrowserModal: { title: string | undefined; url: string };
   Thread: { id: number };
-  Preferences: {};
+  Settings: {};
+  General: {};
   Home: {};
 };
 
 export type TabParamList = {
   Home: undefined;
-  All: undefined;
-  Show: undefined;
-  Ask: undefined;
-  Jobs: undefined;
+  User: undefined;
   Settings: undefined;
 };

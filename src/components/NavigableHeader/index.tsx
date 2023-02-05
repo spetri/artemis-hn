@@ -5,7 +5,14 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Icon } from "../Icon";
 import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
-import { Text, SafeAreaView, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  Text,
+  SafeAreaView,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 export function NavigableHeader({ title, actions }: NavigableHeaderProps) {
   useDash();

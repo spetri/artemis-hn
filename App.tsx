@@ -8,7 +8,7 @@ import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
-import { Preferences, usePreferences } from "./src/screens/preferences";
+import { usePreferences } from "./src/screens/Settings";
 import {
   AskStack,
   AllStack,
@@ -18,10 +18,10 @@ import {
   Tab,
   HomeStack,
 } from "./src/screens/routers";
-import { Stories } from "./src/screens/stories";
-import { Thread } from "./src/screens/thread";
-import { User } from "./src/screens/user";
-import { BrowserModal } from "./src/screens/browser-modal";
+import { Stories } from "./src/screens/Stories";
+import { Thread } from "./src/screens/Thread";
+import { User } from "./src/screens/User";
+import { BrowserModal } from "./src/screens/BrowserModal";
 import { useLayoutEffect } from "react";
 import {
   Text,
@@ -33,7 +33,8 @@ import {
   ViewStyle,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Home } from "./src/screens/home";
+import { Home } from "./src/screens/Home";
+import { SettingsListView } from "./src/screens/Settings/SettingsListView/SettingsListView";
 
 registerRootComponent(App);
 
@@ -129,60 +130,25 @@ function Tabs() {
           name="Home"
           component={HomeScreens}
           options={{
-            tabBarLabel: "Home",
-            tabBarIcon: () => {
-              return <Icon name="logo-snapchat" size={25} />;
-            },
+            tabBarLabel: "Posts",
+            tabBarIcon: () => <Icon name="ios-browsers" size={25} />,
           }}
         />
         <Tab.Screen
-          name="All"
-          component={AllScreens}
+          name="User"
+          component={User}
+          initialParams={{ id: "pookieinc" }}
           options={{
-            tabBarLabel: "All",
-            tabBarIcon: () => {
-              return <Icon name="logo-snapchat" size={25} />;
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Show"
-          component={ShowScreens}
-          options={{
-            tabBarLabel: "Show",
-            tabBarIcon: () => {
-              return <Icon name="logo-snapchat" size={25} />;
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Ask"
-          component={AskScreens}
-          options={{
-            tabBarLabel: "Ask",
-            tabBarIcon: () => {
-              return <Icon name="logo-snapchat" size={25} />;
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Jobs"
-          component={JobsScreens}
-          options={{
-            tabBarLabel: "Jobs",
-            tabBarIcon: () => {
-              return <Icon name="logo-snapchat" size={25} />;
-            },
+            tabBarLabel: "User",
+            tabBarIcon: () => <Icon name="person-circle" size={25} />,
           }}
         />
         <Tab.Screen
           name="Settings"
-          component={SettingsScreens}
+          component={SettingsListView}
           options={{
             tabBarLabel: "Settings",
-            tabBarIcon: () => {
-              return <Icon name="settings-outline" size={25} />;
-            },
+            tabBarIcon: () => <Icon name="settings-outline" size={25} />,
           }}
         />
       </Tab.Navigator>
@@ -283,7 +249,6 @@ function HomeScreens() {
       />
       <HomeStack.Screen name="User" component={User} />
       <HomeStack.Screen name="Thread" component={Thread} />
-      <HomeStack.Screen name="Preferences" component={Preferences} />
       <HomeStack.Group
         screenOptions={{ headerShown: false, presentation: "modal" }}
       >
@@ -292,114 +257,17 @@ function HomeScreens() {
     </HomeStack.Navigator>
   );
 }
-
-function AllScreens() {
-  return (
-    <AllStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <AllStack.Screen
-        name="Stories"
-        component={Stories}
-        initialParams={{ filter: "top" }}
-      />
-      <AllStack.Screen name="User" component={User} />
-      <AllStack.Screen name="Thread" component={Thread} />
-      <AllStack.Screen name="Preferences" component={Preferences} />
-      <AllStack.Group
-        screenOptions={{ headerShown: false, presentation: "modal" }}
-      >
-        <AllStack.Screen name="BrowserModal" component={BrowserModal} />
-      </AllStack.Group>
-    </AllStack.Navigator>
-  );
-}
-
-function ShowScreens() {
-  return (
-    <ShowStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <ShowStack.Screen
-        name="Stories"
-        component={Stories}
-        initialParams={{ filter: "show" }}
-      />
-      <ShowStack.Screen name="User" component={User} />
-      <ShowStack.Screen name="Thread" component={Thread} />
-      <ShowStack.Screen name="Preferences" component={Preferences} />
-      <ShowStack.Group
-        screenOptions={{ headerShown: false, presentation: "modal" }}
-      >
-        <ShowStack.Screen name="BrowserModal" component={BrowserModal} />
-      </ShowStack.Group>
-    </ShowStack.Navigator>
-  );
-}
-
-function AskScreens() {
-  return (
-    <AskStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <AskStack.Screen
-        name="Stories"
-        component={Stories}
-        initialParams={{ filter: "ask" }}
-      />
-      <AskStack.Screen name="User" component={User} />
-      <AskStack.Screen name="Thread" component={Thread} />
-      <AskStack.Screen name="Preferences" component={Preferences} />
-      <AskStack.Group
-        screenOptions={{ headerShown: false, presentation: "modal" }}
-      >
-        <AskStack.Screen name="BrowserModal" component={BrowserModal} />
-      </AskStack.Group>
-    </AskStack.Navigator>
-  );
-}
-
-function JobsScreens() {
-  return (
-    <JobsStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <JobsStack.Screen
-        name="Stories"
-        component={Stories}
-        initialParams={{ filter: "job" }}
-      />
-      <JobsStack.Screen name="User" component={User} />
-      <JobsStack.Screen name="Thread" component={Thread} />
-      <JobsStack.Screen name="Preferences" component={Preferences} />
-      <JobsStack.Group
-        screenOptions={{ headerShown: false, presentation: "modal" }}
-      >
-        <JobsStack.Screen name="BrowserModal" component={BrowserModal} />
-      </JobsStack.Group>
-    </JobsStack.Navigator>
-  );
-}
-
-function SettingsScreens() {
-  return (
-    <SettingsStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <SettingsStack.Screen name="Preferences" component={Preferences} />
-    </SettingsStack.Navigator>
-  );
-}
+// function SettingsScreens() {
+//   return (
+//     <SettingsStack.Navigator
+//       screenOptions={{
+//         headerShown: false,
+//       }}
+//     >
+//       <SettingsStack.Screen name="Settings" component={SettingsListView} />
+//     </SettingsStack.Navigator>
+//   );
+// }
 
 const navigationText = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,

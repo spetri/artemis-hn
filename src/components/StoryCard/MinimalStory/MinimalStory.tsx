@@ -1,5 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import Icon from "react-native-vector-icons/Ionicons";
+import IoniconIcon from "react-native-vector-icons/Ionicons";
+import EntypoIcon from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import {
@@ -83,28 +84,30 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       </View>
       <Pressable onPress={() => navigation.push("Thread", { id: data.id })}>
         <View style={bodyColumn(index)}>
-          <View>
+          <View style={storyTitle(index)}>
             <Text style={storyTitle(index)} numberOfLines={4}>
               {data.title}
             </Text>
           </View>
-          <View>
-            <Text style={footerText()}>
-              <Pressable
-                onPress={() => navigation.push("User", { id: data.by })}
-              >
-                <Text style={byStyle()}>{data.by}</Text>
-              </Pressable>
-              &bull;{" "}
+          <View style={footerText()}>
+            <Pressable onPress={() => navigation.push("User", { id: data.by })}>
+              <Text style={byStyle()}>{data.by}</Text>
+            </Pressable>
+            <Text style={restText()}>
               <Text>
-                <Icon size={13} name="arrow-up" />
+                <IoniconIcon size={13} name="arrow-up" />
                 {data.score}
-              </Text>{" "}
-              &bull;{" "}
-              <Text style={commentsStyle}>
-                <Icon size={13} name="ios-chatbubble-outline" />
-                {data.descendants} &bull;{" "}
               </Text>
+              <EntypoIcon name="dot-single" size={10}></EntypoIcon>
+              <Text style={commentsStyle}>
+                <IoniconIcon
+                  size={13}
+                  name="ios-chatbubble-outline"
+                  style={chatIcon}
+                />
+                {data.descendants}
+              </Text>
+              <EntypoIcon name="dot-single" size={10}></EntypoIcon>
               <Text>{ago.format(new Date(data.time * 1000), "mini")}</Text>
             </Text>
           </View>
@@ -145,6 +148,7 @@ const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
   color: t.color.textPrimary,
   display: "flex",
   flexWrap: "wrap",
+  width: Dimensions.get("window").width - 100,
 }));
 
 const storySkeleton = styles.lazy<number, ViewStyle>((index) => (t) => ({
@@ -162,11 +166,23 @@ const storyImage = styles.lazy<number, ImageStyle>((index: number) => (t) => ({
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
+  fontSize: 13,
   fontWeight: "300",
-  display: "flex",
+  marginRight: 5,
 }));
 
 const footerText = styles.one<TextStyle>((t) => ({
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "nowrap",
+  alignItems: "center",
+}));
+
+const chatIcon = {
+  transform: [{ scaleX: -1 }],
+};
+
+const restText = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   display: "flex",

@@ -1,5 +1,3 @@
-import { styles, useDash } from "../../../dash.config";
-import Icon from "react-native-vector-icons/Ionicons";
 import { FC } from "react";
 import {
   SafeAreaView,
@@ -9,21 +7,21 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { LogoHeader } from "../../components/LogoHeader";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackParamList } from "../routers";
 import { useNavigation } from "@react-navigation/native";
-import { StoryFilters } from "../../types/hn-api";
+import { StoryFilters } from "../../../types/hn-api";
+import { StackParamList } from "../../routers";
+import { styles, useDash } from "../../../../dash.config";
+import { LogoHeader } from "../../../components/LogoHeader";
+import Icon from "react-native-vector-icons/Ionicons";
 
 type ListItemType = {
   id: string;
   header: string;
-  subheader: string;
   iconName: string;
-  filter: StoryFilters;
 }[];
 
-export const Home: FC = () => {
+export const SettingsListView: FC = () => {
   useDash();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const {
@@ -32,31 +30,28 @@ export const Home: FC = () => {
   const listItems: ListItemType = [
     {
       id: "1",
-      header: "All HN",
-      subheader: "All HNs Combined",
-      iconName: "ios-logo-hackernews",
-      filter: "top",
+      header: "General",
+      iconName: "ios-settings-outline",
     },
     {
       id: "2",
-      header: "Show HN",
-      subheader: "Handmade projects",
-      iconName: "rocket-outline",
-      filter: "show",
+      header: "Theme",
+      iconName: "ios-moon-outline",
     },
     {
       id: "3",
-      header: "Ask HN",
-      subheader: "Questions and answers",
-      iconName: "bulb-outline",
-      filter: "ask",
+      header: "App Icon",
+      iconName: "ios-logo-hackernews",
     },
     {
       id: "4",
-      header: "Jobs HN",
-      subheader: "Who's hiring?",
-      iconName: "file-tray-outline",
-      filter: "job",
+      header: "About",
+      iconName: "at-circle-outline",
+    },
+    {
+      id: "5",
+      header: "Email",
+      iconName: "file-tray-full-outline",
     },
   ];
 
@@ -69,39 +64,21 @@ export const Home: FC = () => {
           )}
           ListHeaderComponent={<LogoHeader title="Select" />}
           sections={[{ title: "Topics", data: listItems }]}
-          renderSectionHeader={({ section }) => (
-            <Text style={sectionHeaderStyle()}>{section.title}</Text>
-          )}
           renderItem={({ item }) => (
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={imageContainer}>
+              <Text style={imageContainer}>
                 <Icon
                   name={item.iconName}
                   color={color.textPrimary}
-                  size={25}
-                  style={image}
+                  size={18}
                 />
-              </View>
+              </Text>
               <View style={row()}>
                 <Text
                   style={header()}
-                  onPress={() =>
-                    navigation.navigate("Stories", {
-                      filter: item?.filter as StoryFilters,
-                    })
-                  }
+                  onPress={() => navigation.navigate("General")}
                 >
                   {item.header}
-                </Text>
-                <Text
-                  style={subheader()}
-                  onPress={() =>
-                    navigation.navigate("Stories", {
-                      filter: item?.filter as StoryFilters,
-                    })
-                  }
-                >
-                  {item.subheader}
                 </Text>
               </View>
             </View>

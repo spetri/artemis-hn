@@ -7,7 +7,8 @@ export const Icon = memo(function Icon(props: IconProps) {
   return (
     <Feather
       {...props}
-      size={responsiveSize((props).size * (type.size.base / 16))}
+      style={props.style}
+      size={responsiveSize(props.size * (type.size.base / 16))}
       color={color[props.color]}
     />
   );
@@ -17,4 +18,5 @@ export interface IconProps {
   color: AppColors;
   name: any;
   size: number;
+  style: string;
 }

@@ -29,6 +29,7 @@
     "node-html-parser": "^6.1.4",
     "prettier": "^2.8.3",
     "react": "18.1.0",
+    "react-devtools": "^4.27.1",
     "react-native": "0.70.5",
     "react-native-render-html": "^6.3.4",
     "react-native-screens": "~3.18.0",
