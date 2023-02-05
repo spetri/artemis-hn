@@ -16,13 +16,34 @@ import { Skeleton } from "../../components/Skeleton";
 import { styles, useDash } from "../../../dash.config";
 import { useMetadata } from "../../hooks/use-metadata";
 import { useParents } from "../../hooks/use-parents";
-import { HackerNewsStory, HackerNewsJob, HackerNewsPoll, HackerNewsAsk, HackerNewsComment } from "../../types/hn-api";
+import {
+  HackerNewsStory,
+  HackerNewsJob,
+  HackerNewsPoll,
+  HackerNewsAsk,
+  HackerNewsComment,
+} from "../../types/hn-api";
 import { ago } from "../../utils/ago";
 import { pluralize } from "../../utils/pluralize";
 import { StackParamList } from "../routers";
 import { HACKER_NEWS_API } from "../../constants/api";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Text, Image, FlatList, RefreshControl, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View, ViewStyle, ImageStyle, TextStyle, TextProps } from "react-native";
+import {
+  Text,
+  Image,
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+  ImageStyle,
+  TextStyle,
+  TextProps,
+  Pressable,
+} from "react-native";
 
 export function Thread({ route }: ThreadProps) {
   const { id } = route.params;
@@ -32,13 +53,11 @@ export function Thread({ route }: ThreadProps) {
     | HackerNewsPoll
     | HackerNewsAsk
     | HackerNewsComment
-  >(
-    id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
-    (key) =>
-      fetch(key, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }).then((res) => res.json())
+  >(id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`, (key) =>
+    fetch(key, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => res.json())
   );
 
   if (!data) {
@@ -124,10 +143,7 @@ function StoryThread({
                   })
                 }
               >
-                <Image
-                  style={storyImage()}
-                  source={{ uri: metadata?.image }}
-                />
+                <Image style={storyImage()} source={{ uri: metadata?.image }} />
               </TouchableWithoutFeedback>
             </>
           ) : (
@@ -153,16 +169,9 @@ function StoryThread({
               }
             >
               <View style={hostContainerStyle()}>
-                <Image
-                  style={favicon()}
-                  source={{ uri: metadata.favicon }}
-                />
+                <Image style={favicon()} source={{ uri: metadata.favicon }} />
 
-                <Text
-                  style={hostname()}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                >
+                <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
                   {metadata.applicationName || url.host.replace(/^www\./, "")}
                 </Text>
               </View>
@@ -214,10 +223,7 @@ function StoryThread({
               <Text style={subtitle()}>
                 {data.score && <Text style={score()}>⇧{data.score}</Text>}
                 {"descendants" in data && (
-                  <>
-                    {" "}
-                    &bull; {pluralize(data.descendants, "comment")}
-                  </>
+                  <> &bull; {pluralize(data.descendants, "comment")}</>
                 )}
               </Text>
             )}
@@ -523,9 +529,7 @@ const Comment = memo<{ id: number; index: number; depth: number }>(
   function Comment({ id, depth }) {
     const { theme } = useDash();
     const comment = useSWR<HackerNewsComment>(
-      id === -1
-        ? null
-        : `${HACKER_NEWS_API}/item/${id}.json`,
+      id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
       (key) =>
         fetch(key, {
           method: "GET",
@@ -573,17 +577,17 @@ const Comment = memo<{ id: number; index: number; depth: number }>(
     }
 
     const data = comment.data;
-
+    console.log(comment.data);
     return (
       <>
         <View style={commentContainer(depth)}>
           <View style={byLine}>
-            <TouchableWithoutFeedback
+            <Pressable
               onPress={() => navigation.navigate("User", { id: data.by })}
             >
-              <Text style={byStyle()}>@{data.by}</Text>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback
+              <Text style={byStyle()}>{data.by}</Text>
+            </Pressable>
+            <Pressable
               onPress={() =>
                 navigation.push("Thread", {
                   id: data.id,
@@ -593,7 +597,7 @@ const Comment = memo<{ id: number; index: number; depth: number }>(
               <Text style={agoStyle()}>
                 {ago.format(new Date(data.time * 1000), "mini")}
               </Text>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </View>
 
           {htmlSource && (
@@ -609,24 +613,28 @@ const Comment = memo<{ id: number; index: number; depth: number }>(
               enableExperimentalMarginCollapsing
             />
           )}
-
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setShowingReplies((current) => !current);
-            }}
-          >
-            <Text style={replies()}>
-              {pluralize(data.kids?.length ?? 0, "reply", "replies")}
-            </Text>
-          </TouchableWithoutFeedback>
         </View>
 
         {showingReplies &&
           data.kids &&
           data.kids.length > 0 &&
           data.kids.map((id, index) => (
-            <Comment key={id} id={id} index={index} depth={depth + 1} />
+            <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
+
+        {data.kids?.length > 0 && !showingReplies && (
+          <View style={commentContainerReply(depth)}>
+            <Pressable
+              onPress={() => {
+                setShowingReplies((current) => !current);
+              }}
+            >
+              <Text style={replies(depth)}>
+                {pluralize(data.kids?.length ?? 0, "reply", "replies")}
+              </Text>
+            </Pressable>
+          </View>
+        )}
       </>
     );
   },
@@ -639,7 +647,7 @@ const container = styles.one<ViewStyle>((t) => ({
 }));
 
 const commentContainer = styles.lazy<number, ViewStyle>((depth) => (t) => ({
-  padding: t.space.lg,
+  padding: t.space.md,
   borderTopWidth: t.borderWidth.hairline,
   borderTopColor: t.color.accent,
   ...(depth > 1
@@ -650,6 +658,22 @@ const commentContainer = styles.lazy<number, ViewStyle>((depth) => (t) => ({
       } as const)
     : {}),
 }));
+
+const commentContainerReply = styles.lazy<number, ViewStyle>(
+  (depth) => (t) => ({
+    padding: t.space.sm,
+    paddingHorizontal: t.space.md,
+    borderTopWidth: t.borderWidth.hairline,
+    borderTopColor: t.color.accent,
+    ...(depth > 0
+      ? ({
+          borderLeftWidth: 2,
+          borderLeftColor: t.color.primary,
+          marginLeft: t.space.md * (depth + 0.5),
+        } as const)
+      : {}),
+  })
+);
 
 const parentCommentContainer = styles.one<ViewStyle>((t) => ({
   padding: t.space.lg,
@@ -783,15 +807,15 @@ const byLine: ViewStyle = {
 };
 
 const byStyle = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
+  color: t.color.textPrimary,
   fontSize: t.type.size["2xs"],
-  fontWeight: "300",
+  fontWeight: "700",
   padding: t.space.sm,
   paddingTop: 0,
   paddingLeft: 0,
 }));
 
-const replies = styles.one<TextStyle>((t) => ({
+const replies = styles.one<any>((t, depth) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   fontWeight: "300",
@@ -799,6 +823,11 @@ const replies = styles.one<TextStyle>((t) => ({
   paddingTop: t.space.md,
   paddingLeft: 0,
   width: "100%",
+  ...(depth > 0
+    ? ({
+        marginLeft: t.space.md * (depth - 2),
+      } as const)
+    : {}),
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
