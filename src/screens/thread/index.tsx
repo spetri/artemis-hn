@@ -577,7 +577,7 @@ const Comment = memo<{ id: number; index: number; depth: number }>(
     }
 
     const data = comment.data;
-    console.log(comment.data);
+
     return (
       <>
         <View style={commentContainer(depth)}>

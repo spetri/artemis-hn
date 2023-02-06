@@ -2,6 +2,7 @@
   "expo": {
     "name": "hn",
     "slug": "hn",
+    "privacy": "unlisted",
     "version": "1.0.0",
     "orientation": "portrait",
     "entryPoint": "./App.tsx",
@@ -15,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },

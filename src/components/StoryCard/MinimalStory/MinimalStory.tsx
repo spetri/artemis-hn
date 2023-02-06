@@ -51,7 +51,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       </View>
     );
   };
-  console.log(metadata);
+
   return (
     <View style={storyContainer(index)}>
       <View style={imageColumn(index)}>

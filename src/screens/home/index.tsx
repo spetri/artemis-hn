@@ -153,7 +153,7 @@ const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
   fontSize: 15,
   paddingHorizontal: 10,
   paddingTop: 5,
-  color: "#fff",
+  color: t.color.primary,
   fontWeight: "800",
   textTransform: "uppercase",
 }));
@@ -167,5 +167,5 @@ const header = styles.one<TextStyle>((t) => ({
 const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
   height: 0.3,
   width: "100%",
-  backgroundColor: t.color.textAccent,
+  backgroundColor: t.color.accent,
 }));
