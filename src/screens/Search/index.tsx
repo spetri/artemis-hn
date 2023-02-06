@@ -60,7 +60,7 @@ export const Search: FC = () => {
           {queryData?.hits?.map((query) => {
             const story = {
               data: {
-                id: query.objectID,
+                id: Number(query.objectID),
                 title: query.title,
                 by: query.author,
                 time: query.created_at_i,
@@ -88,13 +88,13 @@ export const Search: FC = () => {
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: "100%",
-  width: Dimensions.get("screen").width - 40,
-  marginLeft: 20,
+  width: Dimensions.get("screen").width,
 }));
 
 const container = styles.one<ViewStyle>((t) => ({
   flexDirection: "row",
   borderWidth: 1,
+  marginHorizontal: 20,
 }));
 
 const searchIcon = styles.one<ViewStyle>((t) => ({

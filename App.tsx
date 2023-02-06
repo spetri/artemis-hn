@@ -9,7 +9,7 @@ import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
 import { usePreferences } from "./src/screens/Settings";
-import { AllStack, Tab, HomeStack } from "./src/screens/routers";
+import { AllStack, Tab, HomeStack, SearchStack } from "./src/screens/routers";
 import { Stories } from "./src/screens/Stories";
 import { Thread } from "./src/screens/Thread";
 import { User } from "./src/screens/User";
@@ -139,7 +139,7 @@ function Tabs() {
         />
         <Tab.Screen
           name="Search"
-          component={Search}
+          component={SearchScreens}
           options={{
             tabBarLabel: "Search",
             tabBarIcon: () => <Icon name="search" size={25} />,
@@ -259,17 +259,18 @@ function HomeScreens() {
     </HomeStack.Navigator>
   );
 }
-// function SettingsScreens() {
-//   return (
-//     <SettingsStack.Navigator
-//       screenOptions={{
-//         headerShown: false,
-//       }}
-//     >
-//       <SettingsStack.Screen name="Settings" component={SettingsListView} />
-//     </SettingsStack.Navigator>
-//   );
-// }
+function SearchScreens() {
+  return (
+    <SearchStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <SearchStack.Screen name="Search" component={Search} />
+      <SearchStack.Screen name="Thread" component={Thread} />
+    </SearchStack.Navigator>
+  );
+}
 
 const navigationText = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,

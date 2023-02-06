@@ -52,6 +52,10 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     );
   };
 
+  const goToThread = (data) => {
+    navigation.push("Thread", { id: data.id });
+  };
+
   return (
     <View style={storyContainer(index)} key={data.id}>
       <View style={imageColumn(index)}>
@@ -89,7 +93,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
           </>
         )}
       </View>
-      <Pressable onPress={() => navigation.push("Thread", { id: data.id })}>
+      <Pressable onPress={() => goToThread(data)}>
         <View style={bodyColumn(index)}>
           <View style={storyTitle(index)}>
             <Text style={storyTitle(index)} numberOfLines={4}>
