@@ -14,10 +14,12 @@ import { JobStory } from "./JobStory/JobStory";
 import { AskStory } from "./AskStory/AskStory";
 import { CommentStory } from "./CommentStory/CommentStory";
 import { MinimalStory } from "./MinimalStory/MinimalStory";
+import { usePreferences } from "../../screens/Settings";
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
+    const [preferences] = usePreferences();
     const story = useSWR<HackerNewsItem>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
       (key) =>
@@ -38,6 +40,8 @@ export const StoryCard = memo(
     if (story.data.deleted || story.data.dead) {
       return null;
     }
+
+    console.log(preferences?.data?.postSize);
 
     return (!("url" in story.data) || story.data.url === undefined) &&
       story.data.type === "story" ? (

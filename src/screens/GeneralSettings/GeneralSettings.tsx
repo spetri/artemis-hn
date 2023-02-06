@@ -5,7 +5,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
 
-import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { FC, useCallback, useLayoutEffect, useMemo, useState } from "react";
 import {
   Text,
   SafeAreaView,
@@ -23,7 +23,10 @@ import { colorSystem, styles, useDash } from "../../../dash.config";
 import { NavigableHeader } from "../../components/NavigableHeader";
 import { StackParamList } from "../routers";
 
-export function General(props: SettingsProps) {
+export interface SettingsProps
+  extends NativeStackScreenProps<StackParamList, "User"> {}
+
+export const GeneralSettings: FC<SettingsProps> = (props) => {
   const { tokens } = useDash();
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(
     undefined
@@ -136,6 +139,36 @@ export function General(props: SettingsProps) {
         <View style={preferenceGroup()}>
           <View style={preferenceRow("start")}>
             <View style={preferenceLabelContainer()}>
+              <Text style={preferenceLabel()}>Post Size</Text>
+              <Text style={preferenceDescription()}>
+                By default we use your system preferences{" "}
+                {preferences.data?.postSize && (
+                  <Text
+                    style={resetToDefault()}
+                    onPress={() => setStorage({ postSize: undefined })}
+                  >
+                    Reset
+                  </Text>
+                )}
+              </Text>
+            </View>
+            <Switch
+              value={
+                preferences.data?.postSize === "compact" ||
+                preferences.data?.postSize === undefined
+              }
+              onValueChange={(value) => {
+                setStorage({
+                  postSize: value ? "compact" : "article",
+                });
+              }}
+            />
+          </View>
+        </View>
+
+        <View style={preferenceGroup()}>
+          <View style={preferenceRow("start")}>
+            <View style={preferenceLabelContainer()}>
               <Text style={preferenceLabel()}>Dark mode</Text>
               <Text style={preferenceDescription()}>
                 By default we use your system preferences{" "}
@@ -175,13 +208,14 @@ export function General(props: SettingsProps) {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const preferencesVersion = "1.0";
 const defaultPreferences: PreferencesType = {
   colorScheme: undefined,
   primaryColor: "orange500",
   baseTypeSize: 16,
+  postSize: "compact",
 };
 const primaryColors: (keyof typeof colorSystem)[] = [
   "orange500",
@@ -206,6 +240,7 @@ export type PreferencesType = {
   colorScheme: "dark" | "light" | null | undefined;
   primaryColor: keyof typeof colorSystem;
   baseTypeSize: number;
+  postSize: "compact" | "article";
 };
 
 const container = styles.one<ViewStyle>((t) => ({
@@ -295,6 +330,3 @@ const version = styles.one<TextStyle>((t) => ({
   textAlign: "center",
   marginBottom: t.space["2xl"],
 }));
-
-export interface SettingsProps
-  extends NativeStackScreenProps<StackParamList, "User"> {}

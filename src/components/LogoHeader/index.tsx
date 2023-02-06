@@ -29,7 +29,7 @@ export const LogoHeader = ({ title }: LogoHeaderProps) => {
         <View style={logoContainer()}>
           {navigation.canGoBack() && (
             <Pressable style={icon()} onPress={() => navigation.goBack()}>
-              <Icon name="chevron-back" color={"white"} size={18} />
+              <Icon name="chevron-back" color={color.textPrimary} size={18} />
             </Pressable>
           )}
           <Text style={headerText()}>{title}</Text>

@@ -16,11 +16,17 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sabbapetri.artemis",
+      "buildNumber": "1.0.0"
     },
     "android": {
+      "package": "com.sabbapetri.artemis",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +34,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3ecd10d9-8547-438d-a507-b2a662a13c80"
+      }
     }
   }
 }

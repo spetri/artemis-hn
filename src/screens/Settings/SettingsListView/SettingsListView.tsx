@@ -76,7 +76,7 @@ export const SettingsListView: FC = () => {
               <View style={row()}>
                 <Text
                   style={header()}
-                  onPress={() => navigation.navigate("General")}
+                  onPress={() => navigation.navigate("GeneralSettings")}
                 >
                   {item.header}
                 </Text>

@@ -9,7 +9,13 @@ import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
 import { usePreferences } from "./src/screens/Settings";
-import { AllStack, Tab, HomeStack, SearchStack } from "./src/screens/routers";
+import {
+  AllStack,
+  Tab,
+  HomeStack,
+  SearchStack,
+  SettingsStack,
+} from "./src/screens/routers";
 import { Stories } from "./src/screens/Stories";
 import { Thread } from "./src/screens/Thread";
 import { User } from "./src/screens/User";
@@ -28,6 +34,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { Home } from "./src/screens/Home";
 import { SettingsListView } from "./src/screens/Settings/SettingsListView/SettingsListView";
 import { Search } from "./src/screens/Search";
+import { GeneralSettings } from "./src/screens/GeneralSettings/GeneralSettings";
 
 registerRootComponent(App);
 
@@ -147,7 +154,7 @@ function Tabs() {
         />
         <Tab.Screen
           name="Settings"
-          component={SettingsListView}
+          component={SettingsScreens}
           options={{
             tabBarLabel: "Settings",
             tabBarIcon: () => <Icon name="settings-outline" size={25} />,
@@ -259,6 +266,23 @@ function HomeScreens() {
     </HomeStack.Navigator>
   );
 }
+
+function SettingsScreens() {
+  return (
+    <SettingsStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <SettingsStack.Screen name="Settings" component={SettingsListView} />
+      <SettingsStack.Screen
+        name="GeneralSettings"
+        component={GeneralSettings}
+      />
+    </SettingsStack.Navigator>
+  );
+}
+
 function SearchScreens() {
   return (
     <SearchStack.Navigator
@@ -268,6 +292,7 @@ function SearchScreens() {
     >
       <SearchStack.Screen name="Search" component={Search} />
       <SearchStack.Screen name="Thread" component={Thread} />
+      <SearchStack.Screen name="BrowserModal" component={BrowserModal} />
     </SearchStack.Navigator>
   );
 }

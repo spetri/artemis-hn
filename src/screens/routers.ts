@@ -18,7 +18,7 @@ export type StackParamList = {
   BrowserModal: { title: string | undefined; url: string };
   Thread: { id: number };
   Settings: {};
-  General: {};
+  GeneralSettings: {};
   Home: {};
   Search: {};
 };
