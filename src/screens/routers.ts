@@ -19,10 +19,12 @@ export type StackParamList = {
   Settings: {};
   General: {};
   Home: {};
+  Search: {};
 };
 
 export type TabParamList = {
   Home: undefined;
   User: undefined;
+  Search: undefined;
   Settings: undefined;
 };

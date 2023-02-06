@@ -9,15 +9,7 @@ import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
 import { usePreferences } from "./src/screens/Settings";
-import {
-  AskStack,
-  AllStack,
-  JobsStack,
-  SettingsStack,
-  ShowStack,
-  Tab,
-  HomeStack,
-} from "./src/screens/routers";
+import { AllStack, Tab, HomeStack } from "./src/screens/routers";
 import { Stories } from "./src/screens/Stories";
 import { Thread } from "./src/screens/Thread";
 import { User } from "./src/screens/User";
@@ -35,6 +27,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { Home } from "./src/screens/Home";
 import { SettingsListView } from "./src/screens/Settings/SettingsListView/SettingsListView";
+import { Search } from "./src/screens/Search";
 
 registerRootComponent(App);
 
@@ -142,6 +135,14 @@ function Tabs() {
           options={{
             tabBarLabel: "User",
             tabBarIcon: () => <Icon name="person-circle" size={25} />,
+          }}
+        />
+        <Tab.Screen
+          name="Search"
+          component={Search}
+          options={{
+            tabBarLabel: "Search",
+            tabBarIcon: () => <Icon name="search" size={25} />,
           }}
         />
         <Tab.Screen
