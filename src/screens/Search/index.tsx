@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import { HackerNewsStory, StoryFilters } from "../../types/hn-api";
 import { SEARCH_API } from "../../constants/api";
 import { MinimalStory } from "../../components/StoryCard/MinimalStory/MinimalStory";
+import { SearchBar } from "@rneui/base";
 
 type ListItemType = {
   id: string;
@@ -51,9 +52,18 @@ export const Search: FC = () => {
 
   return (
     <SafeAreaView style={containerBg()}>
-      <View style={container()}>
-        <Icon name="search" size={25} style={searchIcon()} />
-        <TextInput style={input()} onChangeText={onChangeText} autoFocus />
+      <View>
+        <SearchBar
+          platform="ios"
+          onChangeText={(newVal) => onChangeText(newVal)}
+          placeholder="Search HN"
+          value={search}
+          autoFocus
+          showCancel
+          containerStyle={{ backgroundColor: color.bodyBg }}
+          inputContainerStyle={inputContainerStyle()}
+        />
+        {/* <TextInput style={input()} onChangeText={onChangeText} autoFocus /> */}
       </View>
       {!!search && (
         <View>
@@ -91,21 +101,8 @@ const containerBg = styles.one<ViewStyle>((t) => ({
   width: Dimensions.get("screen").width,
 }));
 
-const container = styles.one<ViewStyle>((t) => ({
-  flexDirection: "row",
-  borderWidth: 1,
-  marginHorizontal: 20,
-}));
-
-const searchIcon = styles.one<ViewStyle>((t) => ({
-  padding: 10,
-  color: t.color.accent,
-}));
-
-const input = styles.one<ViewStyle>((t) => ({
-  paddingTop: 10,
-  paddingRight: 10,
-  paddingBottom: 10,
-  paddingLeft: 0,
-  color: t.color.textPrimary,
+const inputContainerStyle = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.accent,
+  height: 40,
+  marginLeft: 20,
 }));
