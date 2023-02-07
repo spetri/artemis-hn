@@ -41,8 +41,6 @@ export const StoryCard = memo(
       return null;
     }
 
-    console.log(preferences?.data?.postSize);
-
     return (!("url" in story.data) || story.data.url === undefined) &&
       story.data.type === "story" ? (
       <AskStory data={story.data as HackerNewsAsk} index={index} />

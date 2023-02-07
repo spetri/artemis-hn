@@ -1,6 +1,6 @@
 import { styles, useDash } from "../../../dash.config";
 import Icon from "react-native-vector-icons/Ionicons";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   SafeAreaView,
   SectionList,
@@ -14,6 +14,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../routers";
 import { useNavigation } from "@react-navigation/native";
 import { StoryFilters } from "../../types/hn-api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePreferences } from "../Settings";
 
 type ListItemType = {
   id: string;

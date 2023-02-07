@@ -1,32 +1,12 @@
 import { styles, useDash } from "../../../dash.config";
 import useSWR from "swr";
-import { useEffect, useMemo, useState } from "react";
-import Icon from "react-native-vector-icons/Ionicons";
-import { FC, useRef } from "react";
-import {
-  Dimensions,
-  RefreshControl,
-  SafeAreaView,
-  TextInput,
-  View,
-  Text,
-  ViewStyle,
-} from "react-native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackParamList } from "../routers";
-import { useNavigation } from "@react-navigation/native";
-import { HackerNewsStory, StoryFilters } from "../../types/hn-api";
+import { useMemo, useState } from "react";
+import { FC } from "react";
+import { Dimensions, SafeAreaView, View, ViewStyle } from "react-native";
+import { HackerNewsStory } from "../../types/hn-api";
 import { SEARCH_API } from "../../constants/api";
 import { MinimalStory } from "../../components/StoryCard/MinimalStory/MinimalStory";
 import { SearchBar } from "@rneui/base";
-
-type ListItemType = {
-  id: string;
-  header: string;
-  subheader: string;
-  iconName: string;
-  filter: StoryFilters;
-}[];
 
 export const Search: FC = () => {
   useDash();
@@ -46,16 +26,12 @@ export const Search: FC = () => {
 
   const queryData = useMemo(() => query.data, [query.data]);
 
-  const onChangeText = (text: string) => {
-    setSearch(text);
-  };
-
   return (
     <SafeAreaView style={containerBg()}>
       <View>
         <SearchBar
           platform="ios"
-          onChangeText={(newVal) => onChangeText(newVal)}
+          onChangeText={setSearch}
           placeholder="Search HN"
           value={search}
           autoFocus
@@ -63,7 +39,6 @@ export const Search: FC = () => {
           containerStyle={{ backgroundColor: color.bodyBg }}
           inputContainerStyle={inputContainerStyle()}
         />
-        {/* <TextInput style={input()} onChangeText={onChangeText} autoFocus /> */}
       </View>
       {!!search && (
         <View>

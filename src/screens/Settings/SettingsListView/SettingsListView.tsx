@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import { StoryFilters } from "../../../types/hn-api";
 import { StackParamList } from "../../routers";
 import { styles, useDash } from "../../../../dash.config";
 import { LogoHeader } from "../../../components/LogoHeader";
@@ -102,11 +101,6 @@ const row = styles.one<ViewStyle>((t) => ({
   paddingVertical: 15,
 }));
 
-const subheader = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  fontSize: 12,
-}));
-
 const imageContainer: ViewStyle = {
   display: "flex",
   justifyContent: "center",
@@ -114,25 +108,10 @@ const imageContainer: ViewStyle = {
   paddingHorizontal: 10,
 };
 
-const image = styles.one<ViewStyle>((t) => ({
-  height: "100%",
-  width: "100%",
-}));
-
 const container = styles.one<ViewStyle>((t) => ({
   flex: 1,
   justifyContent: "center",
   backgroundColor: t.color.bodyBg,
-}));
-
-const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-  fontSize: 15,
-  paddingHorizontal: 10,
-  paddingTop: 5,
-  color: "#fff",
-  fontWeight: "800",
-  textTransform: "uppercase",
 }));
 
 const header = styles.one<TextStyle>((t) => ({

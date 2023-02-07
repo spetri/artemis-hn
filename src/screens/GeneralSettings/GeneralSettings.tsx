@@ -1,6 +1,6 @@
 import { useAsync } from "@react-hook/async";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Slider from "@react-native-community/slider";
+import { Slider, Switch } from "@rneui/themed";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
@@ -16,7 +16,6 @@ import {
   useWindowDimensions,
   View,
   ViewStyle,
-  Switch,
 } from "react-native";
 import { usePreferences } from "../Settings";
 import { colorSystem, styles, useDash } from "../../../dash.config";
@@ -26,7 +25,7 @@ import { StackParamList } from "../routers";
 export interface SettingsProps
   extends NativeStackScreenProps<StackParamList, "User"> {}
 
-export const GeneralSettings: FC<SettingsProps> = (props) => {
+export const GeneralSettings: FC<SettingsProps> = () => {
   const { tokens } = useDash();
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(
     undefined
@@ -123,7 +122,6 @@ export const GeneralSettings: FC<SettingsProps> = (props) => {
             </View>
             <View style={sliderContainer}>
               <Slider
-                style={slider}
                 minimumValue={12}
                 maximumValue={20}
                 step={2}
@@ -133,36 +131,6 @@ export const GeneralSettings: FC<SettingsProps> = (props) => {
                 maximumTrackTintColor="#000000"
               />
             </View>
-          </View>
-        </View>
-
-        <View style={preferenceGroup()}>
-          <View style={preferenceRow("start")}>
-            <View style={preferenceLabelContainer()}>
-              <Text style={preferenceLabel()}>Post Size</Text>
-              <Text style={preferenceDescription()}>
-                By default we use your system preferences{" "}
-                {preferences.data?.postSize && (
-                  <Text
-                    style={resetToDefault()}
-                    onPress={() => setStorage({ postSize: undefined })}
-                  >
-                    Reset
-                  </Text>
-                )}
-              </Text>
-            </View>
-            <Switch
-              value={
-                preferences.data?.postSize === "compact" ||
-                preferences.data?.postSize === undefined
-              }
-              onValueChange={(value) => {
-                setStorage({
-                  postSize: value ? "compact" : "article",
-                });
-              }}
-            />
           </View>
         </View>
 
@@ -215,7 +183,6 @@ const defaultPreferences: PreferencesType = {
   colorScheme: undefined,
   primaryColor: "orange500",
   baseTypeSize: 16,
-  postSize: "compact",
 };
 const primaryColors: (keyof typeof colorSystem)[] = [
   "orange500",
@@ -240,7 +207,6 @@ export type PreferencesType = {
   colorScheme: "dark" | "light" | null | undefined;
   primaryColor: keyof typeof colorSystem;
   baseTypeSize: number;
-  postSize: "compact" | "article";
 };
 
 const container = styles.one<ViewStyle>((t) => ({

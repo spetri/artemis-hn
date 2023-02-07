@@ -69,14 +69,12 @@ const defaultPreferences: PreferencesType = {
   colorScheme: undefined,
   primaryColor: "orange500",
   baseTypeSize: 16,
-  postSize: "compact",
 };
 
 export type PreferencesType = {
   colorScheme: "dark" | "light" | null | undefined;
   primaryColor: keyof typeof colorSystem;
   baseTypeSize: number;
-  postSize: "compact" | "article";
 };
 
 export interface SettingsProps
