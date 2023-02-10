@@ -1,14 +1,16 @@
 import { useParents } from "../../../hooks/use-parents";
+import { FAB } from "@rneui/themed";
 import { HackerNewsComment } from "../../../types/hn-api";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, RefreshControl, View, ViewStyle } from "react-native";
 import { CommentThreadHeader } from "./CommentThreadHeader/CommentThreadHeader";
 import { Comment } from "../Comment/Comment";
 import { styles } from "../../../../dash.config";
+import { fauxFlatComments, keyExtractor } from "../../../utils/util";
 
 type CommentThreadProps = {
-  data: any;
-  onRefresh: any;
+  data: HackerNewsComment;
+  onRefresh: () => void;
 };
 
 export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
@@ -35,15 +37,9 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
     [data, didMount, onRefresh]
   );
 
-  const fauxFlatComments = Array.from<number>({ length: 3 }).fill(-1);
-
-  const renderThreadedItem = ({ item, index }) => {
-    return <Comment id={item} index={index} depth={3} />;
-  };
-
-  function keyExtractor(item: number, index: number) {
-    return item === -1 ? index.toString() : item.toString();
-  }
+  const renderThreadedItem = ({ item, index }) => (
+    <Comment id={item} index={index} depth={3} />
+  );
 
   return (
     <View style={container()}>

@@ -14,6 +14,7 @@ import { StoryCard } from "../../components/StoryCard";
 import { useDash, styles } from "../../../dash.config";
 import { StackParamList } from "../routers";
 import { HACKER_NEWS_API } from "../../constants/api";
+import { keyExtractor } from "../../utils/util";
 
 type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">;
 
@@ -32,10 +33,6 @@ export const Stories: FC<StoriesProps> = (props) => {
         headers: { "Content-Type": "application/json" },
       }).then((res) => res.json())
   );
-
-  const keyExtractor = (item: number, index: number) => {
-    return item === -1 ? index.toString() : item.toString();
-  };
 
   const renderItem = (item: number, index: number) => {
     return (

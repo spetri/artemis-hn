@@ -16,10 +16,10 @@ import {
   SearchStack,
   SettingsStack,
 } from "./src/screens/routers";
-import { Stories } from "./src/screens/Stories";
+import { Stories } from "./src/screens/Stories/Stories";
 import { Thread } from "./src/screens/Thread";
 import { User } from "./src/screens/User";
-import { BrowserModal } from "./src/screens/BrowserModal";
+import { BrowserModal } from "./src/screens/BrowserModal/BrowserModal";
 import { useLayoutEffect } from "react";
 import {
   Text,
@@ -31,10 +31,10 @@ import {
   ViewStyle,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Home } from "./src/screens/Home";
+import { Home } from "./src/screens/Home/Home";
 import { SettingsListView } from "./src/screens/Settings/SettingsListView/SettingsListView";
-import { Search } from "./src/screens/Search";
-import { GeneralSettings } from "./src/screens/GeneralSettings/GeneralSettings";
+import { Search } from "./src/screens/Search/Search";
+import { GeneralSettings } from "./src/screens/Settings/GeneralSettings/GeneralSettings";
 
 registerRootComponent(App);
 
@@ -108,11 +108,15 @@ function App() {
 
 function AppStatusBar() {
   const { theme } = useDash();
-  return (
-    <StatusBar
-      style={theme === "light" ? "dark" : theme === "dark" ? "light" : "auto"}
-    />
-  );
+  let appTheme;
+  if (theme === "light") {
+    appTheme = "dark";
+  } else if (theme === "dark") {
+    appTheme = "light";
+  } else {
+    appTheme = "auto";
+  }
+  return <StatusBar style={appTheme} />;
 }
 
 function Tabs() {

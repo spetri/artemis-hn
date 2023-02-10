@@ -57,91 +57,99 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   };
 
   return (
-    <View style={storyContainer(index)} key={data.id}>
-      <View style={imageColumn(index)}>
-        {metadata?.image ? (
-          <Pressable
-            onPress={() =>
-              navigation.push("BrowserModal", {
-                title: data.title,
-                url: url.toString(),
-              })
-            }
-          >
-            <Image
-              style={storyImage(index)}
-              source={{ uri: metadata?.image }}
-            />
-          </Pressable>
-        ) : (
-          <>
+    metadata && (
+      <View style={storyContainer(index)} key={data.id}>
+        <View style={imageColumn(index)}>
+          {metadata?.image ? (
             <Pressable
               onPress={() =>
                 navigation.push("BrowserModal", {
-                  title: metadata.applicationName || url.hostname,
-                  url: url.origin,
+                  title: data.title,
+                  url: url.toString(),
                 })
               }
             >
-              <View>
-                <Image
-                  style={storyImage(index)}
-                  source={{ uri: metadata.favicon }}
-                />
-              </View>
+              <Image
+                style={storyImage(index)}
+                source={{ uri: metadata?.image }}
+              />
             </Pressable>
-          </>
-        )}
-      </View>
-      <Pressable onPress={() => goToThread(data)}>
-        <View style={bodyColumn(index)}>
-          <View style={storyTitle(index)}>
-            <Text style={storyTitle(index)} numberOfLines={4}>
-              {data.title}
-              <View>
-                <Text style={appName()} numberOfLines={1} ellipsizeMode="tail">
-                  ({metadata.applicationName || url.host.replace(/^www\./, "")})
-                </Text>
-              </View>
-            </Text>
-          </View>
-          <View style={footerText()}>
-            <View>
+          ) : (
+            <>
               <Pressable
-                onPress={() => navigation.push("User", { id: data.by })}
+                onPress={() =>
+                  navigation.push("BrowserModal", {
+                    title: metadata.applicationName || url.hostname,
+                    url: url.origin,
+                  })
+                }
               >
-                <Text style={byStyle()}>{data.by}</Text>
+                <View>
+                  <Image
+                    style={storyImage(index)}
+                    source={{ uri: metadata.favicon }}
+                  />
+                </View>
               </Pressable>
+            </>
+          )}
+        </View>
+        <Pressable onPress={() => goToThread(data)}>
+          <View style={bodyColumn(index)}>
+            <View style={storyTitle(index)}>
+              <Text style={storyTitle(index)} numberOfLines={4}>
+                {data.title}
+                <View>
+                  <Text
+                    style={appName()}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    (
+                    {metadata.applicationName || url.host.replace(/^www\./, "")}
+                    )
+                  </Text>
+                </View>
+              </Text>
             </View>
-            <View style={restText()}>
-              {iconName(
-                {
-                  size: 13,
-                  name: "md-arrow-up-outline",
-                  color: color.textAccent,
-                },
-                data.score
-              )}
+            <View style={footerText()}>
               <View>
+                <Pressable
+                  onPress={() => navigation.push("User", { id: data.by })}
+                >
+                  <Text style={byStyle()}>{data.by}</Text>
+                </Pressable>
+              </View>
+              <View style={restText()}>
                 {iconName(
                   {
                     size: 13,
-                    name: "chatbubbles-outline",
+                    name: "md-arrow-up-outline",
                     color: color.textAccent,
                   },
-                  data.descendants
+                  data.score
                 )}
-              </View>
-              <View>
-                <Text style={restIcon()}>
-                  {ago.format(new Date(data.time * 1000), "mini")}
-                </Text>
+                <View>
+                  {iconName(
+                    {
+                      size: 13,
+                      name: "chatbubbles-outline",
+                      color: color.textAccent,
+                    },
+                    data.descendants
+                  )}
+                </View>
+                <View>
+                  <Text style={restIcon()}>
+                    {ago.format(new Date(data.time * 1000), "mini")}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      </Pressable>
-    </View>
+        </Pressable>
+      </View>
+    )
   );
 };
 

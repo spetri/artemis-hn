@@ -7,7 +7,20 @@ import { StackParamList } from "../routers";
 import { useLayoutEffect, useMemo } from "react";
 import { useColorScheme } from "react-native";
 
-export function usePreferences() {
+export const preferencesVersion = "1.0";
+export const defaultPreferences: PreferencesType = {
+  colorScheme: undefined,
+  primaryColor: "orange500",
+  baseTypeSize: 16,
+};
+
+export type PreferencesType = {
+  colorScheme: "dark" | "light" | null | undefined;
+  primaryColor: keyof typeof colorSystem;
+  baseTypeSize: number;
+};
+
+export const usePreferences = () => {
   const { setTheme, insertThemes, insertTokens } = useDash();
   const colorScheme = useColorScheme();
   const [storage, loadStorage] = useAsync(async () => {
@@ -62,19 +75,6 @@ export function usePreferences() {
       loadStorage,
     ] as const;
   }, [storage, loadStorage]);
-}
-
-const preferencesVersion = "1.0";
-const defaultPreferences: PreferencesType = {
-  colorScheme: undefined,
-  primaryColor: "orange500",
-  baseTypeSize: 16,
-};
-
-export type PreferencesType = {
-  colorScheme: "dark" | "light" | null | undefined;
-  primaryColor: keyof typeof colorSystem;
-  baseTypeSize: number;
 };
 
 export interface SettingsProps

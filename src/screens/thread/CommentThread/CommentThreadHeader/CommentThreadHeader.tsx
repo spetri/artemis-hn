@@ -27,7 +27,7 @@ import {
 } from "@react-navigation/native-stack";
 import { linkify } from "../../../../utils/util";
 import { HackerNewsComment } from "../../../../types/hn-api";
-import { ParentComment } from "../..";
+import { ParentComment } from "../ParentComment/ParentComment";
 
 type CommentThreadHeaderProps = {
   data: any;

@@ -33,11 +33,9 @@ export const Thread: FC<ThreadProps> = ({ route }) => {
 
   if (!data) {
     return null;
+  } else if (data.type === "comment") {
+    return <CommentThread data={data} onRefresh={() => mutate()} />;
+  } else {
+    return <StoryThread data={data} onRefresh={() => mutate()} />;
   }
-
-  return data.type === "comment" ? (
-    <CommentThread data={data} onRefresh={() => mutate()} />
-  ) : (
-    <StoryThread data={data} onRefresh={() => mutate()} />
-  );
 };

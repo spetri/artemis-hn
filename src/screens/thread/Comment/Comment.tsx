@@ -17,16 +17,25 @@ import { ago } from "../../../utils/ago";
 import { pluralize } from "../../../utils/pluralize";
 import { StackParamList } from "../../routers";
 import { HACKER_NEWS_API } from "../../../constants/api";
-import { FC, memo, useMemo, useState } from "react";
+import {
+  FC,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Text,
   useWindowDimensions,
   View,
   ViewStyle,
-  ImageStyle,
   TextStyle,
   TextProps,
   Pressable,
+  NativeSyntheticEvent,
+  LayoutRectangle,
 } from "react-native";
 import { linkify } from "../../../utils/util";
 
@@ -34,12 +43,15 @@ type CommentProps = {
   id: number;
   index: number;
   depth: number;
+  setPosition?: (position: any) => any;
 };
 
 export const Comment: FC<CommentProps> = memo(
-  function Comment({ id, depth }) {
+  function Comment({ id, depth, setPosition, index }) {
     const { theme } = useDash();
-    const comment = useSWR<HackerNewsComment>(
+    const newRef = useRef();
+
+    const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
       (key) =>
         fetch(key, {
@@ -69,13 +81,13 @@ export const Comment: FC<CommentProps> = memo(
 
     const htmlSource = useMemo(
       () =>
-        comment.data && {
-          html: linkify(comment.data.text),
+        commentData.data && {
+          html: linkify(commentData.data.text),
         },
-      [comment.data]
+      [commentData.data]
     );
 
-    if (!comment.data) {
+    if (!commentData.data) {
       return (
         <View>
           <Skeleton />
@@ -83,30 +95,42 @@ export const Comment: FC<CommentProps> = memo(
       );
     }
 
-    if (comment.data.dead || comment.data.deleted) {
+    if (commentData.data.dead || commentData.data.deleted) {
       return null;
     }
 
-    const data = comment.data;
+    const getScrollPosition = (
+      event: NativeSyntheticEvent<{ layout: LayoutRectangle; target?: number }>
+    ) => {
+      newRef?.current?.measure((fx, fy, width, height, px, py) => {
+        setPosition(py);
+      });
+    };
+
+    const comment = commentData.data;
 
     return (
       <>
-        <View style={commentContainer(depth)}>
+        <View
+          style={commentContainer(depth)}
+          onLayout={(e) => getScrollPosition(e)}
+          ref={newRef}
+        >
           <View style={byLine}>
             <Pressable
-              onPress={() => navigation.navigate("User", { id: data.by })}
+              onPress={() => navigation.navigate("User", { id: comment.by })}
             >
-              <Text style={byStyle()}>{data.by}</Text>
+              <Text style={byStyle()}>{comment.by}</Text>
             </Pressable>
             <Pressable
               onPress={() =>
                 navigation.push("Thread", {
-                  id: data.id,
+                  id: comment.id,
                 })
               }
             >
               <Text style={agoStyle()}>
-                {ago.format(new Date(data.time * 1000), "mini")}
+                {ago.format(new Date(comment.time * 1000), "mini")}
               </Text>
             </Pressable>
           </View>
@@ -127,13 +151,19 @@ export const Comment: FC<CommentProps> = memo(
         </View>
 
         {showingReplies &&
-          data.kids &&
-          data.kids.length > 0 &&
-          data.kids.map((id, index) => (
-            <Comment key={id} id={id} index={index} depth={depth + 1.5} />
+          comment.kids &&
+          comment.kids.length > 0 &&
+          comment.kids.map((id, index) => (
+            <Comment
+              key={id}
+              id={id}
+              index={index}
+              depth={depth + 1.5}
+              setPosition={(e) => getScrollPosition(e)}
+            />
           ))}
 
-        {data.kids?.length > 0 && !showingReplies && (
+        {comment.kids?.length > 0 && !showingReplies && (
           <View style={commentContainerReply(depth)}>
             <Pressable
               onPress={() => {
@@ -141,7 +171,7 @@ export const Comment: FC<CommentProps> = memo(
               }}
             >
               <Text style={replies(depth)}>
-                {pluralize(data.kids?.length ?? 0, "reply", "replies")}
+                {pluralize(comment.kids?.length ?? 0, "reply", "replies")}
               </Text>
             </Pressable>
           </View>

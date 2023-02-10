@@ -14,7 +14,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../routers";
 import { useNavigation } from "@react-navigation/native";
 import { StoryFilters } from "../../types/hn-api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePreferences } from "../Settings";
 
 type ListItemType = {
@@ -25,7 +24,7 @@ type ListItemType = {
   filter: StoryFilters;
 }[];
 
-export const Home: FC = () => {
+export const Home: FC<ListItemType> = () => {
   useDash();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const {
@@ -148,16 +147,6 @@ const container = styles.one<ViewStyle>((t) => ({
   flex: 1,
   justifyContent: "center",
   backgroundColor: t.color.bodyBg,
-}));
-
-const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-  fontSize: 15,
-  paddingHorizontal: 10,
-  paddingTop: 5,
-  color: t.color.primary,
-  fontWeight: "800",
-  textTransform: "uppercase",
 }));
 
 const header = styles.one<TextStyle>((t) => ({

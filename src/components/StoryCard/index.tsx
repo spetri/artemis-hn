@@ -19,7 +19,6 @@ import { usePreferences } from "../../screens/Settings";
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
-    const [preferences] = usePreferences();
     const story = useSWR<HackerNewsItem>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
       (key) =>

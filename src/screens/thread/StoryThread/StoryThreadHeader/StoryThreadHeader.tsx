@@ -27,9 +27,21 @@ import {
 import { styles, useDash } from "../../../../../dash.config";
 import { useNavigation } from "@react-navigation/native";
 import { linkify } from "../../../../utils/util";
+import {
+  HackerNewsAsk,
+  HackerNewsJob,
+  HackerNewsPoll,
+  HackerNewsStory,
+} from "../../../../types/hn-api";
 
 type StoryThreadHeaderProps = {
-  data: any;
+  data:
+    | HackerNewsStory
+    | HackerNewsJob
+    | HackerNewsStory
+    | HackerNewsJob
+    | HackerNewsPoll
+    | HackerNewsAsk;
   metadata: any;
   url: any;
 };
@@ -179,29 +191,6 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
   );
 };
 
-const container = styles.one<ViewStyle>((t) => ({
-  flex: 1,
-  backgroundColor: t.color.bodyBg,
-}));
-
-const parentCommentContainer = styles.one<ViewStyle>((t) => ({
-  padding: t.space.lg,
-  paddingTop: 0,
-  marginLeft: t.space.md,
-  borderLeftWidth: 2,
-  borderLeftColor: t.color.primary,
-}));
-
-const parentCommentMarker = styles.one<ViewStyle>((t) => ({
-  position: "absolute",
-  left: -5,
-  top: 0,
-  width: 8,
-  height: 8,
-  borderRadius: t.radius.full,
-  backgroundColor: t.color.primary,
-}));
-
 const header = styles.one<ViewStyle>((t) => ({
   flexDirection: "row",
   alignItems: "center",
@@ -288,18 +277,6 @@ const content = styles.one((t) => ({
   paddingBottom: 0,
 }));
 
-const commentStoryContent = styles.one((t) => ({
-  color: t.color.textPrimary,
-  fontSize: t.type.size.sm,
-  fontWeight: "400",
-}));
-
-const commentContent = styles.one((t) => ({
-  color: t.color.textPrimary,
-  fontSize: t.type.size.xs,
-  fontWeight: "300",
-}));
-
 const storyByLine = styles.one<ViewStyle>((t) => ({
   width: "100%",
   flexDirection: "row",
@@ -308,12 +285,6 @@ const storyByLine = styles.one<ViewStyle>((t) => ({
   paddingRight: t.space.lg,
   paddingBottom: t.space.md,
 }));
-
-const byLine: ViewStyle = {
-  width: "100%",
-  flexDirection: "row",
-  justifyContent: "space-between",
-};
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
@@ -335,15 +306,6 @@ const link = styles.one((t) => ({
   fontWeight: "600",
   textDecorationLine: "underline",
   textDecorationColor: t.color.primary,
-}));
-
-const pre = styles.one((t) => ({
-  color: t.color.textPrimary,
-  backgroundColor: t.color.accent,
-  borderRadius: t.radius.xl,
-  padding: t.space.lg,
-  paddingBottom: t.space.sm,
-  fontSize: t.type.size["2xs"],
 }));
 
 const htmlDefaultTextProps: TextProps = {

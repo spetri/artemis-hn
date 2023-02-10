@@ -1,11 +1,9 @@
-import { HackerNewsAsk, HackerNewsComment } from "../../../types/hn-api";
+import { HackerNewsComment } from "../../../types/hn-api";
 import { useNavigation } from "@react-navigation/native";
 import * as htmlEntities from "html-entities";
 import stripTags from "striptags";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
-  Image,
-  ImageStyle,
   Text,
   TextStyle,
   TouchableWithoutFeedback,

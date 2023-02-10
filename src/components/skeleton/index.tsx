@@ -1,15 +1,13 @@
-
 import { FC, useLayoutEffect, useState } from "react";
 import { Animated, ViewStyle } from "react-native";
 import { useDash, styles } from "../../../dash.config";
 
 type SkeletonProps = {
   variant?: SkeletonVariant;
-  style?: ViewStyle
+  style?: ViewStyle;
 };
 
 export type SkeletonVariant = "text" | "rect" | "circle";
-
 
 export const Skeleton: FC<SkeletonProps> = (props) => {
   useDash();
@@ -43,7 +41,7 @@ export const Skeleton: FC<SkeletonProps> = (props) => {
       ]}
     />
   );
-}
+};
 
 const skeleton = styles.lazy<SkeletonVariant, ViewStyle>(
   (variant = "rect") =>

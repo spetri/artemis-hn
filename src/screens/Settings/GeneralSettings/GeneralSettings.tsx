@@ -17,10 +17,15 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { usePreferences } from "../Settings";
-import { colorSystem, styles, useDash } from "../../../dash.config";
-import { NavigableHeader } from "../../components/NavigableHeader";
-import { StackParamList } from "../routers";
+import {
+  defaultPreferences,
+  PreferencesType,
+  preferencesVersion,
+  usePreferences,
+} from "..";
+import { colorSystem, styles, useDash } from "../../../../dash.config";
+import { NavigableHeader } from "../../../components/NavigableHeader";
+import { StackParamList } from "../../routers";
 
 export interface SettingsProps
   extends NativeStackScreenProps<StackParamList, "User"> {}
@@ -178,12 +183,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   );
 };
 
-const preferencesVersion = "1.0";
-const defaultPreferences: PreferencesType = {
-  colorScheme: undefined,
-  primaryColor: "orange500",
-  baseTypeSize: 16,
-};
 const primaryColors: (keyof typeof colorSystem)[] = [
   "orange500",
   "amber500",
@@ -202,12 +201,6 @@ const primaryColors: (keyof typeof colorSystem)[] = [
   "pink500",
   "rose500",
 ];
-
-export type PreferencesType = {
-  colorScheme: "dark" | "light" | null | undefined;
-  primaryColor: keyof typeof colorSystem;
-  baseTypeSize: number;
-};
 
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,

@@ -17,3 +17,9 @@ export function linkify(text: string) {
 
   return text;
 }
+
+export const fauxFlatComments = Array.from<number>({ length: 3 }).fill(-1);
+
+export const keyExtractor = (item: number, index: number) => {
+  return item === -1 ? index.toString() : item.toString();
+};

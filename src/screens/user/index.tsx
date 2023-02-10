@@ -1,25 +1,32 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import useSWR from 'swr';
-import { NavigableHeader } from '../../components/NavigableHeader';
-import { StoryCard } from '../../components/StoryCard';
-import { styles, useDash } from '../../../dash.config';
-import { HackerNewsUser } from '../../types/hn-api';
-import { StackParamList } from '../routers';
-import { HACKER_NEWS_API } from '../../constants/api';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, RefreshControl, SafeAreaView, Share, ViewStyle } from 'react-native';
+import useSWR from "swr";
+import { NavigableHeader } from "../../components/NavigableHeader";
+import { StoryCard } from "../../components/StoryCard";
+import { styles, useDash } from "../../../dash.config";
+import { HackerNewsUser } from "../../types/hn-api";
+import { StackParamList } from "../routers";
+import { HACKER_NEWS_API } from "../../constants/api";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  Share,
+  ViewStyle,
+} from "react-native";
+import { keyExtractor } from "../../utils/util";
 
 export function User(props: UserProps) {
   useDash();
   const { id } = props.route.params;
-  
+
   const user = useSWR<HackerNewsUser>(
     `${HACKER_NEWS_API}/user/${id}.json`,
     (key) =>
       fetch(key, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       }).then((res) => res.json())
   );
   const [didMount, setDidMount] = useState(false);
@@ -35,7 +42,7 @@ export function User(props: UserProps) {
         title={id}
         actions={{
           options: {
-            options: ['Share', 'Open in Browser', 'cancel'],
+            options: ["Share", "Open in Browser", "cancel"],
           },
           callback(index) {
             switch (index) {
@@ -46,7 +53,7 @@ export function User(props: UserProps) {
                 });
                 break;
               case 1:
-                props.navigation.push('BrowserModal', {
+                props.navigation.push("BrowserModal", {
                   title: id,
                   url: `https://news.ycombinator.com/user?id=${id}`,
                 });
@@ -89,10 +96,6 @@ export function User(props: UserProps) {
 
 const fauxStories = Array.from<number>({ length: 6 }).fill(-1);
 
-function keyExtractor(item: number, index: number) {
-  return item === -1 ? index.toString() : item.toString();
-}
-
 function renderFlatListItem({ item, index }: { item: number; index: number }) {
   return (
     <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
@@ -101,9 +104,9 @@ function renderFlatListItem({ item, index }: { item: number; index: number }) {
 
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: '100%',
-  width: '100%',
+  height: "100%",
+  width: "100%",
 }));
 
 export interface UserProps
-  extends NativeStackScreenProps<StackParamList, 'User'> {}
+  extends NativeStackScreenProps<StackParamList, "User"> {}
