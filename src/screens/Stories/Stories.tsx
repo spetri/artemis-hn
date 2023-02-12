@@ -15,6 +15,7 @@ import { useDash, styles } from "../../../dash.config";
 import { StackParamList } from "../routers";
 import { HACKER_NEWS_API } from "../../constants/api";
 import { keyExtractor } from "../../utils/util";
+import { EmbeddedSearch } from "../Search/EmbeddedSearch";
 
 type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">;
 
@@ -62,7 +63,7 @@ export const Stories: FC<StoriesProps> = (props) => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
   }, []);
 
-  const flatListData = useMemo(() => stories.data?.slice(5), [stories.data]);
+  const flatListData = useMemo(() => stories.data?.slice(0), [stories.data]);
 
   const listHeaderComponent = useCallback(() => {
     return (
@@ -78,9 +79,7 @@ export const Stories: FC<StoriesProps> = (props) => {
               : "HN"
           }
         />
-        <View style={listStyle}>
-          {(stories.data ?? fauxStories).slice(0, 5).map(renderItem)}
-        </View>
+        <EmbeddedSearch />
       </>
     );
   }, [stories.data, filter]);
@@ -98,6 +97,7 @@ export const Stories: FC<StoriesProps> = (props) => {
   return (
     <FlatList
       ListHeaderComponent={listHeaderComponent}
+      stickyHeaderIndices={[0]}
       refreshControl={refreshControl}
       data={flatListData ?? fauxFlatStories}
       keyExtractor={keyExtractor}

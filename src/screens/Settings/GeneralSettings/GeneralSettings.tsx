@@ -1,7 +1,10 @@
 import { useAsync } from "@react-hook/async";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Slider, Switch } from "@rneui/themed";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Button, ListItem, Switch } from "@rneui/themed";
+import type {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
 
@@ -16,6 +19,7 @@ import {
   useWindowDimensions,
   View,
   ViewStyle,
+  SectionList,
 } from "react-native";
 import {
   defaultPreferences,
@@ -26,6 +30,12 @@ import {
 import { colorSystem, styles, useDash } from "../../../../dash.config";
 import { NavigableHeader } from "../../../components/NavigableHeader";
 import { StackParamList } from "../../routers";
+import { LogoHeader } from "../../../components/LogoHeader";
+import Icon from "react-native-vector-icons/Ionicons";
+import { StoryFilters } from "../../../types/hn-api";
+import { useNavigation } from "@react-navigation/native";
+import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
+import Slider from "@react-native-community/slider";
 
 export interface SettingsProps
   extends NativeStackScreenProps<StackParamList, "User"> {}
@@ -35,6 +45,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(
     undefined
   );
+  const [isVisible, setIsVisible] = useState(false);
   const [preferences, loadPreferences] = usePreferences();
   const colorScheme = useColorScheme();
   const dimensions = useWindowDimensions();
@@ -47,6 +58,10 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     await AsyncStorage.multiSet(data);
     await loadPreferences();
   });
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const {
+    tokens: { color },
+  } = useDash();
 
   const setStorage = useCallback(
     (settings: Partial<PreferencesType>) => {
@@ -54,6 +69,63 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     },
     [setStorage_, preferences?.data]
   );
+
+  const listItems = [
+    {
+      id: "1",
+      header: "App Color",
+      subheader: "Select app color theme",
+      iconName: "ios-logo-hackernews",
+      type: <ListItem.Chevron />,
+    },
+    {
+      id: "2",
+      header: "Dark Mode",
+      subheader: "By default, we use your system preferences",
+      iconName: "rocket-outline",
+      type: (
+        <Switch
+          value={
+            preferences.data?.colorScheme === "dark" ||
+            (preferences.data?.colorScheme === undefined &&
+              colorScheme === "dark")
+          }
+          trackColor={{
+            false: tokens.color.textAccent,
+            true: tokens.color.primary,
+          }}
+          onValueChange={(value) => {
+            setStorage({
+              colorScheme: value ? "dark" : "light",
+            });
+          }}
+        />
+      ),
+    },
+    {
+      id: "3",
+      header: "Text Size",
+      subheader: "Select Text Size",
+      iconName: "bulb-outline",
+      type: <ListItem.Chevron />,
+    },
+    {
+      id: "4",
+      header: "Display All Replies",
+      subheader: "When selected, display all replies automatically",
+      iconName: "file-tray-outline",
+      type: (
+        <Switch
+          value={preferences.data?.displayReplies}
+          onValueChange={(value) => {
+            setStorage({
+              displayReplies: value ? true : false,
+            });
+          }}
+        />
+      ),
+    },
+  ];
 
   useLayoutEffect(() => {
     if (
@@ -73,6 +145,46 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     }
   }, [baseTypeSize]);
 
+  const twoColumn = (item) => {
+    return (
+      <>
+        <ListItem bottomDivider containerStyle={containerBg()}>
+          <Icon
+            name={item.iconName}
+            color={color.textPrimary}
+            size={25}
+            style={image}
+          />
+          <ListItemContent>
+            <ListItem.Title
+              style={header()}
+              onPress={() =>
+                navigation.navigate("Stories", {
+                  filter: item?.filter as StoryFilters,
+                })
+              }
+            >
+              {item.header}
+            </ListItem.Title>
+            <ListItem.Subtitle
+              style={subheader()}
+              onPress={() =>
+                navigation.navigate("Stories", {
+                  filter: item?.filter as StoryFilters,
+                })
+              }
+            >
+              {item.subheader}
+            </ListItem.Subtitle>
+          </ListItemContent>
+          <View>
+            <Text>{item.type}</Text>
+          </View>
+        </ListItem>
+      </>
+    );
+  };
+
   return (
     <SafeAreaView style={container()}>
       <NavigableHeader
@@ -90,52 +202,19 @@ export const GeneralSettings: FC<SettingsProps> = () => {
           },
         }}
       />
-      <View style={container()}>
+      <View style={containerBg()}>
         <SectionList
           ItemSeparatorComponent={() => (
             <View style={listItemSeparatorStyle()} />
           )}
-          ListHeaderComponent={<LogoHeader title="Select" />}
           sections={[{ title: "Topics", data: listItems }]}
           // renderSectionHeader={({ section }) => (
           //   <Text style={sectionHeaderStyle()}>{section.title}</Text>
           // )}
-          renderItem={({ item }) => (
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={imageContainer}>
-                <Icon
-                  name={item.iconName}
-                  color={color.textPrimary}
-                  size={25}
-                  style={image}
-                />
-              </View>
-              <View style={row()}>
-                <Text
-                  style={header()}
-                  onPress={() =>
-                    navigation.navigate("Stories", {
-                      filter: item?.filter as StoryFilters,
-                    })
-                  }
-                >
-                  {item.header}
-                </Text>
-                <Text
-                  style={subheader()}
-                  onPress={() =>
-                    navigation.navigate("Stories", {
-                      filter: item?.filter as StoryFilters,
-                    })
-                  }
-                >
-                  {item.subheader}
-                </Text>
-              </View>
-            </View>
-          )}
+          renderItem={({ item }) => twoColumn(item)}
         />
       </View>
+
       {/* <ScrollView style={preferencesContainer()}>
         <View style={preferenceGroup()}>
           <View style={preferenceLabelContainer()}>
@@ -182,68 +261,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
                 maximumTrackTintColor="#000000"
               />
             </View>
-          </View>
-        </View>
-
-        <View style={preferenceGroup()}>
-          <View style={preferenceRow("start")}>
-            <View style={preferenceLabelContainer()}>
-              <Text style={preferenceLabel()}>Hide Replies</Text>
-              <Text style={preferenceDescription()}>
-                When toggled on, automatically minimize replies{" "}
-                {preferences.data?.colorScheme && (
-                  <Text
-                    style={resetToDefault()}
-                    onPress={() => setStorage({ displayReplies: undefined })}
-                  >
-                    Reset
-                  </Text>
-                )}
-              </Text>
-            </View>
-            <Switch
-              value={preferences.data?.displayReplies}
-              onValueChange={(value) => {
-                setStorage({
-                  displayReplies: value ? true : false,
-                });
-              }}
-            />
-          </View>
-        </View>
-
-        <View style={preferenceGroup()}>
-          <View style={preferenceRow("start")}>
-            <View style={preferenceLabelContainer()}>
-              <Text style={preferenceLabel()}>Dark mode</Text>
-              <Text style={preferenceDescription()}>
-                By default we use your system preferences{" "}
-                {preferences.data?.colorScheme && (
-                  <Text
-                    style={resetToDefault()}
-                    onPress={() => setStorage({ colorScheme: undefined })}
-                  >
-                    Reset
-                  </Text>
-                )}
-              </Text>
-            </View>
-            <Switch
-              value={
-                preferences.data?.colorScheme === "dark" ||
-                (preferences.data?.colorScheme === undefined &&
-                  colorScheme === "dark")
-              }
-              trackColor={{
-                false: tokens.color.textAccent,
-                true: tokens.color.primary,
-              }}
-              onValueChange={(value) => {
-                setStorage({
-                  colorScheme: value ? "dark" : "light",
-                });
-              }}
-            />
           </View>
         </View>
 
@@ -361,4 +378,59 @@ const version = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   textAlign: "center",
   marginBottom: t.space["2xl"],
+}));
+
+const containerBg = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+}));
+
+const containerRow = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  flexDirection: "row",
+  display: "flex",
+  paddingVertical: 10,
+}));
+
+const row = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  flexDirection: "row",
+  display: "flex",
+}));
+
+const col = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  display: "flex",
+  flexDirection: "column",
+}));
+
+const toggleSwitch = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+}));
+
+const subheader = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
+  fontSize: 12,
+}));
+
+const image = styles.one<ViewStyle>((t) => ({
+  height: "100%",
+  width: "100%",
+}));
+
+// const container = styles.one<ViewStyle>((t) => ({
+//   flex: 1,
+//   justifyContent: "center",
+//   backgroundColor: t.color.bodyBg,
+// }));
+
+const header = styles.one<TextStyle>((t) => ({
+  fontSize: 15,
+  fontWeight: "500",
+  color: t.color.textPrimary,
+}));
+
+const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
+  height: 0.3,
+  width: "100%",
+  backgroundColor: t.color.accent,
 }));
