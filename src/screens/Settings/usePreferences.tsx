@@ -3,22 +3,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useDash, createTypeSystem, colorSystem } from "../../../dash.config";
 
-import { StackParamList } from "../routers";
 import { useLayoutEffect, useMemo } from "react";
 import { useColorScheme } from "react-native";
+import { StackParamList } from "../routers";
 
-export const preferencesVersion = "1.0";
+export const preferencesVersion = "1.1";
 export const defaultPreferences: PreferencesType = {
+  displayReplies: false,
   colorScheme: undefined,
   primaryColor: "orange500",
   baseTypeSize: 16,
 };
 
 export type PreferencesType = {
+  displayReplies: boolean;
   colorScheme: "dark" | "light" | null | undefined;
   primaryColor: keyof typeof colorSystem;
   baseTypeSize: number;
 };
+
+export interface SettingsProps
+  extends NativeStackScreenProps<StackParamList, "User"> {}
 
 export const usePreferences = () => {
   const { setTheme, insertThemes, insertTokens } = useDash();
@@ -76,6 +81,3 @@ export const usePreferences = () => {
     ] as const;
   }, [storage, loadStorage]);
 };
-
-export interface SettingsProps
-  extends NativeStackScreenProps<StackParamList, "User"> {}

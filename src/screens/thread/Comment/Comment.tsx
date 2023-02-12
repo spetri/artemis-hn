@@ -17,15 +17,7 @@ import { ago } from "../../../utils/ago";
 import { pluralize } from "../../../utils/pluralize";
 import { StackParamList } from "../../routers";
 import { HACKER_NEWS_API } from "../../../constants/api";
-import {
-  FC,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, memo, useEffect, useMemo, useRef, useState } from "react";
 import {
   Text,
   useWindowDimensions,
@@ -34,8 +26,6 @@ import {
   TextStyle,
   TextProps,
   Pressable,
-  NativeSyntheticEvent,
-  LayoutRectangle,
 } from "react-native";
 import { linkify } from "../../../utils/util";
 
@@ -43,13 +33,11 @@ type CommentProps = {
   id: number;
   index: number;
   depth: number;
-  setPosition?: (position: any) => any;
 };
 
 export const Comment: FC<CommentProps> = memo(
-  function Comment({ id, depth, setPosition, index }) {
+  function Comment({ id, depth }) {
     const { theme } = useDash();
-    const newRef = useRef();
 
     const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -99,23 +87,11 @@ export const Comment: FC<CommentProps> = memo(
       return null;
     }
 
-    const getScrollPosition = (
-      event: NativeSyntheticEvent<{ layout: LayoutRectangle; target?: number }>
-    ) => {
-      newRef?.current?.measure((fx, fy, width, height, px, py) => {
-        setPosition(py);
-      });
-    };
-
     const comment = commentData.data;
 
     return (
       <>
-        <View
-          style={commentContainer(depth)}
-          onLayout={(e) => getScrollPosition(e)}
-          ref={newRef}
-        >
+        <View style={commentContainer(depth)}>
           <View style={byLine}>
             <Pressable
               onPress={() => navigation.navigate("User", { id: comment.by })}
@@ -154,13 +130,7 @@ export const Comment: FC<CommentProps> = memo(
           comment.kids &&
           comment.kids.length > 0 &&
           comment.kids.map((id, index) => (
-            <Comment
-              key={id}
-              id={id}
-              index={index}
-              depth={depth + 1.5}
-              setPosition={(e) => getScrollPosition(e)}
-            />
+            <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
         {comment.kids?.length > 0 && !showingReplies && (

@@ -22,7 +22,7 @@ import {
   PreferencesType,
   preferencesVersion,
   usePreferences,
-} from "..";
+} from "../usePreferences";
 import { colorSystem, styles, useDash } from "../../../../dash.config";
 import { NavigableHeader } from "../../../components/NavigableHeader";
 import { StackParamList } from "../../routers";
@@ -90,7 +90,53 @@ export const GeneralSettings: FC<SettingsProps> = () => {
           },
         }}
       />
-      <ScrollView style={preferencesContainer()}>
+      <View style={container()}>
+        <SectionList
+          ItemSeparatorComponent={() => (
+            <View style={listItemSeparatorStyle()} />
+          )}
+          ListHeaderComponent={<LogoHeader title="Select" />}
+          sections={[{ title: "Topics", data: listItems }]}
+          // renderSectionHeader={({ section }) => (
+          //   <Text style={sectionHeaderStyle()}>{section.title}</Text>
+          // )}
+          renderItem={({ item }) => (
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <View style={imageContainer}>
+                <Icon
+                  name={item.iconName}
+                  color={color.textPrimary}
+                  size={25}
+                  style={image}
+                />
+              </View>
+              <View style={row()}>
+                <Text
+                  style={header()}
+                  onPress={() =>
+                    navigation.navigate("Stories", {
+                      filter: item?.filter as StoryFilters,
+                    })
+                  }
+                >
+                  {item.header}
+                </Text>
+                <Text
+                  style={subheader()}
+                  onPress={() =>
+                    navigation.navigate("Stories", {
+                      filter: item?.filter as StoryFilters,
+                    })
+                  }
+                >
+                  {item.subheader}
+                </Text>
+              </View>
+            </View>
+          )}
+        />
+      </View>
+      {/* <ScrollView style={preferencesContainer()}>
         <View style={preferenceGroup()}>
           <View style={preferenceLabelContainer()}>
             <Text style={preferenceLabel()}>Color</Text>
@@ -142,6 +188,33 @@ export const GeneralSettings: FC<SettingsProps> = () => {
         <View style={preferenceGroup()}>
           <View style={preferenceRow("start")}>
             <View style={preferenceLabelContainer()}>
+              <Text style={preferenceLabel()}>Hide Replies</Text>
+              <Text style={preferenceDescription()}>
+                When toggled on, automatically minimize replies{" "}
+                {preferences.data?.colorScheme && (
+                  <Text
+                    style={resetToDefault()}
+                    onPress={() => setStorage({ displayReplies: undefined })}
+                  >
+                    Reset
+                  </Text>
+                )}
+              </Text>
+            </View>
+            <Switch
+              value={preferences.data?.displayReplies}
+              onValueChange={(value) => {
+                setStorage({
+                  displayReplies: value ? true : false,
+                });
+              }}
+            />
+          </View>
+        </View>
+
+        <View style={preferenceGroup()}>
+          <View style={preferenceRow("start")}>
+            <View style={preferenceLabelContainer()}>
               <Text style={preferenceLabel()}>Dark mode</Text>
               <Text style={preferenceDescription()}>
                 By default we use your system preferences{" "}
@@ -178,7 +251,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
           v{Application.nativeBuildVersion}{" "}
           {Updates.updateId && <>&bull; {Updates.updateId}</>}
         </Text>
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   );
 };

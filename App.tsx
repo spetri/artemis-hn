@@ -8,7 +8,7 @@ import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
-import { usePreferences } from "./src/screens/Settings";
+import { usePreferences } from "./src/screens/Settings/usePreferences";
 import {
   AllStack,
   Tab,
@@ -35,6 +35,7 @@ import { Home } from "./src/screens/Home/Home";
 import { SettingsListView } from "./src/screens/Settings/SettingsListView/SettingsListView";
 import { Search } from "./src/screens/Search/Search";
 import { GeneralSettings } from "./src/screens/Settings/GeneralSettings/GeneralSettings";
+import { useAsyncStorage } from "./src/hooks/use-async-storage";
 
 registerRootComponent(App);
 

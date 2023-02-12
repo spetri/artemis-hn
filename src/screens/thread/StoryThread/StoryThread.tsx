@@ -1,5 +1,11 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, RefreshControl, View, ViewStyle } from "react-native";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FlatList,
+  RefreshControl,
+  View,
+  ViewabilityConfigCallbackPair,
+  ViewStyle,
+} from "react-native";
 import { styles, useDash } from "../../../../dash.config";
 import { useMetadata } from "../../../hooks/use-metadata";
 import {
@@ -23,9 +29,9 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   const {
     tokens: { color },
   } = useDash();
-  const scrollViewRef = useRef();
-  const [commentsPositions, setCommentsPositions] = useState([]);
-  const [currentScrollPosition, setCurrentScrollPosition] = useState(0);
+  const scrollViewRef = useRef<any>();
+  const [viewportOffsetTopComment, setViewportOffsetTopComment] =
+    useState<[{ index: number }]>();
 
   const url = useMemo(
     () => ("url" in data && data.url ? new URL(data.url) : undefined),
@@ -39,27 +45,21 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
     }
   }, [data]);
 
-  const pressed = () => {
-    const sortCommentPositions = commentsPositions.sort((a, b) => {
-      if (a > b) return 1;
-      if (a < b) return -1;
-      return 0;
-    });
-
-    const comments = sortCommentPositions.map((commentPosition, index) => {
-      return { position: commentPosition, index };
-    });
-
-    const commentIndex = comments.filter((comment) => {
-      if (currentScrollPosition < comment.position) {
-        return comment;
+  const pressed = (isLongPressed: boolean) => {
+    if (viewportOffsetTopComment && viewportOffsetTopComment.length > 0) {
+      if (isLongPressed) {
+        scrollViewRef?.current.scrollToIndex({
+          index: viewportOffsetTopComment[0].index - 1,
+          animated: true,
+        });
+      } else {
+        scrollViewRef?.current.scrollToIndex({
+          index: viewportOffsetTopComment[0].index + 1,
+          animated: true,
+          viewOffset: -10,
+        });
       }
-    })[0];
-
-    scrollViewRef?.current.scrollToOffset({
-      offset: commentIndex.position + 1,
-      animated: true,
-    });
+    }
   };
 
   const refreshControl = useMemo(
@@ -70,21 +70,22 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   );
 
   const renderItem = ({ item, index }: { item: number; index: number }) => {
-    return (
-      <Comment
-        id={item}
-        index={index}
-        depth={1}
-        setPosition={(position) =>
-          setCommentsPositions((prevArray) => [...prevArray, position])
-        }
-      />
-    );
+    return <Comment id={item} index={index} depth={1} />;
   };
 
-  const onScrollEvent = (event) => {
-    setCurrentScrollPosition(event.nativeEvent.contentOffset.y);
-  };
+  const onViewableItemsChanged = useCallback(
+    (viewableItems) => {
+      console.log("viewableItems", viewableItems.viewableItems);
+      if (!!viewableItems.viewableItems) {
+        setViewportOffsetTopComment(viewableItems.viewableItems);
+      }
+    },
+    [setViewportOffsetTopComment]
+  );
+
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 10 });
+
+  const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }]);
 
   return (
     <View style={container()}>
@@ -102,14 +103,18 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
         windowSize={3}
         renderItem={renderItem}
         style={container()}
-        onScroll={onScrollEvent}
+        viewabilityConfigCallbackPairs={
+          viewabilityConfigCallbackPairs.current as ViewabilityConfigCallbackPair[]
+        }
+        viewabilityConfig={viewConfigRef.current}
         ref={scrollViewRef}
       />
       <FAB
         placement="right"
         icon={{ name: "keyboard-arrow-down", color: color.textPrimary }}
         color={color.primary as string}
-        onPress={pressed}
+        onPress={() => pressed(false)}
+        onLongPress={() => pressed(true)}
       />
     </View>
   );

@@ -14,7 +14,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../routers";
 import { useNavigation } from "@react-navigation/native";
 import { StoryFilters } from "../../types/hn-api";
-import { usePreferences } from "../Settings";
 
 type ListItemType = {
   id: string;

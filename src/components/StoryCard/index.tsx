@@ -14,7 +14,6 @@ import { JobStory } from "./JobStory/JobStory";
 import { AskStory } from "./AskStory/AskStory";
 import { CommentStory } from "./CommentStory/CommentStory";
 import { MinimalStory } from "./MinimalStory/MinimalStory";
-import { usePreferences } from "../../screens/Settings";
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
