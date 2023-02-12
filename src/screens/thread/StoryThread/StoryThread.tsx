@@ -59,6 +59,8 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
           viewOffset: -10,
         });
       }
+    } else {
+      return;
     }
   };
 
