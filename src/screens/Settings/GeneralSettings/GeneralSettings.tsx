@@ -1,20 +1,16 @@
 import { useAsync } from "@react-hook/async";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button, ListItem, Switch } from "@rneui/themed";
+import { BottomSheet, Button, ListItem, Slider, Switch } from "@rneui/themed";
 import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
-import * as Application from "expo-application";
-import * as Updates from "expo-updates";
 
-import { FC, useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { FC, useCallback, useLayoutEffect, useState } from "react";
 import {
   Text,
   SafeAreaView,
-  ScrollView,
   TextStyle,
-  TouchableOpacity,
   useColorScheme,
   useWindowDimensions,
   View,
@@ -27,15 +23,12 @@ import {
   preferencesVersion,
   usePreferences,
 } from "../usePreferences";
-import { colorSystem, styles, useDash } from "../../../../dash.config";
+import { styles, useDash } from "../../../../dash.config";
 import { NavigableHeader } from "../../../components/NavigableHeader";
 import { StackParamList } from "../../routers";
-import { LogoHeader } from "../../../components/LogoHeader";
 import Icon from "react-native-vector-icons/Ionicons";
-import { StoryFilters } from "../../../types/hn-api";
 import { useNavigation } from "@react-navigation/native";
 import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
-import Slider from "@react-native-community/slider";
 
 export interface SettingsProps
   extends NativeStackScreenProps<StackParamList, "User"> {}
@@ -76,7 +69,14 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: "App Color",
       subheader: "Select app color theme",
       iconName: "ios-logo-hackernews",
-      type: <ListItem.Chevron />,
+      type: (
+        <Button
+          buttonStyle={{ backgroundColor: color.bodyBg }}
+          onPress={() => navigation.navigate("AppColorSettings")}
+        >
+          <ListItem.Chevron />
+        </Button>
+      ),
     },
     {
       id: "2",
@@ -107,7 +107,14 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: "Text Size",
       subheader: "Select Text Size",
       iconName: "bulb-outline",
-      type: <ListItem.Chevron />,
+      type: (
+        <Button
+          buttonStyle={{ backgroundColor: color.bodyBg }}
+          onPress={() => setIsVisible(true)}
+        >
+          <ListItem.Chevron />
+        </Button>
+      ),
     },
     {
       id: "4",
@@ -156,24 +163,8 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             style={image}
           />
           <ListItemContent>
-            <ListItem.Title
-              style={header()}
-              onPress={() =>
-                navigation.navigate("Stories", {
-                  filter: item?.filter as StoryFilters,
-                })
-              }
-            >
-              {item.header}
-            </ListItem.Title>
-            <ListItem.Subtitle
-              style={subheader()}
-              onPress={() =>
-                navigation.navigate("Stories", {
-                  filter: item?.filter as StoryFilters,
-                })
-              }
-            >
+            <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+            <ListItem.Subtitle style={subheader()}>
               {item.subheader}
             </ListItem.Subtitle>
           </ListItemContent>
@@ -208,48 +199,12 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             <View style={listItemSeparatorStyle()} />
           )}
           sections={[{ title: "Topics", data: listItems }]}
-          // renderSectionHeader={({ section }) => (
-          //   <Text style={sectionHeaderStyle()}>{section.title}</Text>
-          // )}
           renderItem={({ item }) => twoColumn(item)}
         />
-      </View>
-
-      {/* <ScrollView style={preferencesContainer()}>
-        <View style={preferenceGroup()}>
-          <View style={preferenceLabelContainer()}>
-            <Text style={preferenceLabel()}>Color</Text>
-            <Text style={preferenceDescription()}>
-              Sets the primary color used throughout the app
-            </Text>
-          </View>
-          <View style={colorSwatches()}>
-            {primaryColors.map((color) => (
-              <TouchableOpacity
-                key={color}
-                onPress={() => {
-                  setStorage({
-                    primaryColor: color,
-                  });
-                }}
-              >
-                <View
-                  style={colorSwatch({
-                    color,
-                    size: (dimensions.width - 112) / 4,
-                    selected: color === preferences.data?.primaryColor,
-                  })}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        <View style={preferenceGroup()}>
-          <View style={preferenceRow("center")}>
-            <View style={preferenceLabelContainer()}>
-              <Text style={preferenceLabel()}>Text size</Text>
-            </View>
+        <BottomSheet
+          modalProps={{}}
+          isVisible={isVisible}
+          children={
             <View style={sliderContainer}>
               <Slider
                 minimumValue={12}
@@ -261,36 +216,12 @@ export const GeneralSettings: FC<SettingsProps> = () => {
                 maximumTrackTintColor="#000000"
               />
             </View>
-          </View>
-        </View>
-
-        <Text style={version()}>
-          v{Application.nativeBuildVersion}{" "}
-          {Updates.updateId && <>&bull; {Updates.updateId}</>}
-        </Text>
-      </ScrollView> */}
+          }
+        ></BottomSheet>
+      </View>
     </SafeAreaView>
   );
 };
-
-const primaryColors: (keyof typeof colorSystem)[] = [
-  "orange500",
-  "amber500",
-  "emerald500",
-  "blue500",
-  "cyan500",
-  "teal500",
-  "green500",
-  "lime600",
-  "red600",
-  "lightBlue500",
-  "violet500",
-  "purple500",
-  "indigo500",
-  "fuchsia500",
-  "pink500",
-  "rose500",
-];
 
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
@@ -298,112 +229,12 @@ const container = styles.one<ViewStyle>((t) => ({
   width: "100%",
 }));
 
-const preferencesContainer = styles.one<ViewStyle>((t) => ({
-  paddingTop: t.space.lg,
-  width: "100%",
-}));
-
-const slider: ViewStyle = { width: "100%", height: 40 };
 const sliderContainer: ViewStyle = {
   width: "100%",
-  flexGrow: 1,
-  flexShrink: 1,
+  marginBottom: 100,
 };
 
-const preferenceGroup = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.accentLight,
-  padding: t.space.lg,
-  margin: t.space.lg,
-  marginTop: 0,
-  borderRadius: t.radius.xl,
-}));
-
-const preferenceLabel = styles.one<TextStyle>((t) => ({
-  color: t.color.textPrimary,
-  fontSize: t.type.size.base,
-  fontWeight: "700",
-  width: "100%",
-}));
-
-const preferenceDescription = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  fontSize: t.type.size.xs,
-  fontWeight: "400",
-  width: "100%",
-  marginTop: t.space.sm,
-}));
-
-const preferenceRow = styles.lazy<"center" | "start", ViewStyle>(
-  (variant) => () => ({
-    flexDirection: "row",
-    alignItems: variant === "center" ? "center" : "flex-start",
-  })
-);
-
-const preferenceLabelContainer = styles.one<ViewStyle>((t) => ({
-  flexDirection: "column",
-  flexGrow: 1,
-  flexShrink: 1,
-  flexWrap: "wrap",
-  minWidth: 128,
-  marginRight: t.space.lg,
-}));
-
-const colorSwatches = styles.one<ViewStyle>((t) => ({
-  flexDirection: "row",
-  flexWrap: "wrap",
-  justifyContent: "space-between",
-  marginTop: t.space.lg,
-}));
-
-const colorSwatch = styles.lazy<
-  { color: string; size: number; selected: boolean },
-  ViewStyle
->(({ color, size, selected }) => (t) => ({
-  width: size,
-  height: size,
-  marginBottom: t.space.md,
-  backgroundColor: (t.color as any)[color],
-  borderColor: selected ? t.color.textPrimary : "transparent",
-  borderWidth: 6,
-  borderRadius: t.radius.primary,
-}));
-
-const resetToDefault = styles.one<TextStyle>((t) => ({
-  color: t.color.primary,
-  fontWeight: "500",
-}));
-
-const version = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  textAlign: "center",
-  marginBottom: t.space["2xl"],
-}));
-
 const containerBg = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-}));
-
-const containerRow = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-  flexDirection: "row",
-  display: "flex",
-  paddingVertical: 10,
-}));
-
-const row = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-  flexDirection: "row",
-  display: "flex",
-}));
-
-const col = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-  display: "flex",
-  flexDirection: "column",
-}));
-
-const toggleSwitch = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
 }));
 
@@ -416,12 +247,6 @@ const image = styles.one<ViewStyle>((t) => ({
   height: "100%",
   width: "100%",
 }));
-
-// const container = styles.one<ViewStyle>((t) => ({
-//   flex: 1,
-//   justifyContent: "center",
-//   backgroundColor: t.color.bodyBg,
-// }));
 
 const header = styles.one<TextStyle>((t) => ({
   fontSize: 15,

@@ -35,7 +35,7 @@ import { Home } from "./src/screens/Home/Home";
 import { SettingsListView } from "./src/screens/Settings/SettingsListView/SettingsListView";
 import { Search } from "./src/screens/Search/Search";
 import { GeneralSettings } from "./src/screens/Settings/GeneralSettings/GeneralSettings";
-import { useAsyncStorage } from "./src/hooks/use-async-storage";
+import { AppColorSettings } from "./src/screens/Settings/GeneralSettings/AppColorSettings/AppColorSettings";
 
 registerRootComponent(App);
 
@@ -283,6 +283,10 @@ function SettingsScreens() {
       <SettingsStack.Screen
         name="GeneralSettings"
         component={GeneralSettings}
+      />
+      <SettingsStack.Screen
+        name="AppColorSettings"
+        component={AppColorSettings}
       />
     </SettingsStack.Navigator>
   );

@@ -21,6 +21,7 @@ export type StackParamList = {
   GeneralSettings: {};
   Home: {};
   Search: {};
+  AppColorSettings: {};
 };
 
 export type TabParamList = {

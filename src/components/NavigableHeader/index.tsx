@@ -13,8 +13,20 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { FC } from "react";
 
-export function NavigableHeader({ title, actions }: NavigableHeaderProps) {
+export type NavigableHeaderProps = {
+  title: string;
+  actions?: {
+    options: Parameters<ActionSheetProps["showActionSheetWithOptions"]>[0];
+    callback: Parameters<ActionSheetProps["showActionSheetWithOptions"]>[1];
+  };
+};
+
+export const NavigableHeader: FC<NavigableHeaderProps> = ({
+  title,
+  actions,
+}) => {
   useDash();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const actionSheet = useActionSheet();
@@ -51,7 +63,7 @@ export function NavigableHeader({ title, actions }: NavigableHeaderProps) {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const headerContainer = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.headerBg,
@@ -90,11 +102,3 @@ const titleStyle = styles.one<TextStyle>((t) => ({
   flex: 1,
   textAlign: "center",
 }));
-
-export interface NavigableHeaderProps {
-  title: string;
-  actions: {
-    options: Parameters<ActionSheetProps["showActionSheetWithOptions"]>[0];
-    callback: Parameters<ActionSheetProps["showActionSheetWithOptions"]>[1];
-  };
-}

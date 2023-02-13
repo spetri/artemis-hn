@@ -1,4 +1,6 @@
 import { FC } from "react";
+import * as Application from "expo-application";
+import * as Updates from "expo-updates";
 import {
   SafeAreaView,
   SectionList,
@@ -83,6 +85,16 @@ export const SettingsListView: FC = () => {
             </View>
           )}
         />
+        <Text
+          style={{
+            display: "flex",
+            alignSelf: "center",
+            color: color.textPrimary,
+          }}
+        >
+          v{Application.nativeBuildVersion}{" "}
+          {Updates.updateId && <>&bull; {Updates.updateId}</>}
+        </Text>
       </View>
     </SafeAreaView>
   );

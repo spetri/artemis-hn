@@ -1,6 +1,6 @@
 import { styles, useDash } from "../../../dash.config";
 import Icon from "react-native-vector-icons/Ionicons";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import {
   SafeAreaView,
   SectionList,
@@ -69,9 +69,6 @@ export const Home: FC<ListItemType> = () => {
           )}
           ListHeaderComponent={<LogoHeader title="Select" />}
           sections={[{ title: "Topics", data: listItems }]}
-          // renderSectionHeader={({ section }) => (
-          //   <Text style={sectionHeaderStyle()}>{section.title}</Text>
-          // )}
           renderItem={({ item }) => (
             <View style={{ display: "flex", flexDirection: "row" }}>
               <View style={imageContainer}>

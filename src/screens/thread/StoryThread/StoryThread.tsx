@@ -77,7 +77,6 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
 
   const onViewableItemsChanged = useCallback(
     (viewableItems) => {
-      console.log("viewableItems", viewableItems.viewableItems);
       if (!!viewableItems.viewableItems) {
         setViewportOffsetTopComment(viewableItems.viewableItems);
       }
