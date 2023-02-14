@@ -14,6 +14,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../routers";
 import { useNavigation } from "@react-navigation/native";
 import { StoryFilters } from "../../types/hn-api";
+import { ListItem } from "@rneui/themed";
+import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
 
 type ListItemType = {
   id: string;
@@ -70,17 +72,15 @@ export const Home: FC<ListItemType> = () => {
           ListHeaderComponent={<LogoHeader title="Select" />}
           sections={[{ title: "Topics", data: listItems }]}
           renderItem={({ item }) => (
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={imageContainer}>
-                <Icon
-                  name={item.iconName}
-                  color={color.textPrimary}
-                  size={25}
-                  style={image}
-                />
-              </View>
-              <View style={row()}>
-                <Text
+            <ListItem bottomDivider containerStyle={containerBg()}>
+              <Icon
+                name={item.iconName}
+                color={color.textPrimary}
+                size={25}
+                style={image}
+              />
+              <ListItemContent>
+                <ListItem.Title
                   style={header()}
                   onPress={() =>
                     navigation.navigate("Stories", {
@@ -89,8 +89,8 @@ export const Home: FC<ListItemType> = () => {
                   }
                 >
                   {item.header}
-                </Text>
-                <Text
+                </ListItem.Title>
+                <ListItem.Subtitle
                   style={subheader()}
                   onPress={() =>
                     navigation.navigate("Stories", {
@@ -99,9 +99,9 @@ export const Home: FC<ListItemType> = () => {
                   }
                 >
                   {item.subheader}
-                </Text>
-              </View>
-            </View>
+                </ListItem.Subtitle>
+              </ListItemContent>
+            </ListItem>
           )}
         />
       </View>
@@ -109,17 +109,14 @@ export const Home: FC<ListItemType> = () => {
   );
 };
 
-const containerBg = styles.one<ViewStyle>((t) => ({
+const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: "100%",
   width: "100%",
 }));
 
-const row = styles.one<ViewStyle>((t) => ({
+const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  display: "flex",
-  width: "100%",
-  paddingVertical: 15,
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({
@@ -127,22 +124,9 @@ const subheader = styles.one<TextStyle>((t) => ({
   fontSize: 12,
 }));
 
-const imageContainer: ViewStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignSelf: "center",
-  paddingHorizontal: 10,
-};
-
 const image = styles.one<ViewStyle>((t) => ({
   height: "100%",
   width: "100%",
-}));
-
-const container = styles.one<ViewStyle>((t) => ({
-  flex: 1,
-  justifyContent: "center",
-  backgroundColor: t.color.bodyBg,
 }));
 
 const header = styles.one<TextStyle>((t) => ({

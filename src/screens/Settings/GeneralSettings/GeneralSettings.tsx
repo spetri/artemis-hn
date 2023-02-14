@@ -12,7 +12,6 @@ import {
   SafeAreaView,
   TextStyle,
   useColorScheme,
-  useWindowDimensions,
   View,
   ViewStyle,
   SectionList,
@@ -41,7 +40,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [preferences, loadPreferences] = usePreferences();
   const colorScheme = useColorScheme();
-  const dimensions = useWindowDimensions();
 
   const [, setStorage_] = useAsync(async (preferences: PreferencesType) => {
     const data = Object.entries({
@@ -68,7 +66,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       id: "1",
       header: "App Color",
       subheader: "Select app color theme",
-      iconName: "ios-logo-hackernews",
+      iconName: "color-palette-outline",
       type: (
         <Button
           buttonStyle={{ backgroundColor: color.bodyBg }}
@@ -82,7 +80,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       id: "2",
       header: "Dark Mode",
       subheader: "By default, we use your system preferences",
-      iconName: "rocket-outline",
+      iconName: "moon-outline",
       type: (
         <Switch
           value={
@@ -106,7 +104,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       id: "3",
       header: "Text Size",
       subheader: "Select Text Size",
-      iconName: "bulb-outline",
+      iconName: "text-outline",
       type: (
         <Button
           buttonStyle={{ backgroundColor: color.bodyBg }}
@@ -154,25 +152,23 @@ export const GeneralSettings: FC<SettingsProps> = () => {
 
   const twoColumn = (item) => {
     return (
-      <>
-        <ListItem bottomDivider containerStyle={containerBg()}>
-          <Icon
-            name={item.iconName}
-            color={color.textPrimary}
-            size={25}
-            style={image}
-          />
-          <ListItemContent>
-            <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-            <ListItem.Subtitle style={subheader()}>
-              {item.subheader}
-            </ListItem.Subtitle>
-          </ListItemContent>
-          <View>
-            <Text>{item.type}</Text>
-          </View>
-        </ListItem>
-      </>
+      <ListItem bottomDivider containerStyle={containerBg()}>
+        <Icon
+          name={item.iconName}
+          color={color.textPrimary}
+          size={25}
+          style={image}
+        />
+        <ListItemContent>
+          <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+          <ListItem.Subtitle style={subheader()}>
+            {item.subheader}
+          </ListItem.Subtitle>
+        </ListItemContent>
+        <View>
+          <Text>{item.type}</Text>
+        </View>
+      </ListItem>
     );
   };
 
