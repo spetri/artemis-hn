@@ -25,6 +25,7 @@ import {
   Pressable,
 } from "react-native";
 import { linkify } from "../../../utils/util";
+import { usePreferences } from "../../Settings/usePreferences";
 
 type CommentProps = {
   id: number;
@@ -35,6 +36,8 @@ type CommentProps = {
 export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const { theme } = useDash();
+    const displayReplies = usePreferences("displayReplies", false);
+    console.log("displayReplies", displayReplies[0]);
 
     const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -45,7 +48,7 @@ export const Comment: FC<CommentProps> = memo(
         }).then((res) => res.json())
     );
     const dimensions = useWindowDimensions();
-    const [showingReplies, setShowingReplies] = useState(false);
+    const [showingReplies, setShowingReplies] = useState(displayReplies[0]);
     const navigation =
       useNavigation<NativeStackNavigationProp<StackParamList>>();
     const htmlRenderersProps = useMemo<Partial<RenderersProps>>(

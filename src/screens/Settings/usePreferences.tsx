@@ -1,83 +1,33 @@
-import { useAsync } from "@react-hook/async";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useDash, createTypeSystem, colorSystem } from "../../../dash.config";
+import { useEffect, useState } from "react";
 
-import { useLayoutEffect, useMemo } from "react";
-import { useColorScheme } from "react-native";
-import { StackParamList } from "../routers";
+export function usePreferences(key, initialValue) {
+  const [storedValue, setStoredValue] = useState();
 
-export const preferencesVersion = "1.1";
-export const defaultPreferences: PreferencesType = {
-  displayReplies: false,
-  colorScheme: undefined,
-  primaryColor: "orange500",
-  baseTypeSize: 16,
-};
-
-export type PreferencesType = {
-  displayReplies: boolean;
-  colorScheme: "dark" | "light" | null | undefined;
-  primaryColor: keyof typeof colorSystem;
-  baseTypeSize: number;
-};
-
-export interface SettingsProps
-  extends NativeStackScreenProps<StackParamList, "User"> {}
-
-export const usePreferences = () => {
-  const { setTheme, insertThemes, insertTokens } = useDash();
-  const colorScheme = useColorScheme();
-  const [storage, loadStorage] = useAsync(async () => {
-    const keys = await AsyncStorage.getAllKeys();
-    const values = await AsyncStorage.multiGet(keys);
-    const data: Record<string, unknown> = {
-      data: defaultPreferences,
-      version: preferencesVersion,
-    };
-
-    for (const [key, value] of values) {
-      data[key] = value && JSON.parse(value);
+  async function getStoredItem(key, initialValue) {
+    try {
+      const item = await AsyncStorage.getItem(key);
+      const value = item ? JSON.parse(item) : initialValue;
+      setStoredValue(value);
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    return data as { data: PreferencesType; version: string };
-  });
+  useEffect(() => {
+    getStoredItem(key, initialValue);
+  }, [key, initialValue]);
 
-  useLayoutEffect(() => {
-    loadStorage();
-  }, []);
-
-  useLayoutEffect(() => {
-    const theme = storage.value?.data.colorScheme ?? colorScheme;
-    if (theme) {
-      setTheme(theme);
+  const setValue = async (value) => {
+    try {
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      await AsyncStorage.setItem(key, JSON.stringify(valueToStore));
+    } catch (error) {
+      console.log(error);
     }
-  }, [storage.value?.data.colorScheme, colorScheme]);
+  };
 
-  useLayoutEffect(() => {
-    const baseTypeSize = storage.value?.data.baseTypeSize;
-    if (baseTypeSize) {
-      insertTokens({
-        type: createTypeSystem(baseTypeSize),
-      });
-    }
-  }, [storage.value?.data.baseTypeSize]);
-
-  useLayoutEffect(() => {
-    const primaryColor = storage.value?.data.primaryColor;
-    if (primaryColor) {
-      insertThemes({
-        dark: { color: { primary: colorSystem[primaryColor] } },
-        light: { color: { primary: colorSystem[primaryColor] } },
-      });
-    }
-  }, [storage.value?.data.primaryColor]);
-
-  return useMemo(() => {
-    const { value, ...rest } = storage;
-    return [
-      { ...rest, data: value?.data, version: value?.version },
-      loadStorage,
-    ] as const;
-  }, [storage, loadStorage]);
-};
+  return [storedValue, setValue];
+}

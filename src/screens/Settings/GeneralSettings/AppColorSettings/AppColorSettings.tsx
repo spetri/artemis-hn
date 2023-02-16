@@ -13,22 +13,22 @@ import {
   ViewStyle,
   Pressable,
 } from "react-native";
-import {
-  defaultPreferences,
-  PreferencesType,
-  preferencesVersion,
-  usePreferences,
-} from "../../usePreferences";
 import { colorSystem, styles } from "../../../../../dash.config";
 import { NavigableHeader } from "../../../../components/NavigableHeader";
 import { StackParamList } from "../../../routers";
 import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
+import {
+  defaultPreferences,
+  preferencesVersion,
+  SetThemeType,
+  useTheme,
+} from "../../useTheme";
 
 export interface SettingsProps
   extends NativeStackScreenProps<StackParamList, "User"> {}
 
 export const AppColorSettings: FC<SettingsProps> = () => {
-  const [preferences, loadPreferences] = usePreferences();
+  const [preferences, loadPreferences] = useTheme();
   const primaryColors: (keyof typeof colorSystem)[] = [
     "orange500",
     "amber500",
@@ -48,7 +48,7 @@ export const AppColorSettings: FC<SettingsProps> = () => {
     "rose500",
   ];
 
-  const [, setStorage_] = useAsync(async (preferences: PreferencesType) => {
+  const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
       data: preferences,
       version: preferencesVersion,
@@ -58,7 +58,7 @@ export const AppColorSettings: FC<SettingsProps> = () => {
   });
 
   const setStorage = useCallback(
-    (settings: Partial<PreferencesType>) => {
+    (settings: Partial<SetThemeType>) => {
       setStorage_({ ...defaultPreferences, ...preferences?.data, ...settings });
     },
     [setStorage_, preferences?.data]

@@ -16,18 +16,20 @@ import {
   ViewStyle,
   SectionList,
 } from "react-native";
-import {
-  defaultPreferences,
-  PreferencesType,
-  preferencesVersion,
-  usePreferences,
-} from "../usePreferences";
+
 import { styles, useDash } from "../../../../dash.config";
 import { NavigableHeader } from "../../../components/NavigableHeader";
 import { StackParamList } from "../../routers";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
+import {
+  defaultPreferences,
+  preferencesVersion,
+  SetThemeType,
+  useTheme,
+} from "../useTheme";
+import { usePreferences } from "../usePreferences";
 
 export interface SettingsProps
   extends NativeStackScreenProps<StackParamList, "User"> {}
@@ -37,11 +39,16 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(
     undefined
   );
+  const [displayReplies, setDisplayReplies] = usePreferences(
+    "displayReplies",
+    false
+  );
+
   const [isVisible, setIsVisible] = useState(false);
-  const [preferences, loadPreferences] = usePreferences();
+  const [preferences, loadPreferences] = useTheme();
   const colorScheme = useColorScheme();
 
-  const [, setStorage_] = useAsync(async (preferences: PreferencesType) => {
+  const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
       data: preferences,
       version: preferencesVersion,
@@ -55,7 +62,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   } = useDash();
 
   const setStorage = useCallback(
-    (settings: Partial<PreferencesType>) => {
+    (settings: Partial<SetThemeType>) => {
       setStorage_({ ...defaultPreferences, ...preferences?.data, ...settings });
     },
     [setStorage_, preferences?.data]
@@ -121,11 +128,9 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: "file-tray-outline",
       type: (
         <Switch
-          value={preferences.data?.displayReplies}
+          value={displayReplies[0]}
           onValueChange={(value) => {
-            setStorage({
-              displayReplies: value ? true : false,
-            });
+            value ? setDisplayReplies(true) : setDisplayReplies(false);
           }}
         />
       ),

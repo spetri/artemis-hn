@@ -2,6 +2,8 @@ import { styles, useDash } from "../../../dash.config";
 import Icon from "react-native-vector-icons/Ionicons";
 import { FC } from "react";
 import {
+  Dimensions,
+  Pressable,
   SafeAreaView,
   SectionList,
   Text,
@@ -35,26 +37,40 @@ export const Home: FC<ListItemType> = () => {
     {
       id: "1",
       header: "All HN",
-      subheader: "All HNs Combined",
+      subheader: "All HNs combined",
       iconName: "ios-logo-hackernews",
       filter: "top",
     },
     {
       id: "2",
+      header: "Best HN",
+      subheader: "Best recent stories",
+      iconName: "star-half-outline",
+      filter: "best",
+    },
+    {
+      id: "3",
+      header: "New HN",
+      subheader: "Newest posts",
+      iconName: "ios-time-outline",
+      filter: "best",
+    },
+    {
+      id: "4",
       header: "Show HN",
       subheader: "Handmade projects",
       iconName: "rocket-outline",
       filter: "show",
     },
     {
-      id: "3",
+      id: "5",
       header: "Ask HN",
       subheader: "Questions and answers",
       iconName: "bulb-outline",
       filter: "ask",
     },
     {
-      id: "4",
+      id: "6",
       header: "Jobs HN",
       subheader: "Who's hiring?",
       iconName: "file-tray-outline",
@@ -66,42 +82,33 @@ export const Home: FC<ListItemType> = () => {
     <SafeAreaView style={containerBg()}>
       <View style={container()}>
         <SectionList
-          ItemSeparatorComponent={() => (
-            <View style={listItemSeparatorStyle()} />
-          )}
           ListHeaderComponent={<LogoHeader title="Select" />}
           sections={[{ title: "Topics", data: listItems }]}
           renderItem={({ item }) => (
-            <ListItem bottomDivider containerStyle={containerBg()}>
-              <Icon
-                name={item.iconName}
-                color={color.textPrimary}
-                size={25}
-                style={image}
-              />
-              <ListItemContent>
-                <ListItem.Title
-                  style={header()}
-                  onPress={() =>
-                    navigation.navigate("Stories", {
-                      filter: item?.filter as StoryFilters,
-                    })
-                  }
-                >
-                  {item.header}
-                </ListItem.Title>
-                <ListItem.Subtitle
-                  style={subheader()}
-                  onPress={() =>
-                    navigation.navigate("Stories", {
-                      filter: item?.filter as StoryFilters,
-                    })
-                  }
-                >
-                  {item.subheader}
-                </ListItem.Subtitle>
-              </ListItemContent>
-            </ListItem>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Stories", {
+                  filter: item?.filter as StoryFilters,
+                })
+              }
+            >
+              <ListItem bottomDivider containerStyle={content()}>
+                <Icon
+                  name={item.iconName}
+                  color={color.textPrimary}
+                  size={25}
+                  style={image}
+                />
+                <ListItemContent>
+                  <ListItem.Title style={header()}>
+                    {item.header}
+                  </ListItem.Title>
+                  <ListItem.Subtitle style={subheader()}>
+                    {item.subheader}
+                  </ListItem.Subtitle>
+                </ListItemContent>
+              </ListItem>
+            </Pressable>
           )}
         />
       </View>
@@ -119,6 +126,11 @@ const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
 }));
 
+const content = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  height: 65,
+}));
+
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: 12,
@@ -130,13 +142,7 @@ const image = styles.one<ViewStyle>((t) => ({
 }));
 
 const header = styles.one<TextStyle>((t) => ({
-  fontSize: 15,
+  fontSize: 16,
   fontWeight: "500",
   color: t.color.textPrimary,
-}));
-
-const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
-  height: 0.3,
-  width: "100%",
-  backgroundColor: t.color.accent,
 }));

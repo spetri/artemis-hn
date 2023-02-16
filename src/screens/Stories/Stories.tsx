@@ -1,13 +1,7 @@
 import "react-native-url-polyfill/auto";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState, useEffect, useMemo, useCallback, FC } from "react";
-import {
-  View,
-  LogBox,
-  RefreshControl,
-  FlatList,
-  ViewStyle,
-} from "react-native";
+import { LogBox, RefreshControl, FlatList, ViewStyle } from "react-native";
 import useSWR from "swr";
 import { LogoHeader } from "../../components/LogoHeader";
 import { StoryCard } from "../../components/StoryCard";
@@ -23,7 +17,6 @@ export const Stories: FC<StoriesProps> = (props) => {
   useDash();
   const { filter } = props.route.params;
   const [didMount, setDidMount] = useState(false);
-  const fauxStories = Array.from<number>({ length: 12 }).fill(-1);
   const fauxFlatStories = Array.from<number>({ length: 3 }).fill(-1);
 
   const stories = useSWR<number[]>(
@@ -34,12 +27,6 @@ export const Stories: FC<StoriesProps> = (props) => {
         headers: { "Content-Type": "application/json" },
       }).then((res) => res.json())
   );
-
-  const renderItem = (item: number, index: number) => {
-    return (
-      <StoryCard key={item === -1 ? index : item} index={index} id={item} />
-    );
-  };
 
   const renderFlatListItem = ({
     item,
@@ -116,8 +103,3 @@ const container = styles.one<ViewStyle>((t) => ({
   height: "100%",
   width: "100%",
 }));
-
-const listStyle: ViewStyle = {
-  flexDirection: "row",
-  flexWrap: "wrap",
-};

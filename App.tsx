@@ -8,7 +8,7 @@ import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
-import { usePreferences } from "./src/screens/Settings/usePreferences";
+import { useTheme } from "./src/screens/Settings/useTheme";
 import {
   AllStack,
   Tab,
@@ -122,7 +122,7 @@ function AppStatusBar() {
 
 function Tabs() {
   useDash();
-  usePreferences();
+  useTheme();
 
   return (
     <View style={sceneContainer()}>

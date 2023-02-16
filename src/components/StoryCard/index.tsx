@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { View, ViewStyle } from "react-native";
+import { Dimensions, View, ViewStyle } from "react-native";
 import useSWR from "swr";
 
 import { styles, useDash } from "../../../dash.config";
@@ -8,12 +8,12 @@ import {
   HackerNewsItem,
   HackerNewsPoll,
 } from "../../types/hn-api";
-import { Skeleton } from "../Skeleton";
 import { HACKER_NEWS_API } from "../../constants/api";
 import { JobStory } from "./JobStory/JobStory";
 import { AskStory } from "./AskStory/AskStory";
 import { CommentStory } from "./CommentStory/CommentStory";
 import { MinimalStory } from "./MinimalStory/MinimalStory";
+import { ListItem, Skeleton } from "@rneui/themed";
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
@@ -29,8 +29,17 @@ export const StoryCard = memo(
 
     if (!story.data) {
       return (
-        <View style={storyContainer(index)}>
-          <Skeleton style={storySkeleton(index)} />
+        <View>
+          <ListItem bottomDivider containerStyle={skeletonContainer(index)}>
+            <Skeleton animation="pulse" style={storySkeletonImage(index)} />
+            <ListItem.Content>
+              <Skeleton style={storySkeletonTitle(index)} />
+              <ListItem containerStyle={skeletonContainer(index)}>
+                <Skeleton style={storySkeletonBy(index)} />
+                <Skeleton style={storySkeletonMetadata(index)} />
+              </ListItem>
+            </ListItem.Content>
+          </ListItem>
         </View>
       );
     }
@@ -59,16 +68,39 @@ function PollStory({ data, index }: { data: HackerNewsPoll; index: number }) {
   return null;
 }
 
-const storyContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
-  width: index === 0 || index > 4 ? "100%" : "50%",
-  padding: t.space.lg,
-  paddingTop: index === 0 ? t.space.xl : index < 5 ? t.space.md : t.space.lg,
-  paddingBottom: index === 0 ? t.space.xl : index < 5 ? t.space.lg : t.space.lg,
+const skeletonContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
+  backgroundColor: t.color.bodyBg,
 }));
 
-const storySkeleton = styles.lazy<number, ViewStyle>((index) => (t) => ({
-  width: "100%",
-  height: index === 0 || index > 4 ? 172 : 96,
-  marginBottom: t.space.md,
-  borderRadius: t.radius.secondary,
+const storySkeletonImage = styles.lazy<number, ViewStyle>((index) => (t) => ({
+  display: "flex",
+  borderRadius: 10,
+  flexDirection: "column",
+  justifyContent: "center",
+  height: 60,
+  width: 60,
+  backgroundColor: t.color.accent,
 }));
+
+const storySkeletonTitle = styles.lazy<number, ViewStyle>((index) => (t) => ({
+  width: Dimensions.get("window").width - 200,
+  height: 15,
+  borderRadius: 10,
+  backgroundColor: t.color.accent,
+}));
+
+const storySkeletonBy = styles.lazy<number, ViewStyle>((index) => (t) => ({
+  height: 15,
+  width: 30,
+  borderRadius: 10,
+  backgroundColor: t.color.accent,
+}));
+
+const storySkeletonMetadata = styles.lazy<number, ViewStyle>(
+  (index) => (t) => ({
+    height: 15,
+    width: 90,
+    borderRadius: 10,
+    backgroundColor: t.color.accent,
+  })
+);

@@ -477,7 +477,7 @@ export const tokens = {
 };
 
 export const themes: Record<
-  "light" | "dark",
+  "light" | "dark" | "black",
   {
     color: {
       primary: RN.ColorValue;
