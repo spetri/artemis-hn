@@ -15,7 +15,7 @@ import {
   HackerNewsStory,
 } from "../../../types/hn-api";
 import { StoryThreadHeader } from "./StoryThreadHeader/StoryThreadHeader";
-import { Comment } from "./../Comment/Comment";
+import { Comment } from "../Comment/Comment";
 import { fauxFlatComments, keyExtractor } from "../../../utils/util";
 import { FAB } from "@rneui/themed";
 
