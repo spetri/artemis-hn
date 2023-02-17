@@ -37,7 +37,6 @@ export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const { theme } = useDash();
     const displayReplies = usePreferences("displayReplies", false);
-    console.log("displayReplies", displayReplies[0]);
 
     const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -48,7 +47,8 @@ export const Comment: FC<CommentProps> = memo(
         }).then((res) => res.json())
     );
     const dimensions = useWindowDimensions();
-    const [showingReplies, setShowingReplies] = useState(displayReplies[0]);
+    const [showingReplies, setShowingReplies] = useState(false);
+
     const navigation =
       useNavigation<NativeStackNavigationProp<StackParamList>>();
     const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
@@ -88,6 +88,7 @@ export const Comment: FC<CommentProps> = memo(
     }
 
     const comment = commentData.data;
+    console.log("displayReplies", displayReplies);
 
     return (
       <>
@@ -126,14 +127,14 @@ export const Comment: FC<CommentProps> = memo(
           )}
         </View>
 
-        {showingReplies &&
+        {(showingReplies || displayReplies[0]) &&
           comment.kids &&
           comment.kids.length > 0 &&
           comment.kids.map((id, index) => (
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids?.length > 0 && !showingReplies && (
+        {comment.kids?.length > 0 && !showingReplies && !displayReplies[0] && (
           <View style={commentContainerReply(depth)}>
             <Pressable
               onPress={() => {

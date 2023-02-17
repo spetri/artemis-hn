@@ -128,14 +128,16 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: "file-tray-outline",
       type: (
         <Switch
-          value={displayReplies[0]}
-          onValueChange={(value) => {
-            value ? setDisplayReplies(true) : setDisplayReplies(false);
-          }}
+          value={displayReplies}
+          onValueChange={(value) => onSetDisplayRepliesChange(value)}
         />
       ),
     },
   ];
+
+  const onSetDisplayRepliesChange = (value) => {
+    return value ? setDisplayReplies(true) : setDisplayReplies(false);
+  };
 
   useLayoutEffect(() => {
     if (
