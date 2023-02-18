@@ -3,13 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as htmlEntities from "html-entities";
 import stripTags from "striptags";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import {
-  Text,
-  TextStyle,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Text, TextStyle, Pressable, View, ViewStyle } from "react-native";
 import { StackParamList } from "../../../screens/routers";
 import { ago } from "../../../utils/ago";
 import { styles } from "../../../../dash.config";
@@ -38,7 +32,7 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
 
   return (
     <View style={storyContainer(index)}>
-      <TouchableWithoutFeedback
+      <Pressable
         onPress={() =>
           navigation.push("Thread", {
             id: parentData.id,
@@ -46,8 +40,8 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
         }
       >
         <Text style={commentStoryTitle()}>{parentData.title}</Text>
-      </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback
+      </Pressable>
+      <Pressable
         onPress={() =>
           navigation.push("Thread", {
             id: data.id,
@@ -57,10 +51,10 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
         <Text ellipsizeMode="tail" style={commentStoryText()} numberOfLines={4}>
           {stripTags(htmlEntities.decode(data.text), [], " ")}
         </Text>
-      </TouchableWithoutFeedback>
+      </Pressable>
 
       <View style={byLine}>
-        <TouchableWithoutFeedback
+        <Pressable
           onPress={() =>
             navigation.push("Thread", {
               id: data.id,
@@ -70,7 +64,7 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
           <Text style={byStyle()}>
             {pluralize(data.kids?.length ?? 0, "reply", "replies")}
           </Text>
-        </TouchableWithoutFeedback>
+        </Pressable>
         <Text style={agoStyle()}>
           {ago.format(new Date(data.time * 1000), "mini")}
         </Text>

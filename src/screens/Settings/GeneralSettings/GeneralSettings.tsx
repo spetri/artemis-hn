@@ -18,7 +18,7 @@ import {
 } from "react-native";
 
 import { styles, useDash } from "../../../../dash.config";
-import { NavigableHeader } from "../../../components/NavigableHeader";
+import { NavigableHeader } from "../../../components/NavigableHeader/NavigableHeader";
 import { StackParamList } from "../../routers";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";

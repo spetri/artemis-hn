@@ -13,10 +13,9 @@ import {
   ViewStyle,
   Pressable,
 } from "react-native";
-import { colorSystem, styles } from "../../../../../dash.config";
-import { NavigableHeader } from "../../../../components/NavigableHeader";
+import { styles } from "../../../../../dash.config";
+import { NavigableHeader } from "../../../../components/NavigableHeader/NavigableHeader";
 import { StackParamList } from "../../../routers";
-import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
 import {
   defaultPreferences,
   preferencesVersion,
@@ -29,23 +28,20 @@ export interface SettingsProps
 
 export const AppColorSettings: FC<SettingsProps> = () => {
   const [preferences, loadPreferences] = useTheme();
-  const primaryColors: (keyof typeof colorSystem)[] = [
-    "orange500",
-    "amber500",
-    "emerald500",
-    "blue500",
-    "cyan500",
-    "teal500",
-    "green500",
-    "lime600",
-    "red600",
-    "lightBlue500",
-    "violet500",
-    "purple500",
-    "indigo500",
-    "fuchsia500",
-    "pink500",
-    "rose500",
+  const primaryColors = [
+    { color: "orange500", name: "HN Default" },
+    { color: "red600", name: "Deep Love" },
+    { color: "amber500", name: "Gold" },
+    { color: "emerald200", name: "Mint" },
+    { color: "blue800", name: "Deep Blue Sea" },
+    { color: "cyan500", name: "Cyanic" },
+    { color: "green500", name: "Saint Patrick's Day" },
+    { color: "lime600", name: "Olive" },
+    { color: "violet500", name: "Magenta" },
+    { color: "indigo500", name: "Wild" },
+    { color: "fuchsia500", name: "Pink" },
+    { color: "pink500", name: "Party" },
+    { color: "rose500", name: "Rose" },
   ];
 
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
@@ -77,32 +73,33 @@ export const AppColorSettings: FC<SettingsProps> = () => {
   return (
     <SafeAreaView style={container()}>
       <NavigableHeader title="Select App Color" />
-      <ScrollView>
+      <ScrollView contentContainerStyle={containerBg()}>
         {primaryColors.map((color) => (
-          <ListItem key={color} bottomDivider containerStyle={containerBg()}>
-            <ListItemContent>
-              <ListItem containerStyle={containerBg()}>
-                <Pressable
-                  key={color}
-                  onPress={() => {
-                    setStorage({
-                      primaryColor: color,
-                    });
-                  }}
-                >
-                  <View
-                    style={colorSwatch({
-                      color,
-                      size: 50,
-                      selected: color === preferences.data?.primaryColor,
-                    })}
-                  />
-                </Pressable>
-                <ListItem.Title style={header()}>
-                  <Text>{color}</Text>
-                </ListItem.Title>
-              </ListItem>
-            </ListItemContent>
+          <ListItem
+            key={color.color}
+            bottomDivider
+            containerStyle={containerBg()}
+          >
+            <View style={listItems()}>
+              <Pressable
+                key={color.color}
+                onPress={() => {
+                  setStorage({
+                    primaryColor: color.color,
+                  });
+                }}
+              >
+                <View
+                  style={colorSwatch({
+                    color: color.color,
+                    selected: color.color === preferences.data?.primaryColor,
+                  })}
+                />
+              </Pressable>
+              <ListItem.Title style={header()}>
+                <Text>{color.name}</Text>
+              </ListItem.Title>
+            </View>
           </ListItem>
         ))}
       </ScrollView>
@@ -110,29 +107,37 @@ export const AppColorSettings: FC<SettingsProps> = () => {
   );
 };
 
-const container = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-}));
-
 const colorSwatch = styles.lazy<
-  { color: string; size: number; selected: boolean },
+  { color: string; selected: boolean },
   ViewStyle
->(({ color, size, selected }) => (t) => ({
-  width: size,
-  height: size,
-  marginBottom: t.space.md,
+>(({ color, selected }) => (t) => ({
+  width: 30,
+  height: 30,
   backgroundColor: (t.color as any)[color],
   borderColor: selected ? t.color.textPrimary : "transparent",
-  borderWidth: 6,
-  borderRadius: t.radius.primary,
+  borderWidth: 3,
+  borderRadius: 4,
+  marginRight: 10,
 }));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
 }));
 
+const container = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  height: "100%",
+}));
+
+const listItems = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  height: 20,
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+}));
+
 const header = styles.one<TextStyle>((t) => ({
   fontSize: 15,
-  fontWeight: "500",
   color: t.color.textPrimary,
 }));

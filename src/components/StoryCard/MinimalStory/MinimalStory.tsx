@@ -49,64 +49,55 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     );
   }
 
-  const goToThread = (data) => {
-    navigation.push("Thread", { id: data.id });
+  const displayImage = () => {
+    if (metadata?.image) {
+      return (
+        <Pressable
+          onPress={() =>
+            navigation.push("BrowserModal", {
+              title: data.title,
+              url: url.toString(),
+            })
+          }
+        >
+          <Image style={storyImage} source={{ uri: metadata?.image }} />
+        </Pressable>
+      );
+    } else {
+      return (
+        <Pressable
+          onPress={() =>
+            navigation.push("BrowserModal", {
+              title: metadata.applicationName || url.hostname,
+              url: url.origin,
+            })
+          }
+        >
+          <View>
+            <Image style={storyImage} source={{ uri: metadata.favicon }} />
+          </View>
+        </Pressable>
+      );
+    }
   };
 
   return (
     metadata && (
       <View style={storyContainer(index)} key={data.id}>
-        <View style={imageColumn(index)}>
-          {metadata?.image ? (
-            <Pressable
-              onPress={() =>
-                navigation.push("BrowserModal", {
-                  title: data.title,
-                  url: url.toString(),
-                })
-              }
-            >
-              <Image style={storyImage} source={{ uri: metadata?.image }} />
-            </Pressable>
-          ) : (
-            <>
-              <Pressable
-                onPress={() =>
-                  navigation.push("BrowserModal", {
-                    title: metadata.applicationName || url.hostname,
-                    url: url.origin,
-                  })
-                }
-              >
-                <View>
-                  <Image
-                    style={storyImage}
-                    source={{ uri: metadata.favicon }}
-                  />
-                </View>
-              </Pressable>
-            </>
-          )}
-        </View>
-        <Pressable onPress={() => goToThread(data)}>
+        <View style={imageColumn(index)}>{displayImage()}</View>
+        <Pressable onPress={() => navigation.push("Thread", { id: data.id })}>
           <View style={bodyColumn(index)}>
-            <View style={storyTitle(index)}>
+            <View>
               <Text style={storyTitle(index)} numberOfLines={4}>
                 {data.title}
-                {/* <View>
-                  <Text
-                    style={appName()}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    (
-                    {metadata.applicationName || url.host.replace(/^www\./, "")}
-                    )
-                  </Text>
-                </View> */}
               </Text>
             </View>
-            <View style={footerText}>
+            <View>
+              <Text style={appName()}>
+                ({metadata.applicationName || url.host.replace(/^www\./, "")})
+              </Text>
+            </View>
+            <View style={footerText()}>
               <View>
                 <Pressable
                   onPress={() => navigation.push("User", { id: data.by })}
@@ -124,14 +115,6 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                   <Text>{data.score}</Text>
                 </Text>
                 <View>
-                  {/* {iconName(
-                    {
-                      size: 13,
-                      name: "chatbubble-outline",
-                      color: color.textAccent,
-                    },
-                    data.descendants
-                  )} */}
                   <View style={restIcon()}>
                     <Text style={rotate90}>
                       <IoniconIcon
@@ -144,14 +127,6 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                   </View>
                 </View>
                 <View>
-                  {/* <IoniconIcon
-                    size={13}
-                    name="time-outline"
-                    color={color.textAccent}
-                  />
-                  <Text style={restIcon()}>
-                    {ago.format(new Date(data.time * 1000), "mini")}
-                  </Text> */}
                   <Text style={restIcon()}>
                     <IoniconIcon
                       size={13}
@@ -206,8 +181,7 @@ const imageColumn = styles.lazy<number, ViewStyle>((index) => (t) => ({
   display: "flex",
   flexDirection: "column",
   height: "100%",
-  marginLeft: 10,
-  marginRight: 10,
+  marginHorizontal: 15,
   justifyContent: "center",
 }));
 
@@ -224,7 +198,7 @@ const bodyColumn = styles.lazy<number, ViewStyle>((index) => (t) => ({
 const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
   color: t.color.textPrimary,
   fontSize: 15,
-  fontWeight: "400",
+  fontWeight: "500",
   display: "flex",
   flexWrap: "wrap",
   width: Dimensions.get("window").width - 100,
@@ -282,17 +256,16 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const appName = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: 13,
+  fontSize: 12,
   fontWeight: "300",
-  paddingLeft: 5,
 }));
 
-const footerText = {
+const footerText = styles.one<TextStyle>((t) => ({
   display: "flex",
   flexDirection: "row",
   flexWrap: "nowrap",
   alignItems: "center",
-};
+}));
 
 const restText = styles.one<TextStyle>((t) => ({
   fontSize: t.type.size["2xs"],

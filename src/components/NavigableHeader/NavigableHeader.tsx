@@ -2,14 +2,14 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import type { ActionSheetProps } from "@expo/react-native-action-sheet";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Icon } from "../Icon";
+import Icon from "react-native-vector-icons/Ionicons";
 import { styles, useDash } from "../../../dash.config";
 import { StackParamList } from "../../screens/routers";
 import {
   Text,
   SafeAreaView,
   TextStyle,
-  TouchableOpacity,
+  Pressable,
   View,
   ViewStyle,
 } from "react-native";
@@ -34,19 +34,19 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
   return (
     <SafeAreaView style={headerContainer()}>
       <View style={header()}>
-        <TouchableOpacity
+        <Pressable
           style={navButton("visible")}
           onPress={() => navigation.goBack()}
         >
-          <Icon name="chevron-left" color="textAccent" size={18} />
-        </TouchableOpacity>
+          <Icon name="ios-chevron-back-sharp" style={icon()} size={18} />
+        </Pressable>
 
         <Text style={titleStyle()} ellipsizeMode="tail">
           {title}
         </Text>
 
         {actions ? (
-          <TouchableOpacity
+          <Pressable
             style={navButton("visible")}
             onPress={() => {
               actionSheet.showActionSheetWithOptions(
@@ -55,8 +55,8 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
               );
             }}
           >
-            <Icon name="more-horizontal" color="textAccent" size={18} />
-          </TouchableOpacity>
+            <Icon name="ellipsis-horizontal" style={icon()} size={18} />
+          </Pressable>
         ) : (
           <View style={navButton("hidden")} />
         )}
@@ -90,7 +90,7 @@ const navButton = styles.lazy<"hidden" | "visible", ViewStyle>(
     width: 18 * (t.type.size.base / 16) + t.space.sm * 2,
     height: 18 * (t.type.size.base / 16) + t.space.sm * 2,
     borderRadius: t.radius.full,
-    backgroundColor: t.color.accentLight,
+    color: t.color.accentLight,
     opacity: visibilty === "visible" ? 1 : 0,
   })
 );
@@ -101,4 +101,8 @@ const titleStyle = styles.one<TextStyle>((t) => ({
   fontWeight: "700",
   flex: 1,
   textAlign: "center",
+}));
+
+const icon = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
 }));

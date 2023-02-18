@@ -2,11 +2,8 @@ import { styles, useDash } from "../../../dash.config";
 import Icon from "react-native-vector-icons/Ionicons";
 import { FC, useEffect, useState } from "react";
 import {
-  Dimensions,
   Pressable,
   SafeAreaView,
-  SectionList,
-  Text,
   TextStyle,
   View,
   ViewStyle,
@@ -18,8 +15,6 @@ import { useNavigation } from "@react-navigation/native";
 import { StoryFilters } from "../../types/hn-api";
 import { ListItem } from "@rneui/themed";
 import DraggableFlatList, {
-  NestableDraggableFlatList,
-  NestableScrollContainer,
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
@@ -88,38 +83,7 @@ export const Home: FC<ListItemType> = () => {
               </Pressable>
             </ScaleDecorator>
           )}
-        >
-          {/* <SectionList
-            ListHeaderComponent={<LogoHeader title="Select" />}
-            sections={[{ title: "Topics", data: listItems }]}
-            renderItem={({ item }) => (
-              <Pressable
-                onPress={() =>
-                  navigation.navigate("Stories", {
-                    filter: item?.filter as StoryFilters,
-                  })
-                }
-              >
-                <ListItem bottomDivider containerStyle={content()}>
-                  <Icon
-                    name={item.iconName}
-                    color={color.textPrimary}
-                    size={25}
-                    style={image}
-                  />
-                  <ListItemContent>
-                    <ListItem.Title style={header()}>
-                      {item.header}
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={subheader()}>
-                      {item.subheader}
-                    </ListItem.Subtitle>
-                  </ListItemContent>
-                </ListItem>
-              </Pressable>
-            )}
-          /> */}
-        </DraggableFlatList>
+        ></DraggableFlatList>
       </View>
     </SafeAreaView>
   );

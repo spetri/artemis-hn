@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type {
   MixedStyleRecord,
@@ -35,8 +36,13 @@ type CommentProps = {
 
 export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
+    const [collapsed, setCollapsed] = useState(false);
     const { theme } = useDash();
+    const {
+      tokens: { color },
+    } = useDash();
     const displayReplies = usePreferences("displayReplies", false);
+    const swipeableRef = useRef(null);
 
     const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -88,46 +94,84 @@ export const Comment: FC<CommentProps> = memo(
     }
 
     const comment = commentData.data;
-    console.log("displayReplies", displayReplies);
+
+    const onCollapse = () => {
+      setCollapsed(true);
+      closeSwipeable();
+    };
+
+    const closeSwipeable = () => swipeableRef.current.close();
+
+    const rightSwipeActions = () => {
+      return (
+        <Pressable onPress={onCollapse}>
+          <View
+            style={{
+              backgroundColor: color.primary,
+              justifyContent: "center",
+              alignItems: "flex-end",
+              height: "100%",
+            }}
+          >
+            <Text
+              style={{
+                color: "#1b1a17",
+                paddingHorizontal: 10,
+                fontWeight: "600",
+                paddingVertical: 20,
+              }}
+            >
+              Collapse
+            </Text>
+          </View>
+        </Pressable>
+      );
+    };
 
     return (
       <>
-        <View style={commentContainer(depth)}>
-          <View style={byLine}>
-            <Pressable
-              onPress={() => navigation.navigate("User", { id: comment.by })}
-            >
-              <Text style={byStyle()}>{comment.by}</Text>
-            </Pressable>
-            <Pressable
-              onPress={() =>
-                navigation.push("Thread", {
-                  id: comment.id,
-                })
-              }
-            >
-              <Text style={agoStyle()}>
-                {ago.format(new Date(comment.time * 1000), "mini")}
-              </Text>
-            </Pressable>
+        <Swipeable
+          renderRightActions={rightSwipeActions}
+          onSwipeableRightOpen={() => "right"}
+          ref={swipeableRef}
+        >
+          <View style={commentContainer(depth)}>
+            <View style={byLine}>
+              <Pressable
+                onPress={() => navigation.navigate("User", { id: comment.by })}
+              >
+                <Text style={byStyle()}>{comment.by}</Text>
+              </Pressable>
+              <Pressable
+                onPress={() =>
+                  navigation.push("Thread", {
+                    id: comment.id,
+                  })
+                }
+              >
+                <Text style={agoStyle()}>
+                  {ago.format(new Date(comment.time * 1000), "mini")}
+                </Text>
+              </Pressable>
+            </View>
+
+            {htmlSource && !collapsed && (
+              <RenderHTML
+                contentWidth={dimensions.width}
+                source={htmlSource}
+                baseStyle={commentContent()}
+                tagsStyles={htmlTagStyles}
+                defaultTextProps={htmlDefaultTextProps}
+                renderersProps={htmlRenderersProps}
+                enableExperimentalBRCollapsing
+                enableExperimentalGhostLinesPrevention
+                enableExperimentalMarginCollapsing
+              />
+            )}
           </View>
+        </Swipeable>
 
-          {htmlSource && (
-            <RenderHTML
-              contentWidth={dimensions.width}
-              source={htmlSource}
-              baseStyle={commentContent()}
-              tagsStyles={htmlTagStyles}
-              defaultTextProps={htmlDefaultTextProps}
-              renderersProps={htmlRenderersProps}
-              enableExperimentalBRCollapsing
-              enableExperimentalGhostLinesPrevention
-              enableExperimentalMarginCollapsing
-            />
-          )}
-        </View>
-
-        {(showingReplies || displayReplies[0]) &&
+        {(showingReplies || (displayReplies[0] && !collapsed)) &&
           comment.kids &&
           comment.kids.length > 0 &&
           comment.kids.map((id, index) => (

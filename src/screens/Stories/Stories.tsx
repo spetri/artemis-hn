@@ -3,13 +3,13 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState, useEffect, useMemo, useCallback, FC } from "react";
 import { LogBox, RefreshControl, FlatList, ViewStyle } from "react-native";
 import useSWR from "swr";
-import { LogoHeader } from "../../components/LogoHeader";
 import { StoryCard } from "../../components/StoryCard";
 import { useDash, styles } from "../../../dash.config";
 import { StackParamList } from "../routers";
 import { HACKER_NEWS_API } from "../../constants/api";
 import { keyExtractor } from "../../utils/util";
 import { EmbeddedSearch } from "../Search/EmbeddedSearch";
+import { NavigableHeader } from "../../components/NavigableHeader/NavigableHeader";
 
 type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">;
 
@@ -55,7 +55,7 @@ export const Stories: FC<StoriesProps> = (props) => {
   const listHeaderComponent = useCallback(() => {
     return (
       <>
-        <LogoHeader
+        <NavigableHeader
           title={
             filter === "show"
               ? "Show HN"
@@ -103,3 +103,15 @@ const container = styles.one<ViewStyle>((t) => ({
   height: "100%",
   width: "100%",
 }));
+
+const navButton = styles.lazy<"hidden" | "visible", ViewStyle>(
+  (visibilty) => (t) => ({
+    alignItems: "center",
+    justifyContent: "center",
+    width: 18 * (t.type.size.base / 16) + t.space.sm * 2,
+    height: 18 * (t.type.size.base / 16) + t.space.sm * 2,
+    borderRadius: t.radius.full,
+    color: t.color.accentLight,
+    opacity: visibilty === "visible" ? 1 : 0,
+  })
+);
