@@ -1,4 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
+import Ionicon from "react-native-vector-icons/Ionicons";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type {
@@ -27,6 +29,7 @@ import {
 } from "react-native";
 import { linkify } from "../../../utils/util";
 import { usePreferences } from "../../Settings/usePreferences";
+import { BottomSheet, ListItem } from "@rneui/themed";
 
 type CommentProps = {
   id: number;
@@ -37,6 +40,8 @@ type CommentProps = {
 export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const [collapsed, setCollapsed] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+
     const { theme } = useDash();
     const {
       tokens: { color },
@@ -97,10 +102,8 @@ export const Comment: FC<CommentProps> = memo(
 
     const onCollapse = () => {
       setCollapsed(true);
-      closeSwipeable();
+      swipeableRef.current.close();
     };
-
-    const closeSwipeable = () => swipeableRef.current.close();
 
     const rightSwipeActions = () => {
       return (
@@ -116,12 +119,19 @@ export const Comment: FC<CommentProps> = memo(
             <Text
               style={{
                 color: "#1b1a17",
-                paddingHorizontal: 10,
                 fontWeight: "600",
                 paddingVertical: 20,
+                paddingHorizontal: 10,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              Collapse
+              <MaterialIcon
+                name="arrow-collapse-left"
+                color={color.textPrimary}
+                size={30}
+              />
             </Text>
           </View>
         </Pressable>
@@ -139,20 +149,36 @@ export const Comment: FC<CommentProps> = memo(
             <View style={byLine}>
               <Pressable
                 onPress={() => navigation.navigate("User", { id: comment.by })}
+                style={{ flex: 1 }}
               >
                 <Text style={byStyle()}>{comment.by}</Text>
               </Pressable>
-              <Pressable
-                onPress={() =>
-                  navigation.push("Thread", {
-                    id: comment.id,
-                  })
-                }
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginRight: 10,
+                }}
               >
-                <Text style={agoStyle()}>
-                  {ago.format(new Date(comment.time * 1000), "mini")}
-                </Text>
-              </Pressable>
+                <Pressable
+                  onPress={() =>
+                    navigation.push("Thread", {
+                      id: comment.id,
+                    })
+                  }
+                >
+                  <Text style={agoStyle()}>
+                    {ago.format(new Date(comment.time * 1000), "mini")}
+                  </Text>
+                </Pressable>
+                <Pressable onPress={() => setIsVisible(true)}>
+                  <Ionicon
+                    name="ellipsis-horizontal"
+                    color={color.textPrimary}
+                    size={18}
+                  />
+                </Pressable>
+              </View>
             </View>
 
             {htmlSource && !collapsed && (
@@ -191,6 +217,46 @@ export const Comment: FC<CommentProps> = memo(
             </Pressable>
           </View>
         )}
+
+        <BottomSheet isVisible={isVisible}>
+          <ListItem bottomDivider onPress={onCollapse}>
+            <MaterialIcon
+              name="arrow-collapse-left"
+              color={color.accent}
+              size={25}
+            />
+            <ListItem.Title>Collapse Thread</ListItem.Title>
+          </ListItem>
+          <ListItem
+            bottomDivider
+            onPress={() =>
+              navigation.push("Thread", {
+                id: comment.id,
+              })
+            }
+          >
+            <MaterialIcon
+              name="align-horizontal-right"
+              color={color.accent}
+              size={25}
+            />
+            <ListItem.Title>View Thread</ListItem.Title>
+          </ListItem>
+          <ListItem bottomDivider>
+            <MaterialIcon name="content-copy" color={color.accent} size={25} />
+            <ListItem.Title>Copy Text</ListItem.Title>
+          </ListItem>
+          <ListItem
+            bottomDivider
+            onPress={() => navigation.navigate("User", { id: comment.by })}
+          >
+            <MaterialIcon name="content-copy" color={color.accent} size={25} />
+            <ListItem.Title>View Profile</ListItem.Title>
+          </ListItem>
+          <ListItem onPress={() => setIsVisible(false)} bottomDivider>
+            <ListItem.Title>Cancel</ListItem.Title>
+          </ListItem>
+        </BottomSheet>
       </>
     );
   },
@@ -266,6 +332,7 @@ const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
   fontWeight: "300",
+  paddingRight: 10,
 }));
 
 const link = styles.one((t) => ({
