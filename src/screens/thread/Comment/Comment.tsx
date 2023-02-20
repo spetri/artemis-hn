@@ -40,7 +40,6 @@ type CommentProps = {
 export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const [collapsed, setCollapsed] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
     const actionSheet = useActionSheet();
 
     const { theme } = useDash();
