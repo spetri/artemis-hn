@@ -12,6 +12,7 @@ import {
   View,
   ViewStyle,
   Pressable,
+  SectionList,
 } from "react-native";
 import { styles } from "../../../../../dash.config";
 import { NavigableHeader } from "../../../../components/NavigableHeader/NavigableHeader";
@@ -28,22 +29,47 @@ export interface SettingsProps
 
 export const AppColorSettings: FC<SettingsProps> = () => {
   const [preferences, loadPreferences] = useTheme();
-  const primaryColors = [
-    { color: "orange500", name: "HN Default" },
-    { color: "red600", name: "Deep Love" },
-    { color: "amber500", name: "Gold" },
-    { color: "emerald200", name: "Mint" },
-    { color: "blue800", name: "Deep Blue Sea" },
-    { color: "cyan500", name: "Cyanic" },
-    { color: "green500", name: "Saint Patrick's Day" },
-    { color: "lime600", name: "Olive" },
-    { color: "violet500", name: "Magenta" },
-    { color: "indigo500", name: "Wild" },
-    { color: "fuchsia500", name: "Pink" },
-    { color: "pink500", name: "Party" },
-    { color: "rose500", name: "Rose" },
-  ];
-
+  const appColors = {
+    accentColors: [
+      { color: "orange500", name: "HN Default", displayName: "HN Default" },
+      { color: "red600", name: "Deep Love", displayName: "Deep Love" },
+      { color: "amber500", name: "Gold", displayName: "Gold" },
+      { color: "emerald200", name: "Mint", displayName: "Mint" },
+      { color: "blue800", name: "Deep Blue Sea", displayName: "Deep Blue Sea" },
+      { color: "cyan500", name: "Cyanic", displayName: "Cyanic" },
+      {
+        color: "green500",
+        name: "Saint Patrick's Day",
+        displayName: "Saint Patrick's Day",
+      },
+      { color: "lime600", name: "Olive", displayName: "Olive" },
+      { color: "violet500", name: "Magenta", displayName: "Magenta" },
+      { color: "indigo500", name: "Wild", displayName: "Wild" },
+      { color: "fuchsia500", name: "Pink", displayName: "Pink" },
+      { color: "pink500", name: "Party", displayName: "Party" },
+      { color: "rose500", name: "Rose", displayName: "Rose" },
+    ],
+    themeColors: [
+      {
+        theme: styles.tokens.light.color,
+        color: "white",
+        name: "light",
+        displayName: "Light",
+      },
+      {
+        theme: styles.tokens.dark.color,
+        color: "warmGray900",
+        name: "dark",
+        displayName: "Dark",
+      },
+      {
+        theme: styles.tokens.black.color,
+        color: "black",
+        name: "black",
+        displayName: "Black",
+      },
+    ],
+  };
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
       data: preferences,
@@ -72,37 +98,51 @@ export const AppColorSettings: FC<SettingsProps> = () => {
 
   return (
     <SafeAreaView style={container()}>
-      <NavigableHeader title="Select App Color" />
-      <ScrollView contentContainerStyle={containerBg()}>
-        {primaryColors.map((color) => (
-          <ListItem
-            key={color.color}
-            bottomDivider
-            containerStyle={containerBg()}
-          >
-            <View style={listItems()}>
-              <Pressable
-                key={color.color}
-                onPress={() => {
-                  setStorage({
-                    primaryColor: color.color,
-                  });
-                }}
+      <SectionList
+        ListHeaderComponent={<NavigableHeader title="Select App Color" />}
+        sections={[
+          { title: "Theme Colors", data: appColors.themeColors },
+          { title: "Accent Colors", data: appColors.accentColors },
+        ]}
+        renderSectionHeader={({ section }) => (
+          <Text style={sectionHeaderStyle()}>{section.title}</Text>
+        )}
+        renderItem={(appColor) => {
+          return (
+            <Pressable
+              key={appColor.item.name}
+              onPress={(value) => {
+                !!appColor.item.theme
+                  ? setStorage({
+                      colorScheme: appColor.item.name,
+                    })
+                  : setStorage({
+                      primaryColor: appColor.item.color,
+                    });
+              }}
+            >
+              <ListItem
+                key={appColor.item.name}
+                bottomDivider
+                containerStyle={containerBg()}
               >
-                <View
-                  style={colorSwatch({
-                    color: color.color,
-                    selected: color.color === preferences.data?.primaryColor,
-                  })}
-                />
-              </Pressable>
-              <ListItem.Title style={header()}>
-                <Text>{color.name}</Text>
-              </ListItem.Title>
-            </View>
-          </ListItem>
-        ))}
-      </ScrollView>
+                <View style={listItems()}>
+                  <View
+                    style={colorSwatch({
+                      color: appColor.item.color,
+                      selected:
+                        appColor.item.color === preferences.data?.primaryColor,
+                    })}
+                  />
+                  <ListItem.Title style={header()}>
+                    <Text>{appColor.item.displayName}</Text>
+                  </ListItem.Title>
+                </View>
+              </ListItem>
+            </Pressable>
+          );
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -140,4 +180,16 @@ const listItems = styles.one<ViewStyle>((t) => ({
 const header = styles.one<TextStyle>((t) => ({
   fontSize: 15,
   color: t.color.textPrimary,
+}));
+
+const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
+  marginTop: 30,
+  marginLeft: 10,
+  fontSize: 13,
+  textTransform: "uppercase",
+  height: 30,
+  display: "flex",
+  justifyContent: "center",
+  backgroundColor: t.color.bodyBg,
+  color: t.color.accentLight,
 }));

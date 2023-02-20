@@ -67,6 +67,7 @@ export const useTheme = () => {
     const primaryColor = storage.value?.data.primaryColor;
     if (primaryColor) {
       insertThemes({
+        black: { color: { primary: colorSystem[primaryColor] } },
         dark: { color: { primary: colorSystem[primaryColor] } },
         light: { color: { primary: colorSystem[primaryColor] } },
       });

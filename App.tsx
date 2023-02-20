@@ -279,7 +279,10 @@ function SettingsScreens() {
         headerShown: false,
       }}
     >
-      <SettingsStack.Screen name="Settings" component={SettingsListView} />
+      <SettingsStack.Screen
+        name="SettingsListView"
+        component={SettingsListView}
+      />
       <SettingsStack.Screen
         name="GeneralSettings"
         component={GeneralSettings}

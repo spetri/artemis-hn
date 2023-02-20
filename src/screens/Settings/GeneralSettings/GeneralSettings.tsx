@@ -68,6 +68,12 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     [setStorage_, preferences?.data]
   );
 
+  const themeChange = (value) => {
+    setStorage({
+      colorScheme: value ? "dark" : "light",
+    });
+  };
+
   const listItems = [
     {
       id: "1",
@@ -99,11 +105,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             false: tokens.color.textAccent,
             true: tokens.color.primary,
           }}
-          onValueChange={(value) => {
-            setStorage({
-              colorScheme: value ? "dark" : "light",
-            });
-          }}
+          onValueChange={(value) => themeChange(value)}
         />
       ),
     },

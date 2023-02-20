@@ -517,6 +517,20 @@ export const themes: Record<
 
     shadow: createShadowScale(colorSystem.white),
   },
+
+  black: {
+    color: {
+      primary: colorSystem.orange500,
+      textPrimary: colorSystem.white,
+      textAccent: colorSystem.warmGray500,
+      bodyBg: colorSystem.black,
+      headerBg: colorSystem.black,
+      accent: colorSystem.warmGray800,
+      accentLight: colorSystem.warmGray600,
+    },
+
+    shadow: createShadowScale(colorSystem.white),
+  },
 };
 
 export const { styles, styled, DashProvider, useDash } = createStyles({
@@ -531,9 +545,10 @@ export function tokensAreEqual<Props extends {}>(
   return t === nt;
 }
 
-export type AppTokens = typeof styles.tokens.light | typeof styles.tokens.dark;
+export type AppTokens = typeof styles.tokens.light | typeof styles.tokens.dark | typeof styles.tokens.black;
 export type AppThemes = typeof themes;
 export type AppThemeNames = keyof AppThemes;
 export type AppColors =
+| keyof typeof styles.tokens.light.color
   | keyof typeof styles.tokens.dark.color
-  | keyof typeof styles.tokens.light.color;
+  | keyof typeof styles.tokens.black.color;

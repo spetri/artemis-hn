@@ -89,7 +89,8 @@ export const SettingsListView: FC = () => {
           style={{
             display: "flex",
             alignSelf: "center",
-            color: color.textPrimary,
+            color: color.textAccent,
+            fontSize: 10,
           }}
         >
           v{Application.nativeBuildVersion}{" "}
