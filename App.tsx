@@ -1,4 +1,7 @@
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import {
+  ActionSheetProvider,
+  useActionSheet,
+} from "@expo/react-native-action-sheet";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { registerRootComponent } from "expo";
@@ -8,7 +11,7 @@ import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
-import { useTheme } from "./src/screens/Settings/useTheme";
+import { defaultPreferences, useTheme } from "./src/screens/Settings/useTheme";
 import {
   AllStack,
   Tab,
@@ -248,11 +251,11 @@ function HomeScreens() {
   return (
     <HomeStack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
       }}
     >
       <HomeStack.Screen
-        name="Topics"
+        name="Select"
         component={Home}
         initialParams={{ filter: "home" }}
       />
@@ -263,9 +266,7 @@ function HomeScreens() {
       />
       <HomeStack.Screen name="User" component={User} />
       <HomeStack.Screen name="Thread" component={Thread} />
-      <HomeStack.Group
-        screenOptions={{ headerShown: false, presentation: "modal" }}
-      >
+      <HomeStack.Group screenOptions={{ presentation: "modal" }}>
         <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
       </HomeStack.Group>
     </HomeStack.Navigator>
@@ -276,21 +277,12 @@ function SettingsScreens() {
   return (
     <SettingsStack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
       }}
     >
-      <SettingsStack.Screen
-        name="SettingsListView"
-        component={SettingsListView}
-      />
-      <SettingsStack.Screen
-        name="GeneralSettings"
-        component={GeneralSettings}
-      />
-      <SettingsStack.Screen
-        name="AppColorSettings"
-        component={AppColorSettings}
-      />
+      <SettingsStack.Screen name="Settings" component={SettingsListView} />
+      <SettingsStack.Screen name="General" component={GeneralSettings} />
+      <SettingsStack.Screen name="App Color" component={AppColorSettings} />
     </SettingsStack.Navigator>
   );
 }

@@ -55,7 +55,7 @@ export const Stories: FC<StoriesProps> = (props) => {
   const listHeaderComponent = useCallback(() => {
     return (
       <>
-        <NavigableHeader
+        {/* <NavigableHeader
           title={
             filter === "show"
               ? "Show HN"
@@ -65,7 +65,7 @@ export const Stories: FC<StoriesProps> = (props) => {
               ? "Jobs"
               : "HN"
           }
-        />
+        /> */}
         <EmbeddedSearch />
       </>
     );

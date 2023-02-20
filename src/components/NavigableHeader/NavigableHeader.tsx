@@ -34,13 +34,14 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
   return (
     <SafeAreaView style={headerContainer()}>
       <View style={header()}>
-        <Pressable
-          style={navButton("visible")}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="ios-chevron-back-sharp" style={icon()} size={18} />
-        </Pressable>
-
+        {navigation.canGoBack() && (
+          <Pressable
+            style={navButton("visible")}
+            onPress={() => navigation.goBack()}
+          >
+            <Icon name="ios-chevron-back-sharp" style={icon()} size={18} />
+          </Pressable>
+        )}
         <Text style={titleStyle()} ellipsizeMode="tail">
           {title}
         </Text>

@@ -522,7 +522,7 @@ export const themes: Record<
     color: {
       primary: colorSystem.orange500,
       textPrimary: colorSystem.white,
-      textAccent: colorSystem.warmGray500,
+      textAccent: colorSystem.warmGray300,
       bodyBg: colorSystem.black,
       headerBg: colorSystem.black,
       accent: colorSystem.warmGray800,

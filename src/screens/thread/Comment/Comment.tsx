@@ -30,6 +30,7 @@ import {
 import { linkify } from "../../../utils/util";
 import { usePreferences } from "../../Settings/usePreferences";
 import { BottomSheet, ListItem } from "@rneui/themed";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 type CommentProps = {
   id: number;
@@ -41,6 +42,7 @@ export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const [collapsed, setCollapsed] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
+    const actionSheet = useActionSheet();
 
     const { theme } = useDash();
     const {
@@ -171,7 +173,68 @@ export const Comment: FC<CommentProps> = memo(
                     {ago.format(new Date(comment.time * 1000), "mini")}
                   </Text>
                 </Pressable>
-                <Pressable onPress={() => setIsVisible(true)}>
+                <Pressable
+                  onPress={() => {
+                    actionSheet.showActionSheetWithOptions(
+                      {
+                        options: [
+                          "Collapse Thread",
+                          "View Thread",
+                          "Copy Text",
+                          "View Profile",
+                          "Cancel",
+                        ],
+                        userInterfaceStyle: "dark",
+                        tintIcons: true,
+                        icons: [
+                          <MaterialIcon
+                            name="arrow-collapse-left"
+                            color={color.accent}
+                            size={25}
+                          />,
+                          <MaterialIcon
+                            name="arrow-collapse-left"
+                            color={color.accent}
+                            size={25}
+                          />,
+                          <MaterialIcon
+                            name="arrow-collapse-left"
+                            color={color.accent}
+                            size={25}
+                          />,
+                          <MaterialIcon
+                            name="arrow-collapse-left"
+                            color={color.accent}
+                            size={25}
+                          />,
+                          <MaterialIcon
+                            name="arrow-collapse-left"
+                            color={color.accent}
+                            size={25}
+                          />,
+                        ],
+                      },
+                      (buttonIndex) => {
+                        switch (buttonIndex) {
+                          case 0:
+                            return onCollapse();
+                          case 1:
+                            return navigation.push("Thread", {
+                              id: comment.id,
+                            });
+                          case 2:
+                            return;
+                          case 3:
+                            return navigation.navigate("User", {
+                              id: comment.by,
+                            });
+                          case 4:
+                            return;
+                        }
+                      }
+                    );
+                  }}
+                >
                   <Ionicon
                     name="ellipsis-horizontal"
                     color={color.textPrimary}
@@ -218,7 +281,7 @@ export const Comment: FC<CommentProps> = memo(
           </View>
         )}
 
-        <BottomSheet isVisible={isVisible}>
+        {/* <BottomSheet isVisible={isVisible}>
           <ListItem bottomDivider onPress={onCollapse}>
             <MaterialIcon
               name="arrow-collapse-left"
@@ -256,7 +319,7 @@ export const Comment: FC<CommentProps> = memo(
           <ListItem onPress={() => setIsVisible(false)} bottomDivider>
             <ListItem.Title>Cancel</ListItem.Title>
           </ListItem>
-        </BottomSheet>
+        </BottomSheet> */}
       </>
     );
   },

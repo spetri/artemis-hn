@@ -99,7 +99,7 @@ export const AppColorSettings: FC<SettingsProps> = () => {
   return (
     <SafeAreaView style={container()}>
       <SectionList
-        ListHeaderComponent={<NavigableHeader title="Select App Color" />}
+        // ListHeaderComponent={<NavigableHeader title="Select App Color" />}
         sections={[
           { title: "Theme Colors", data: appColors.themeColors },
           { title: "Accent Colors", data: appColors.accentColors },

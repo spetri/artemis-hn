@@ -75,7 +75,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: "App Color",
       subheader: "Select app color theme",
       iconName: "color-palette-outline",
-      onPress: () => navigation.navigate("AppColorSettings"),
+      onPress: () => navigation.navigate("App Color"),
       type: (
         <Button buttonStyle={{ backgroundColor: color.bodyBg }}>
           <ListItem.Chevron />
@@ -160,7 +160,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
 
   return (
     <SafeAreaView style={container()}>
-      <NavigableHeader
+      {/* <NavigableHeader
         title="Preferences"
         actions={{
           options: {
@@ -174,7 +174,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             }
           },
         }}
-      />
+      /> */}
       <View style={containerBg()}>
         <SectionList
           ItemSeparatorComponent={() => (
