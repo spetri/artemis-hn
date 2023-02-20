@@ -15,6 +15,7 @@ import {
   View,
   ViewStyle,
   SectionList,
+  Pressable,
 } from "react-native";
 
 import { styles, useDash } from "../../../../dash.config";
@@ -68,52 +69,25 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     [setStorage_, preferences?.data]
   );
 
-  const themeChange = (value) => {
-    setStorage({
-      colorScheme: value ? "dark" : "light",
-    });
-  };
-
   const listItems = [
     {
       id: "1",
       header: "App Color",
       subheader: "Select app color theme",
       iconName: "color-palette-outline",
+      onPress: () => navigation.navigate("AppColorSettings"),
       type: (
-        <Button
-          buttonStyle={{ backgroundColor: color.bodyBg }}
-          onPress={() => navigation.navigate("AppColorSettings")}
-        >
+        <Button buttonStyle={{ backgroundColor: color.bodyBg }}>
           <ListItem.Chevron />
         </Button>
       ),
     },
     {
       id: "2",
-      header: "Dark Mode",
-      subheader: "By default, we use your system preferences",
-      iconName: "moon-outline",
-      type: (
-        <Switch
-          value={
-            preferences.data?.colorScheme === "dark" ||
-            (preferences.data?.colorScheme === undefined &&
-              colorScheme === "dark")
-          }
-          trackColor={{
-            false: tokens.color.textAccent,
-            true: tokens.color.primary,
-          }}
-          onValueChange={(value) => themeChange(value)}
-        />
-      ),
-    },
-    {
-      id: "3",
       header: "Text Size",
       subheader: "Select Text Size",
       iconName: "text-outline",
+      onPress: () => setIsVisible(true),
       type: (
         <Button
           buttonStyle={{ backgroundColor: color.bodyBg }}
@@ -124,10 +98,11 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       ),
     },
     {
-      id: "4",
+      id: "3",
       header: "Display All Replies",
       subheader: "When selected, display all replies automatically",
       iconName: "file-tray-outline",
+      onPress: false,
       type: (
         <Switch
           value={displayReplies}
@@ -161,23 +136,25 @@ export const GeneralSettings: FC<SettingsProps> = () => {
 
   const twoColumn = (item) => {
     return (
-      <ListItem bottomDivider containerStyle={containerBg()}>
-        <Icon
-          name={item.iconName}
-          color={color.textPrimary}
-          size={25}
-          style={image}
-        />
-        <ListItemContent>
-          <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-          <ListItem.Subtitle style={subheader()}>
-            {item.subheader}
-          </ListItem.Subtitle>
-        </ListItemContent>
-        <View>
-          <Text>{item.type}</Text>
-        </View>
-      </ListItem>
+      <Pressable onPress={item.onPress}>
+        <ListItem bottomDivider containerStyle={containerBg()}>
+          <Icon
+            name={item.iconName}
+            color={color.textPrimary}
+            size={25}
+            style={image}
+          />
+          <ListItemContent>
+            <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+            <ListItem.Subtitle style={subheader()}>
+              {item.subheader}
+            </ListItem.Subtitle>
+          </ListItemContent>
+          <View>
+            <Text>{item.type}</Text>
+          </View>
+        </ListItem>
+      </Pressable>
     );
   };
 
