@@ -49,7 +49,6 @@ export const Home: FC<ListItemType> = () => {
   return (
     <SafeAreaView style={containerBg()}>
       <View style={container()}>
-        {/* <LogoHeader title="Select" /> */}
         <DraggableFlatList
           data={homeItems}
           keyExtractor={(item: ListItemType) => item.id}

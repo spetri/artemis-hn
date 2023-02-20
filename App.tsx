@@ -1,9 +1,7 @@
-import {
-  ActionSheetProvider,
-  useActionSheet,
-} from "@expo/react-native-action-sheet";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import IoniconIcon from "react-native-vector-icons/Ionicons";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
 import * as Updates from "expo-updates";
@@ -11,19 +9,20 @@ import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 import { SWRConfig } from "swr";
 import { DashProvider, styles, useDash } from "./dash.config";
-import { defaultPreferences, useTheme } from "./src/screens/Settings/useTheme";
+import { useTheme } from "./src/screens/Settings/useTheme";
 import {
   AllStack,
   Tab,
   HomeStack,
   SearchStack,
   SettingsStack,
+  StackParamList,
 } from "./src/screens/routers";
 import { Stories } from "./src/screens/Stories/Stories";
 import { Thread } from "./src/screens/Thread";
 import { User } from "./src/screens/User";
 import { BrowserModal } from "./src/screens/BrowserModal/BrowserModal";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import {
   Text,
   AppState,
@@ -39,6 +38,10 @@ import { SettingsListView } from "./src/screens/Settings/SettingsListView/Settin
 import { Search } from "./src/screens/Search/Search";
 import { GeneralSettings } from "./src/screens/Settings/GeneralSettings/GeneralSettings";
 import { AppColorSettings } from "./src/screens/Settings/GeneralSettings/AppColorSettings/AppColorSettings";
+import { Dialog, ListItem } from "@rneui/themed";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { listItems } from "./src/screens/Home/HomeList";
+import { StoryFilters } from "./src/types/hn-api";
 
 registerRootComponent(App);
 
@@ -248,10 +251,22 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
 }
 
 function HomeScreens() {
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const [switcher, setSwitcher] = useState(false);
+  const {
+    tokens: { color },
+  } = useDash();
+
   return (
     <HomeStack.Navigator
       screenOptions={{
         headerShown: true,
+        headerStyle: {
+          backgroundColor: color.bodyBg as string,
+        },
+        headerTitleStyle: {
+          color: color.textPrimary as string,
+        },
       }}
     >
       <HomeStack.Screen
@@ -263,6 +278,61 @@ function HomeScreens() {
         name="Stories"
         component={Stories}
         initialParams={{ filter: "top" }}
+        options={{
+          headerTitle: () => {
+            return (
+              <>
+                <Pressable
+                  onPress={() => setSwitcher(true)}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color: color.textPrimary,
+                    }}
+                  >
+                    Stories
+                  </Text>
+                  <IoniconIcon
+                    color={color.textPrimary}
+                    size={16}
+                    style={{ marginLeft: 3 }}
+                    name="chevron-down-outline"
+                  />
+                </Pressable>
+                <Dialog
+                  isVisible={switcher}
+                  onBackdropPress={() => setSwitcher(false)}
+                >
+                  <Dialog.Title title="Switch HN" />
+                  {listItems.map((topic) => (
+                    <Pressable
+                      key={topic.id}
+                      onPress={() => {
+                        setSwitcher(false);
+                        return navigation.navigate("Stories", {
+                          filter: topic?.filter as StoryFilters,
+                        });
+                      }}
+                    >
+                      <ListItem bottomDivider>
+                        <ListItem.Content>
+                          <ListItem.Title>{topic.header}</ListItem.Title>
+                        </ListItem.Content>
+                      </ListItem>
+                    </Pressable>
+                  ))}
+                </Dialog>
+              </>
+            );
+          },
+        }}
       />
       <HomeStack.Screen name="User" component={User} />
       <HomeStack.Screen name="Thread" component={Thread} />
@@ -274,10 +344,20 @@ function HomeScreens() {
 }
 
 function SettingsScreens() {
+  const {
+    tokens: { color },
+  } = useDash();
+
   return (
     <SettingsStack.Navigator
       screenOptions={{
         headerShown: true,
+        headerStyle: {
+          backgroundColor: color.bodyBg as string,
+        },
+        headerTitleStyle: {
+          color: color.textPrimary as string,
+        },
       }}
     >
       <SettingsStack.Screen name="Settings" component={SettingsListView} />
@@ -288,10 +368,20 @@ function SettingsScreens() {
 }
 
 function SearchScreens() {
+  const {
+    tokens: { color },
+  } = useDash();
+
   return (
     <SearchStack.Navigator
       screenOptions={{
         headerShown: false,
+        headerStyle: {
+          backgroundColor: color.bodyBg as string,
+        },
+        headerTitleStyle: {
+          color: color.textPrimary as string,
+        },
       }}
     >
       <SearchStack.Screen name="Search" component={Search} />
@@ -335,5 +425,9 @@ const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
 const sceneContainer = styles.one<ViewStyle>((t) => ({
   height: "100%",
   width: "100%",
+  backgroundColor: t.color.bodyBg,
+}));
+
+const bodyBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
 }));

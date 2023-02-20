@@ -9,7 +9,6 @@ import { StackParamList } from "../routers";
 import { HACKER_NEWS_API } from "../../constants/api";
 import { keyExtractor } from "../../utils/util";
 import { EmbeddedSearch } from "../Search/EmbeddedSearch";
-import { NavigableHeader } from "../../components/NavigableHeader/NavigableHeader";
 
 type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">;
 
@@ -53,22 +52,7 @@ export const Stories: FC<StoriesProps> = (props) => {
   const flatListData = useMemo(() => stories.data?.slice(0), [stories.data]);
 
   const listHeaderComponent = useCallback(() => {
-    return (
-      <>
-        {/* <NavigableHeader
-          title={
-            filter === "show"
-              ? "Show HN"
-              : filter === "ask"
-              ? "Ask HN"
-              : filter === "job"
-              ? "Jobs"
-              : "HN"
-          }
-        /> */}
-        <EmbeddedSearch />
-      </>
-    );
+    return <EmbeddedSearch />;
   }, [stories.data, filter]);
 
   const refreshControl = useMemo(

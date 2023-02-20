@@ -2,12 +2,10 @@ import { useAsync } from "@react-hook/async";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListItem } from "@rneui/themed";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-
 import { FC, useCallback, useLayoutEffect } from "react";
 import {
   Text,
   SafeAreaView,
-  ScrollView,
   TextStyle,
   View,
   ViewStyle,
@@ -15,7 +13,6 @@ import {
   SectionList,
 } from "react-native";
 import { styles } from "../../../../../dash.config";
-import { NavigableHeader } from "../../../../components/NavigableHeader/NavigableHeader";
 import { StackParamList } from "../../../routers";
 import {
   defaultPreferences,
@@ -191,5 +188,5 @@ const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
   display: "flex",
   justifyContent: "center",
   backgroundColor: t.color.bodyBg,
-  color: t.color.accentLight,
+  color: t.color.textPrimary,
 }));

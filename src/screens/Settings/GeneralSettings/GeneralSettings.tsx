@@ -19,7 +19,6 @@ import {
 } from "react-native";
 
 import { styles, useDash } from "../../../../dash.config";
-import { NavigableHeader } from "../../../components/NavigableHeader/NavigableHeader";
 import { StackParamList } from "../../routers";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
@@ -160,21 +159,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
 
   return (
     <SafeAreaView style={container()}>
-      {/* <NavigableHeader
-        title="Preferences"
-        actions={{
-          options: {
-            options: ["Restore default settings", "Cancel"],
-          },
-          callback(index) {
-            switch (index) {
-              case 0:
-                setStorage(defaultPreferences);
-                break;
-            }
-          },
-        }}
-      /> */}
       <View style={containerBg()}>
         <SectionList
           ItemSeparatorComponent={() => (

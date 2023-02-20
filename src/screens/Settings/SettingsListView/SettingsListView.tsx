@@ -13,7 +13,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { StackParamList } from "../../routers";
 import { styles, useDash } from "../../../../dash.config";
-import { LogoHeader } from "../../../components/LogoHeader";
 import Icon from "react-native-vector-icons/Ionicons";
 
 type ListItemType = {
@@ -63,7 +62,6 @@ export const SettingsListView: FC = () => {
           ItemSeparatorComponent={() => (
             <View style={listItemSeparatorStyle()} />
           )}
-          ListHeaderComponent={<LogoHeader title="Select" />}
           sections={[{ title: "Topics", data: listItems }]}
           renderItem={({ item }) => (
             <View style={{ display: "flex", flexDirection: "row" }}>

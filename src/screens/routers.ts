@@ -23,6 +23,7 @@ export type StackParamList = {
   SettingsListView: {};
   General: {};
   "App Color": {};
+  Select: {};
 };
 
 export type TabParamList = {

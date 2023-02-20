@@ -17,7 +17,7 @@ import { ago } from "../../../utils/ago";
 import { pluralize } from "../../../utils/pluralize";
 import { StackParamList } from "../../routers";
 import { HACKER_NEWS_API } from "../../../constants/api";
-import { FC, memo, useEffect, useMemo, useRef, useState } from "react";
+import { FC, memo, useMemo, useRef, useState } from "react";
 import {
   Text,
   useWindowDimensions,
@@ -29,7 +29,6 @@ import {
 } from "react-native";
 import { linkify } from "../../../utils/util";
 import { usePreferences } from "../../Settings/usePreferences";
-import { BottomSheet, ListItem } from "@rneui/themed";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
 type CommentProps = {
@@ -280,46 +279,6 @@ export const Comment: FC<CommentProps> = memo(
             </Pressable>
           </View>
         )}
-
-        {/* <BottomSheet isVisible={isVisible}>
-          <ListItem bottomDivider onPress={onCollapse}>
-            <MaterialIcon
-              name="arrow-collapse-left"
-              color={color.accent}
-              size={25}
-            />
-            <ListItem.Title>Collapse Thread</ListItem.Title>
-          </ListItem>
-          <ListItem
-            bottomDivider
-            onPress={() =>
-              navigation.push("Thread", {
-                id: comment.id,
-              })
-            }
-          >
-            <MaterialIcon
-              name="align-horizontal-right"
-              color={color.accent}
-              size={25}
-            />
-            <ListItem.Title>View Thread</ListItem.Title>
-          </ListItem>
-          <ListItem bottomDivider>
-            <MaterialIcon name="content-copy" color={color.accent} size={25} />
-            <ListItem.Title>Copy Text</ListItem.Title>
-          </ListItem>
-          <ListItem
-            bottomDivider
-            onPress={() => navigation.navigate("User", { id: comment.by })}
-          >
-            <MaterialIcon name="content-copy" color={color.accent} size={25} />
-            <ListItem.Title>View Profile</ListItem.Title>
-          </ListItem>
-          <ListItem onPress={() => setIsVisible(false)} bottomDivider>
-            <ListItem.Title>Cancel</ListItem.Title>
-          </ListItem>
-        </BottomSheet> */}
       </>
     );
   },

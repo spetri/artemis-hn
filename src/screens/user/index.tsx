@@ -1,5 +1,4 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-
 import useSWR from "swr";
 import { NavigableHeader } from "../../components/NavigableHeader/NavigableHeader";
 import { StoryCard } from "../../components/StoryCard";
