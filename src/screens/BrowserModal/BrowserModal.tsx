@@ -14,6 +14,9 @@ import { responsiveSize, styles, useDash } from "../../../dash.config";
 
 import { StackParamList } from "../routers";
 
+export interface BrowserModalProps
+  extends NativeStackScreenProps<StackParamList, "BrowserModal"> {}
+
 export const BrowserModal = ({ navigation, route }: BrowserModalProps) => {
   const {
     tokens: { color },
@@ -167,6 +170,3 @@ const footerButton = styles.one<RN.ViewStyle>((t) => ({
   padding: t.space.lg,
   paddingTop: t.space.md,
 }));
-
-export interface BrowserModalProps
-  extends NativeStackScreenProps<StackParamList, "BrowserModal"> {}
