@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import Swipeable from "react-native-gesture-handler/Swipeable";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type {
   MixedStyleRecord,
@@ -30,6 +29,7 @@ import {
 import { linkify } from "../../../utils/util";
 import { usePreferences } from "../../Settings/usePreferences";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { ListItem } from "@rneui/themed";
 
 type CommentProps = {
   id: number;
@@ -100,11 +100,39 @@ export const Comment: FC<CommentProps> = memo(
     const comment = commentData.data;
 
     const onCollapse = () => {
-      return collapsed ? setCollapsed(false) : setCollapsed(true);
+      if (collapsed) {
+        setCollapsed(false);
+      } else {
+        setCollapsed(true);
+      }
     };
 
     const rightSwipeActions = () => {
-      return (
+      return collapsed ? (
+        <Pressable onPress={onCollapse}>
+          <View
+            style={{
+              backgroundColor: color.primary,
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <Text
+              style={{
+                color: "#1b1a17",
+                paddingHorizontal: 50,
+                transform: [{ rotateY: "180deg" }],
+              }}
+            >
+              <MaterialIcon
+                name="arrow-collapse-left"
+                color={color.textPrimary}
+                size={20}
+              />
+            </Text>
+          </View>
+        </Pressable>
+      ) : (
         <Pressable onPress={onCollapse}>
           <View
             style={{
@@ -117,12 +145,7 @@ export const Comment: FC<CommentProps> = memo(
             <Text
               style={{
                 color: "#1b1a17",
-                fontWeight: "600",
-                paddingVertical: 20,
-                paddingHorizontal: 10,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                paddingHorizontal: 50,
               }}
             >
               <MaterialIcon
@@ -200,11 +223,19 @@ export const Comment: FC<CommentProps> = memo(
 
     return (
       <>
-        <Swipeable
-          renderRightActions={rightSwipeActions}
-          onSwipeableRightOpen={() => "right"}
+        <ListItem.Swipeable
+          containerStyle={{
+            backgroundColor: color.bodyBg,
+            margin: 0,
+            padding: 0,
+          }}
+          key={comment.id}
+          rightContent={rightSwipeActions}
+          rightWidth={75}
+          rightStyle={{ backgroundColor: color.bodyBg }}
+          style={{ margin: 0, padding: 0 }}
         >
-          <Pressable onPress={onCollapse}>
+          <Pressable onPress={onCollapse} style={{ width: "100%" }}>
             <View style={commentContainer(depth)}>
               <View style={byLine}>
                 <Pressable
@@ -257,7 +288,7 @@ export const Comment: FC<CommentProps> = memo(
               )}
             </View>
           </Pressable>
-        </Swipeable>
+        </ListItem.Swipeable>
 
         {(showingReplies || displayReplies[0]) &&
           !collapsed &&
@@ -290,6 +321,7 @@ export const Comment: FC<CommentProps> = memo(
 );
 
 const commentContainer = styles.lazy<number, ViewStyle>((depth) => (t) => ({
+  width: "100%",
   padding: t.space.md,
   borderTopWidth: t.borderWidth.hairline,
   borderTopColor: t.color.accent,
@@ -325,7 +357,7 @@ const commentContent = styles.one((t) => ({
 }));
 
 const byLine: ViewStyle = {
-  width: "100%",
+  // width: "100%",
   flexDirection: "row",
   justifyContent: "space-between",
 };

@@ -12,7 +12,7 @@ import {
   SafeAreaView,
   View,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  Pressable,
   ViewStyle,
   ImageStyle,
   TextStyle,
@@ -82,18 +82,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
     <View>
       {metadata?.image ? (
         <>
-          <View style={floatingHeader()}>
-            <SafeAreaView>
-              <TouchableOpacity
-                style={backButton()}
-                onPress={() => navigation.goBack()}
-              >
-                <Icon name="chevron-left" size={18} color="textAccent" />
-              </TouchableOpacity>
-            </SafeAreaView>
-          </View>
-
-          <TouchableWithoutFeedback
+          <Pressable
             onPress={() =>
               data &&
               url &&
@@ -104,7 +93,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
             }
           >
             <Image style={storyImage()} source={{ uri: metadata?.image }} />
-          </TouchableWithoutFeedback>
+          </Pressable>
         </>
       ) : (
         <SafeAreaView>
@@ -120,7 +109,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
       )}
 
       {metadata && url && (
-        <TouchableWithoutFeedback
+        <Pressable
           onPress={() =>
             navigation.navigate("BrowserModal", {
               title: metadata.applicationName || url.hostname,
@@ -135,10 +124,10 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
               {metadata.applicationName || url.host.replace(/^www\./, "")}
             </Text>
           </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
       )}
 
-      <TouchableWithoutFeedback
+      <Pressable
         onPress={() =>
           data &&
           url &&
@@ -151,7 +140,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
         <Text numberOfLines={4} adjustsFontSizeToFit style={title()}>
           {data.title}
         </Text>
-      </TouchableWithoutFeedback>
+      </Pressable>
 
       {htmlSource && (
         <RenderHTML
@@ -168,11 +157,9 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
       )}
 
       <View style={storyByLine()}>
-        <TouchableWithoutFeedback
-          onPress={() => navigation.navigate("User", { id: data.by })}
-        >
+        <Pressable onPress={() => navigation.navigate("User", { id: data.by })}>
           <Text style={byStyle()}>{data.by}</Text>
-        </TouchableWithoutFeedback>
+        </Pressable>
         <Text style={agoStyle()}>
           {ago.format(new Date(data.time * 1000), "mini")}
         </Text>
