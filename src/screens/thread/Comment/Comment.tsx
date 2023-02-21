@@ -47,7 +47,6 @@ export const Comment: FC<CommentProps> = memo(
       tokens: { color },
     } = useDash();
     const displayReplies = usePreferences("displayReplies", false);
-    const swipeableRef = useRef(null);
 
     const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -101,8 +100,7 @@ export const Comment: FC<CommentProps> = memo(
     const comment = commentData.data;
 
     const onCollapse = () => {
-      setCollapsed(true);
-      swipeableRef.current.close();
+      return collapsed ? setCollapsed(false) : setCollapsed(true);
     };
 
     const rightSwipeActions = () => {
@@ -138,146 +136,153 @@ export const Comment: FC<CommentProps> = memo(
       );
     };
 
+    const actionSheetOptions = () => {
+      const collapseText = collapsed ? "Open Thread" : "Collapse Thread";
+      return actionSheet.showActionSheetWithOptions(
+        {
+          options: [
+            collapseText,
+            "View Thread",
+            "Copy Text",
+            "View Profile",
+            "Cancel",
+          ],
+          userInterfaceStyle: "dark",
+          tintIcons: true,
+          icons: [
+            <MaterialIcon
+              name="arrow-collapse-left"
+              color={color.accent}
+              size={25}
+            />,
+            <MaterialIcon
+              name="arrow-collapse-left"
+              color={color.accent}
+              size={25}
+            />,
+            <MaterialIcon
+              name="arrow-collapse-left"
+              color={color.accent}
+              size={25}
+            />,
+            <MaterialIcon
+              name="arrow-collapse-left"
+              color={color.accent}
+              size={25}
+            />,
+            <MaterialIcon
+              name="arrow-collapse-left"
+              color={color.accent}
+              size={25}
+            />,
+          ],
+        },
+        (buttonIndex) => {
+          switch (buttonIndex) {
+            case 0:
+              return onCollapse();
+            case 1:
+              return navigation.push("Thread", {
+                id: comment.id,
+              });
+            case 2:
+              return;
+            case 3:
+              return navigation.navigate("User", {
+                id: comment.by,
+              });
+            case 4:
+              return;
+          }
+        }
+      );
+    };
+
     return (
       <>
         <Swipeable
           renderRightActions={rightSwipeActions}
           onSwipeableRightOpen={() => "right"}
-          ref={swipeableRef}
         >
-          <View style={commentContainer(depth)}>
-            <View style={byLine}>
-              <Pressable
-                onPress={() => navigation.navigate("User", { id: comment.by })}
-                style={{ flex: 1 }}
-              >
-                <Text style={byStyle()}>{comment.by}</Text>
-              </Pressable>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  marginRight: 10,
-                }}
-              >
+          <Pressable onPress={onCollapse}>
+            <View style={commentContainer(depth)}>
+              <View style={byLine}>
                 <Pressable
                   onPress={() =>
-                    navigation.push("Thread", {
-                      id: comment.id,
-                    })
+                    navigation.navigate("User", { id: comment.by })
                   }
                 >
-                  <Text style={agoStyle()}>
-                    {ago.format(new Date(comment.time * 1000), "mini")}
-                  </Text>
+                  <Text style={byStyle()}>{comment.by}</Text>
                 </Pressable>
-                <Pressable
-                  onPress={() => {
-                    actionSheet.showActionSheetWithOptions(
-                      {
-                        options: [
-                          "Collapse Thread",
-                          "View Thread",
-                          "Copy Text",
-                          "View Profile",
-                          "Cancel",
-                        ],
-                        userInterfaceStyle: "dark",
-                        tintIcons: true,
-                        icons: [
-                          <MaterialIcon
-                            name="arrow-collapse-left"
-                            color={color.accent}
-                            size={25}
-                          />,
-                          <MaterialIcon
-                            name="arrow-collapse-left"
-                            color={color.accent}
-                            size={25}
-                          />,
-                          <MaterialIcon
-                            name="arrow-collapse-left"
-                            color={color.accent}
-                            size={25}
-                          />,
-                          <MaterialIcon
-                            name="arrow-collapse-left"
-                            color={color.accent}
-                            size={25}
-                          />,
-                          <MaterialIcon
-                            name="arrow-collapse-left"
-                            color={color.accent}
-                            size={25}
-                          />,
-                        ],
-                      },
-                      (buttonIndex) => {
-                        switch (buttonIndex) {
-                          case 0:
-                            return onCollapse();
-                          case 1:
-                            return navigation.push("Thread", {
-                              id: comment.id,
-                            });
-                          case 2:
-                            return;
-                          case 3:
-                            return navigation.navigate("User", {
-                              id: comment.by,
-                            });
-                          case 4:
-                            return;
-                        }
-                      }
-                    );
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginRight: 10,
                   }}
                 >
-                  <Ionicon
-                    name="ellipsis-horizontal"
-                    color={color.textPrimary}
-                    size={18}
-                  />
-                </Pressable>
+                  <Pressable
+                    onPress={() =>
+                      navigation.push("Thread", {
+                        id: comment.id,
+                      })
+                    }
+                  >
+                    <Text style={agoStyle()}>
+                      {ago.format(new Date(comment.time * 1000), "mini")}
+                    </Text>
+                  </Pressable>
+                  <Pressable onPress={actionSheetOptions}>
+                    <Ionicon
+                      name="ellipsis-horizontal"
+                      color={color.textPrimary}
+                      size={18}
+                    />
+                  </Pressable>
+                </View>
               </View>
-            </View>
 
-            {htmlSource && !collapsed && (
-              <RenderHTML
-                contentWidth={dimensions.width}
-                source={htmlSource}
-                baseStyle={commentContent()}
-                tagsStyles={htmlTagStyles}
-                defaultTextProps={htmlDefaultTextProps}
-                renderersProps={htmlRenderersProps}
-                enableExperimentalBRCollapsing
-                enableExperimentalGhostLinesPrevention
-                enableExperimentalMarginCollapsing
-              />
-            )}
-          </View>
+              {htmlSource && !collapsed && (
+                <RenderHTML
+                  contentWidth={dimensions.width}
+                  source={htmlSource}
+                  baseStyle={commentContent()}
+                  tagsStyles={htmlTagStyles}
+                  defaultTextProps={htmlDefaultTextProps}
+                  renderersProps={htmlRenderersProps}
+                  enableExperimentalBRCollapsing
+                  enableExperimentalGhostLinesPrevention
+                  enableExperimentalMarginCollapsing
+                />
+              )}
+            </View>
+          </Pressable>
         </Swipeable>
 
-        {(showingReplies || (displayReplies[0] && !collapsed)) &&
+        {(showingReplies || displayReplies[0]) &&
+          !collapsed &&
           comment.kids &&
           comment.kids.length > 0 &&
           comment.kids.map((id, index) => (
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids?.length > 0 && !showingReplies && !displayReplies[0] && (
-          <View style={commentContainerReply(depth)}>
-            <Pressable
-              onPress={() => {
-                setShowingReplies((current) => !current);
-              }}
-            >
-              <Text style={replies(depth)}>
-                {pluralize(comment.kids?.length ?? 0, "reply", "replies")}
-              </Text>
-            </Pressable>
-          </View>
-        )}
+        {comment.kids?.length > 0 &&
+          !showingReplies &&
+          !displayReplies[0] &&
+          !collapsed && (
+            <View style={commentContainerReply(depth)}>
+              <Pressable
+                onPress={() => {
+                  setShowingReplies((current) => !current);
+                }}
+              >
+                <Text style={replies(depth)}>
+                  {pluralize(comment.kids?.length ?? 0, "reply", "replies")}
+                </Text>
+              </Pressable>
+            </View>
+          )}
       </>
     );
   },

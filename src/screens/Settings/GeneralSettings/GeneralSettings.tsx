@@ -35,7 +35,6 @@ export interface SettingsProps
   extends NativeStackScreenProps<StackParamList, "User"> {}
 
 export const GeneralSettings: FC<SettingsProps> = () => {
-  const { tokens } = useDash();
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(
     undefined
   );
@@ -43,10 +42,12 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     "displayReplies",
     false
   );
+  const [preferences, loadPreferences] = useTheme();
+  const {
+    tokens: { color },
+  } = useDash();
 
   const [isVisible, setIsVisible] = useState(false);
-  const [preferences, loadPreferences] = useTheme();
-  const colorScheme = useColorScheme();
 
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
@@ -57,9 +58,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     await loadPreferences();
   });
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const {
-    tokens: { color },
-  } = useDash();
 
   const setStorage = useCallback(
     (settings: Partial<SetThemeType>) => {
