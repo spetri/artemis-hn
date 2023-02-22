@@ -249,6 +249,38 @@ export const colorSystem = {
   blueGray700: "#334155",
   blueGray800: "#1e293b",
   blueGray900: "#0f172a",
+
+  solarizedPrimary: "#cb4b16",
+  solarizedTextPrimary: "#fff",
+  solarizedTextAccent: "#839496",
+  solarizedBodyBg: "#073642",
+  solarizedHeaderBg: "#002B36",
+  solarizedAccent: "#002B36",
+  solarizedAccentLight: "#647A82",
+
+  draculaPrimary: "#ff5555",
+  draculaTextPrimary: "#f8f8f2",
+  draculaTextAccent: "#bd93f9",
+  draculaBodyBg: "#44475a",
+  draculaHeaderBg: "#282a36",
+  draculaAccent: "#282a36",
+  draculaAccentLight: "#6272a4",
+
+  nordPrimary: "#5E81AC",
+  nordTextPrimary: "#ECEFF4",
+  nordTextAccent: "#81A1C1",
+  nordBodyBg: "#434C5E",
+  nordHeaderBg: "#3B4252",
+  nordAccent: "#2E3440",
+  nordAccentLight: "#6272a4",
+
+  auroraPrimary: "#BF616A",
+  auroraTextPrimary: "#E5E9F0",
+  auroraTextAccent: "#EBCB8B",
+  auroraBodyBg: "#D08770",
+  auroraHeaderBg: "#D08770",
+  auroraAccent: "#A3BE8C",
+  auroraAccentLight: "#8FBCBB",
 } as const;
 
 export function createTypeSystem(baseSize = 16) {
@@ -477,7 +509,7 @@ export const tokens = {
 };
 
 export const themes: Record<
-  "light" | "dark" | "black",
+  "light" | "dark" | "black" | "solarized" | "dracula" | "nord" | "aurora",
   {
     color: {
       primary: RN.ColorValue;
@@ -531,6 +563,62 @@ export const themes: Record<
 
     shadow: createShadowScale(colorSystem.white),
   },
+
+  solarized: {
+    color: {
+      primary: colorSystem.solarizedPrimary,
+      textPrimary: colorSystem.solarizedTextPrimary,
+      textAccent: colorSystem.solarizedTextAccent,
+      bodyBg: colorSystem.solarizedBodyBg,
+      headerBg: colorSystem.solarizedHeaderBg,
+      accent: colorSystem.solarizedAccent,
+      accentLight: colorSystem.solarizedAccentLight,
+    },
+
+    shadow: createShadowScale(colorSystem.white),
+  },
+
+  dracula: {
+    color: {
+      primary: colorSystem.draculaPrimary,
+      textPrimary: colorSystem.draculaTextPrimary,
+      textAccent: colorSystem.draculaTextAccent,
+      bodyBg: colorSystem.draculaBodyBg,
+      headerBg: colorSystem.draculaHeaderBg,
+      accent: colorSystem.draculaAccent,
+      accentLight: colorSystem.draculaAccentLight,
+    },
+
+    shadow: createShadowScale(colorSystem.white),
+  },
+
+  nord: {
+    color: {
+      primary: colorSystem.nordPrimary,
+      textPrimary: colorSystem.nordTextPrimary,
+      textAccent: colorSystem.nordTextAccent,
+      bodyBg: colorSystem.nordBodyBg,
+      headerBg: colorSystem.nordHeaderBg,
+      accent: colorSystem.nordAccent,
+      accentLight: colorSystem.nordAccentLight,
+    },
+
+    shadow: createShadowScale(colorSystem.white),
+  },
+
+  aurora: {
+    color: {
+      primary: colorSystem.auroraPrimary,
+      textPrimary: colorSystem.auroraTextPrimary,
+      textAccent: colorSystem.auroraTextAccent,
+      bodyBg: colorSystem.auroraBodyBg,
+      headerBg: colorSystem.auroraHeaderBg,
+      accent: colorSystem.auroraAccent,
+      accentLight: colorSystem.auroraAccentLight,
+    },
+
+    shadow: createShadowScale(colorSystem.white),
+  },
 };
 
 export const { styles, styled, DashProvider, useDash } = createStyles({
@@ -545,10 +633,21 @@ export function tokensAreEqual<Props extends {}>(
   return t === nt;
 }
 
-export type AppTokens = typeof styles.tokens.light | typeof styles.tokens.dark | typeof styles.tokens.black;
+export type AppTokens =
+  | typeof styles.tokens.light
+  | typeof styles.tokens.dark
+  | typeof styles.tokens.black
+  | typeof styles.tokens.solarized
+  | typeof styles.tokens.dracula
+  | typeof styles.tokens.nord
+  | typeof styles.tokens.aurora;
 export type AppThemes = typeof themes;
 export type AppThemeNames = keyof AppThemes;
 export type AppColors =
-| keyof typeof styles.tokens.light.color
+  | keyof typeof styles.tokens.light.color
   | keyof typeof styles.tokens.dark.color
-  | keyof typeof styles.tokens.black.color;
+  | keyof typeof styles.tokens.black.color
+  | keyof typeof styles.tokens.solarized.color
+  | keyof typeof styles.tokens.dracula.color
+  | keyof typeof styles.tokens.nord.color
+  | keyof typeof styles.tokens.aurora.color

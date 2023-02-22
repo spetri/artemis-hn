@@ -80,33 +80,18 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({
 
   return !data ? null : (
     <View>
-      {metadata?.image ? (
-        <>
-          <Pressable
-            onPress={() =>
-              data &&
-              url &&
-              navigation.navigate("BrowserModal", {
-                title: data.title,
-                url: url.toString(),
-              })
-            }
-          >
-            <Image style={storyImage()} source={{ uri: metadata?.image }} />
-          </Pressable>
-        </>
-      ) : (
-        <SafeAreaView>
-          <View style={header()}>
-            <TouchableOpacity
-              style={backButton()}
-              onPress={() => navigation.goBack()}
-            >
-              <Icon name="chevron-left" size={18} color="textAccent" />
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      )}
+      <Pressable
+        onPress={() =>
+          data &&
+          url &&
+          navigation.navigate("BrowserModal", {
+            title: data.title,
+            url: url.toString(),
+          })
+        }
+      >
+        <Image style={storyImage()} source={{ uri: metadata?.image }} />
+      </Pressable>
 
       {metadata && url && (
         <Pressable

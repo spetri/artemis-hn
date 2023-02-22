@@ -237,7 +237,7 @@ export const Comment: FC<CommentProps> = memo(
         >
           <Pressable onPress={onCollapse} style={{ width: "100%" }}>
             <View style={commentContainer(depth)}>
-              <View style={byLine}>
+              <View style={byLine(depth)}>
                 <Pressable
                   onPress={() =>
                     navigation.navigate("User", { id: comment.by })
@@ -277,7 +277,7 @@ export const Comment: FC<CommentProps> = memo(
                 <RenderHTML
                   contentWidth={dimensions.width}
                   source={htmlSource}
-                  baseStyle={commentContent()}
+                  baseStyle={commentContent(depth)}
                   tagsStyles={htmlTagStyles}
                   defaultTextProps={htmlDefaultTextProps}
                   renderersProps={htmlRenderersProps}
@@ -323,6 +323,7 @@ export const Comment: FC<CommentProps> = memo(
 const commentContainer = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   width: "100%",
   padding: t.space.md,
+  paddingBottom: 10,
   borderTopWidth: t.borderWidth.hairline,
   borderTopColor: t.color.accent,
   ...(depth > 1
@@ -350,17 +351,26 @@ const commentContainerReply = styles.lazy<number, ViewStyle>(
   })
 );
 
-const commentContent = styles.one((t) => ({
+const commentContent = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.xs,
   fontWeight: "300",
+  ...(depth > 0
+    ? ({
+        marginRight: t.space.md * (depth + 0.5),
+      } as const)
+    : {}),
 }));
 
-const byLine: ViewStyle = {
-  // width: "100%",
+const byLine = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   flexDirection: "row",
   justifyContent: "space-between",
-};
+  ...(depth > 0
+    ? ({
+        marginRight: t.space.md * (depth - 1.5),
+      } as const)
+    : {}),
+}));
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,

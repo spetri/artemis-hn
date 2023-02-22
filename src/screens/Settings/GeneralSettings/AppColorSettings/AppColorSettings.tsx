@@ -65,6 +65,30 @@ export const AppColorSettings: FC<SettingsProps> = () => {
         name: "black",
         displayName: "Black",
       },
+      {
+        theme: styles.tokens.solarized.color,
+        color: "solarizedBodyBg",
+        name: "solarized",
+        displayName: "Solarized",
+      },
+      {
+        theme: styles.tokens.dracula.color,
+        color: "draculaBodyBg",
+        name: "dracula",
+        displayName: "Dracula",
+      },
+      {
+        theme: styles.tokens.nord.color,
+        color: "nordBodyBg",
+        name: "nord",
+        displayName: "Nord",
+      },
+      {
+        theme: styles.tokens.aurora.color,
+        color: "auroraBodyBg",
+        name: "aurora",
+        displayName: "Aurora",
+      },
     ],
   };
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
@@ -107,7 +131,7 @@ export const AppColorSettings: FC<SettingsProps> = () => {
           return (
             <Pressable
               key={appColor.item.name}
-              onPress={(value) => {
+              onPress={() => {
                 !!appColor.item.theme
                   ? setStorage({
                       colorScheme: appColor.item.name,
@@ -179,7 +203,6 @@ const header = styles.one<TextStyle>((t) => ({
 }));
 
 const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
-  marginTop: 30,
   marginLeft: 10,
   fontSize: 13,
   textTransform: "uppercase",

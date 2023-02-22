@@ -12,12 +12,21 @@ export const defaultPreferences: SetThemeType = {
   displayReplies: false,
   colorScheme: undefined,
   primaryColor: "orange500",
-  baseTypeSize: 16,
+  baseTypeSize: 14,
 };
 
 export type SetThemeType = {
   displayReplies: boolean;
-  colorScheme: "dark" | "light" | "black" | null | undefined;
+  colorScheme:
+    | "dark"
+    | "light"
+    | "black"
+    | "solarized"
+    | "dracula"
+    | "nord"
+    | "aurora"
+    | null
+    | undefined;
   primaryColor: keyof typeof colorSystem;
   baseTypeSize: number;
 };

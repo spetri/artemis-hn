@@ -248,7 +248,7 @@ const storyImage = {
 };
 
 const byStyle = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
+  color: t.color.primary,
   fontSize: 13,
   fontWeight: "500",
   marginRight: 5,

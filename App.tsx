@@ -129,13 +129,25 @@ function AppStatusBar() {
 function Tabs() {
   useDash();
   useTheme();
+  const {
+    tokens: { color },
+  } = useDash();
 
   return (
     <View style={sceneContainer()}>
       <Tab.Navigator
         detachInactiveScreens
         sceneContainerStyle={sceneContainer()}
-        screenOptions={{ headerShown: false }}
+        screenOptions={{
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: color.headerBg as string,
+          },
+          headerTintColor: color.primary,
+          headerTitleStyle: {
+            color: color.textPrimary as string,
+          },
+        }}
         tabBar={TabBar}
       >
         <Tab.Screen
@@ -261,8 +273,9 @@ function HomeScreens() {
     <HomeStack.Navigator
       screenOptions={{
         headerShown: true,
+        headerTintColor: color.primary,
         headerStyle: {
-          backgroundColor: color.bodyBg as string,
+          backgroundColor: color.headerBg as string,
         },
         headerTitleStyle: {
           color: color.textPrimary as string,
@@ -352,8 +365,9 @@ function SettingsScreens() {
     <SettingsStack.Navigator
       screenOptions={{
         headerShown: true,
+        headerTintColor: color.primary,
         headerStyle: {
-          backgroundColor: color.bodyBg as string,
+          backgroundColor: color.headerBg as string,
         },
         headerTitleStyle: {
           color: color.textPrimary as string,
@@ -376,8 +390,9 @@ function SearchScreens() {
     <SearchStack.Navigator
       screenOptions={{
         headerShown: false,
+        headerTintColor: color.primary,
         headerStyle: {
-          backgroundColor: color.bodyBg as string,
+          backgroundColor: color.headerBg as string,
         },
         headerTitleStyle: {
           color: color.textPrimary as string,
@@ -425,9 +440,5 @@ const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
 const sceneContainer = styles.one<ViewStyle>((t) => ({
   height: "100%",
   width: "100%",
-  backgroundColor: t.color.bodyBg,
-}));
-
-const bodyBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
 }));
