@@ -1,15 +1,15 @@
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import IoniconIcon from "react-native-vector-icons/Ionicons";
-import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { registerRootComponent } from "expo";
-import { StatusBar } from "expo-status-bar";
-import * as Updates from "expo-updates";
-import { enableScreens } from "react-native-screens";
-import * as Sentry from "sentry-expo";
-import { SWRConfig } from "swr";
-import { DashProvider, styles, useDash } from "./dash.config";
-import { useTheme } from "./src/screens/Settings/useTheme";
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import IoniconIcon from 'react-native-vector-icons/Ionicons';
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { registerRootComponent } from 'expo';
+import { StatusBar } from 'expo-status-bar';
+import * as Updates from 'expo-updates';
+import { enableScreens } from 'react-native-screens';
+import * as Sentry from 'sentry-expo';
+import { SWRConfig } from 'swr';
+import { DashProvider, styles, useDash } from './dash.config';
+import { useTheme } from './src/screens/Settings/useTheme';
 import {
   AllStack,
   Tab,
@@ -17,38 +17,30 @@ import {
   SearchStack,
   SettingsStack,
   StackParamList,
-} from "./src/screens/routers";
-import { Stories } from "./src/screens/Stories/Stories";
-import { Thread } from "./src/screens/Thread";
-import { User } from "./src/screens/User";
-import { BrowserModal } from "./src/screens/BrowserModal/BrowserModal";
-import { useLayoutEffect, useState } from "react";
-import {
-  Text,
-  AppState,
-  Pressable,
-  SafeAreaView,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { Home } from "./src/screens/Home/Home";
-import { SettingsListView } from "./src/screens/Settings/SettingsListView/SettingsListView";
-import { Search } from "./src/screens/Search/Search";
-import { GeneralSettings } from "./src/screens/Settings/GeneralSettings/GeneralSettings";
-import { AppColorSettings } from "./src/screens/Settings/GeneralSettings/AppColorSettings/AppColorSettings";
-import { Dialog, ListItem } from "@rneui/themed";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { listItems } from "./src/screens/Home/HomeList";
-import { StoryFilters } from "./src/types/hn-api";
-import { ThemeSettings } from "./src/screens/Settings/ThemeSettings/ThemeSettings";
+} from './src/screens/routers';
+import { Stories } from './src/screens/Stories/Stories';
+import { Thread } from './src/screens/Thread';
+import { User } from './src/screens/User';
+import { BrowserModal } from './src/screens/BrowserModal/BrowserModal';
+import { useLayoutEffect, useState } from 'react';
+import { Text, AppState, Pressable, SafeAreaView, TextStyle, View, ViewStyle } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Home } from './src/screens/Home/Home';
+import { SettingsListView } from './src/screens/Settings/SettingsListView/SettingsListView';
+import { Search } from './src/screens/Search/Search';
+import { GeneralSettings } from './src/screens/Settings/GeneralSettings/GeneralSettings';
+import { AppColorSettings } from './src/screens/Settings/GeneralSettings/AppColorSettings/AppColorSettings';
+import { Dialog, ListItem } from '@rneui/themed';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { listItems } from './src/screens/Home/HomeList';
+import { StoryFilters } from './src/types/hn-api';
+import { ThemeSettings } from './src/screens/Settings/ThemeSettings/ThemeSettings';
 
 registerRootComponent(App);
 
 Sentry.init({
-  dsn: "https://74d59fdf426b4fd1a90f85ef738b23f5@o1049868.ingest.sentry.io/6031164",
-  environment: process.env.STAGE ?? "development",
+  dsn: 'https://74d59fdf426b4fd1a90f85ef738b23f5@o1049868.ingest.sentry.io/6031164',
+  environment: process.env.STAGE ?? 'development',
   enableInExpoDevelopment: true,
 });
 
@@ -81,20 +73,14 @@ function App() {
 
           const onAppStateChange = (nextAppState: typeof appState) => {
             /* If it's resuming from background or inactive mode to active one */
-            if (
-              appState.match(/inactive|background/) &&
-              nextAppState === "active"
-            ) {
+            if (appState.match(/inactive|background/) && nextAppState === 'active') {
               callback();
             }
             appState = nextAppState;
           };
 
           // Subscribe to the app state change events
-          const listener = AppState.addEventListener(
-            "change",
-            onAppStateChange
-          );
+          const listener = AppState.addEventListener('change', onAppStateChange);
 
           return () => {
             listener.remove();
@@ -117,12 +103,12 @@ function App() {
 function AppStatusBar() {
   const { theme } = useDash();
   let appTheme;
-  if (theme === "light") {
-    appTheme = "dark";
-  } else if (theme === "dark") {
-    appTheme = "light";
+  if (theme === 'light') {
+    appTheme = 'dark';
+  } else if (theme === 'dark') {
+    appTheme = 'light';
   } else {
-    appTheme = "auto";
+    appTheme = 'auto';
   }
   return <StatusBar style={appTheme} />;
 }
@@ -155,16 +141,16 @@ function Tabs() {
           name="Home"
           component={HomeScreens}
           options={{
-            tabBarLabel: "Posts",
+            tabBarLabel: 'Posts',
             tabBarIcon: () => <Icon name="ios-browsers" size={25} />,
           }}
         />
         <Tab.Screen
           name="User"
           component={User}
-          initialParams={{ id: "pookieinc" }}
+          initialParams={{ id: 'pookieinc' }}
           options={{
-            tabBarLabel: "User",
+            tabBarLabel: 'User',
             tabBarIcon: () => <Icon name="person-circle" size={25} />,
           }}
         />
@@ -172,7 +158,7 @@ function Tabs() {
           name="Search"
           component={SearchScreens}
           options={{
-            tabBarLabel: "Search",
+            tabBarLabel: 'Search',
             tabBarIcon: () => <Icon name="search" size={25} />,
           }}
         />
@@ -180,7 +166,7 @@ function Tabs() {
           name="Settings"
           component={SettingsScreens}
           options={{
-            tabBarLabel: "Settings",
+            tabBarLabel: 'Settings',
             tabBarIcon: () => <Icon name="settings-outline" size={25} />,
           }}
         />
@@ -191,12 +177,7 @@ function Tabs() {
 
 function TabBar({ state, descriptors, navigation, insets }: BottomTabBarProps) {
   return (
-    <TabBarBase
-      state={state}
-      descriptors={descriptors}
-      navigation={navigation}
-      insets={insets}
-    />
+    <TabBarBase state={state} descriptors={descriptors} navigation={navigation} insets={insets} />
   );
 }
 
@@ -225,7 +206,7 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
             testID={options.tabBarTestID}
             onPress={() => {
               const event = navigation.emit({
-                type: "tabPress",
+                type: 'tabPress',
                 target: route.key,
                 canPreventDefault: true,
               });
@@ -239,18 +220,18 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
             }}
             onLongPress={() => {
               navigation.emit({
-                type: "tabLongPress",
+                type: 'tabLongPress',
                 target: route.key,
               });
             }}
             style={tabBarTab(isFocused)}
           >
-            <View style={{ display: "flex", flexDirection: "column" }}>
+            <View style={{ display: 'flex', flexDirection: 'column' }}>
               <Text style={tabBarLabel(isFocused)}>
                 {!!options.tabBarIcon &&
                   options.tabBarIcon({
                     focused: true,
-                    color: "blue",
+                    color: 'blue',
                     size: 13,
                   })}
               </Text>
@@ -283,15 +264,11 @@ function HomeScreens() {
         },
       }}
     >
-      <HomeStack.Screen
-        name="Select"
-        component={Home}
-        initialParams={{ filter: "home" }}
-      />
+      <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
       <AllStack.Screen
         name="Stories"
         component={Stories}
-        initialParams={{ filter: "top" }}
+        initialParams={{ filter: 'top' }}
         options={{
           headerTitle: () => {
             return (
@@ -299,15 +276,15 @@ function HomeScreens() {
                 <Pressable
                   onPress={() => setSwitcher(true)}
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}
                 >
                   <Text
                     style={{
                       fontSize: 16,
-                      fontWeight: "600",
+                      fontWeight: '600',
                       color: color.textPrimary,
                     }}
                   >
@@ -320,17 +297,14 @@ function HomeScreens() {
                     name="chevron-down-outline"
                   />
                 </Pressable>
-                <Dialog
-                  isVisible={switcher}
-                  onBackdropPress={() => setSwitcher(false)}
-                >
+                <Dialog isVisible={switcher} onBackdropPress={() => setSwitcher(false)}>
                   <Dialog.Title title="Switch HN" />
                   {listItems.map((topic) => (
                     <Pressable
                       key={topic.id}
                       onPress={() => {
                         setSwitcher(false);
-                        return navigation.navigate("Stories", {
+                        return navigation.navigate('Stories', {
                           filter: topic?.filter as StoryFilters,
                         });
                       }}
@@ -350,7 +324,7 @@ function HomeScreens() {
       />
       <HomeStack.Screen name="User" component={User} />
       <HomeStack.Screen name="Thread" component={Thread} />
-      <HomeStack.Group screenOptions={{ presentation: "modal" }}>
+      <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
         <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
       </HomeStack.Group>
     </HomeStack.Navigator>
@@ -415,8 +389,8 @@ const navigationText = styles.one<TextStyle>((t) => ({
 }));
 
 const tabBar = styles.one<ViewStyle>((t) => ({
-  flexDirection: "row",
-  width: "100%",
+  flexDirection: 'row',
+  width: '100%',
   backgroundColor: t.color.headerBg,
   borderTopWidth: t.borderWidth.hairline,
   borderTopColor: t.color.accent,
@@ -425,9 +399,9 @@ const tabBar = styles.one<ViewStyle>((t) => ({
 const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
   color: isFocused ? t.color.primary : t.color.textAccent,
   fontSize: t.type.size.sm,
-  fontWeight: "700",
+  fontWeight: '700',
   margin: 0,
-  textAlign: "center",
+  textAlign: 'center',
 }));
 
 const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
@@ -435,12 +409,12 @@ const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
   borderTopWidth: 4,
   flex: 1,
   padding: t.space.md,
-  justifyContent: "center",
-  alignItems: "center",
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 const sceneContainer = styles.one<ViewStyle>((t) => ({
-  height: "100%",
-  width: "100%",
+  height: '100%',
+  width: '100%',
   backgroundColor: t.color.bodyBg,
 }));

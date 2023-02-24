@@ -45,12 +45,21 @@
     "sentry-expo": "^6.0.0",
     "striptags": "^3.2.0",
     "swr": "^2.0.0",
-    "trie-memoize": "^1.2.0",
-    "typescript": "^4.6.3"
+    "trie-memoize": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "react-devtools": "^4.27.2"
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-native": "^4.0.0",
+    "react-devtools": "^4.27.2",
+    "typescript": "^4.9.5"
   },
   "private": true
 }
