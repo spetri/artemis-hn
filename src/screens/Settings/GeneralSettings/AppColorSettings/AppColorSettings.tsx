@@ -27,6 +27,18 @@ export interface SettingsProps
 export const AppColorSettings: FC<SettingsProps> = () => {
   const [preferences, loadPreferences] = useTheme();
   const appColors = {
+    commentColors: [
+      {
+        colors: ["4D455D", "#E96479", "#F5E9CF", "#7DB9B6"],
+        name: "HN Default",
+        displayName: "HN Default",
+      },
+      // { colors: ["red600"], name: "Deep Love", displayName: "Deep Love" },
+      // { colors: ["amber500"], name: "Gold", displayName: "Gold" },
+      // { colors: ["emerald200"], name: "Mint", displayName: "Mint" },
+      // { colors: ["blue800"], name: "Deep Blue Sea", displayName: "Deep Blue Sea" },
+      // { colors: ["cyan500"], name: "Cyanic", displayName: "Cyanic" },
+    ],
     accentColors: [
       { color: "orange500", name: "HN Default", displayName: "HN Default" },
       { color: "red600", name: "Deep Love", displayName: "Deep Love" },
@@ -117,10 +129,27 @@ export const AppColorSettings: FC<SettingsProps> = () => {
     }
   }, [preferences, setStorage]);
 
+  const setColorStorage = (appColor) => {
+    if (!!appColor.item.theme) {
+      setStorage({
+        colorScheme: appColor.item.name,
+      });
+    } else if (!!appColor.item.colors) {
+      setStorage({
+        commentColors: appColor.item.name,
+      });
+    } else {
+      setStorage({
+        primaryColor: appColor.item.color,
+      });
+    }
+  };
+
   return (
     <SafeAreaView style={container()}>
       <SectionList
         sections={[
+          { title: "Comment Colors", data: appColors.commentColors },
           { title: "Theme Colors", data: appColors.themeColors },
           { title: "Accent Colors", data: appColors.accentColors },
         ]}
@@ -132,13 +161,8 @@ export const AppColorSettings: FC<SettingsProps> = () => {
             <Pressable
               key={appColor.item.name}
               onPress={() => {
-                !!appColor.item.theme
-                  ? setStorage({
-                      colorScheme: appColor.item.name,
-                    })
-                  : setStorage({
-                      primaryColor: appColor.item.color,
-                    });
+                console.log(appColor);
+                setColorStorage(appColor);
               }}
             >
               <ListItem

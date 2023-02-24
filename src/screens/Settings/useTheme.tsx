@@ -12,6 +12,18 @@ export const defaultPreferences: SetThemeType = {
   displayReplies: false,
   colorScheme: undefined,
   primaryColor: "orange500",
+  commentColor: [
+    "#233cfb",
+    "#ff7d2d",
+    "#fac846",
+    "#a0c382",
+    "#5f9b8c",
+    "#233cfb",
+    "#ff7d2d",
+    "#fac846",
+    "#a0c382",
+    "#5f9b8c",
+  ],
   baseTypeSize: 14,
 };
 
@@ -28,6 +40,7 @@ export type SetThemeType = {
     | null
     | undefined;
   primaryColor: keyof typeof colorSystem;
+  commentColor: string[];
   baseTypeSize: number;
 };
 

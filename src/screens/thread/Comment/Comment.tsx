@@ -16,7 +16,7 @@ import { ago } from "../../../utils/ago";
 import { pluralize } from "../../../utils/pluralize";
 import { StackParamList } from "../../routers";
 import { HACKER_NEWS_API } from "../../../constants/api";
-import { FC, memo, useMemo, useRef, useState } from "react";
+import { FC, memo, useMemo, useState } from "react";
 import {
   Text,
   useWindowDimensions,
@@ -30,6 +30,7 @@ import { linkify } from "../../../utils/util";
 import { usePreferences } from "../../Settings/usePreferences";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { ListItem } from "@rneui/themed";
+import { defaultPreferences } from "../../Settings/useTheme";
 
 type CommentProps = {
   id: number;
@@ -41,6 +42,10 @@ export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const [collapsed, setCollapsed] = useState(false);
     const actionSheet = useActionSheet();
+    const [commentColors] = usePreferences(
+      "commentColor",
+      defaultPreferences.commentColor
+    );
 
     const { theme } = useDash();
     const {
@@ -100,11 +105,7 @@ export const Comment: FC<CommentProps> = memo(
     const comment = commentData.data;
 
     const onCollapse = () => {
-      if (collapsed) {
-        setCollapsed(false);
-      } else {
-        setCollapsed(true);
-      }
+      return collapsed ? setCollapsed(false) : setCollapsed(true);
     };
 
     const rightSwipeActions = () => {
@@ -221,6 +222,12 @@ export const Comment: FC<CommentProps> = memo(
       );
     };
 
+    console.log(
+      commentColors?.[Math.floor(depth)],
+      Math.floor(depth),
+      commentColors
+    );
+
     return (
       <>
         <ListItem.Swipeable
@@ -236,7 +243,14 @@ export const Comment: FC<CommentProps> = memo(
           style={{ margin: 0, padding: 0 }}
         >
           <Pressable onPress={onCollapse} style={{ width: "100%" }}>
-            <View style={commentContainer(depth)}>
+            <View
+              style={commentContainer({
+                depth: depth,
+                commentColors: !!commentColors
+                  ? commentColors?.[Math.floor(depth)]
+                  : commentColors,
+              })}
+            >
               <View style={byLine(depth)}>
                 <Pressable
                   onPress={() =>
@@ -302,7 +316,14 @@ export const Comment: FC<CommentProps> = memo(
           !showingReplies &&
           !displayReplies[0] &&
           !collapsed && (
-            <View style={commentContainerReply(depth)}>
+            <View
+              style={commentContainerReply({
+                depth: depth,
+                commentColors: !!commentColors
+                  ? commentColors?.[Math.floor(depth)]
+                  : commentColors,
+              })}
+            >
               <Pressable
                 onPress={() => {
                   setShowingReplies((current) => !current);
@@ -320,32 +341,34 @@ export const Comment: FC<CommentProps> = memo(
   (prev, next) => prev.id === next.id
 );
 
-const commentContainer = styles.lazy<number, ViewStyle>((depth) => (t) => ({
-  width: "100%",
-  padding: t.space.md,
-  paddingBottom: 10,
-  borderTopWidth: t.borderWidth.hairline,
-  borderTopColor: t.color.accent,
-  ...(depth > 1
-    ? ({
-        borderLeftWidth: 2,
-        borderLeftColor: t.color.primary,
-        marginLeft: t.space.md * (depth - 1),
-      } as const)
-    : {}),
-}));
+const commentContainer = styles.lazy<any>(
+  (obj: { depth: number; commentColors: number }) => (t) => ({
+    width: "100%",
+    padding: t.space.md,
+    paddingBottom: 10,
+    borderTopWidth: t.borderWidth.hairline,
+    borderTopColor: t.color.accent,
+    ...(obj.depth > 1
+      ? ({
+          borderLeftWidth: 2,
+          borderLeftColor: obj.commentColors,
+          marginLeft: t.space.md * (obj.depth - 1),
+        } as const)
+      : {}),
+  })
+);
 
-const commentContainerReply = styles.lazy<number, ViewStyle>(
-  (depth) => (t) => ({
+const commentContainerReply = styles.lazy<any>(
+  (obj: { depth: number; commentColors: number }) => (t) => ({
     padding: t.space.sm,
     paddingHorizontal: t.space.md,
     borderTopWidth: t.borderWidth.hairline,
     borderTopColor: t.color.accent,
-    ...(depth > 0
+    ...(obj.depth > 0
       ? ({
           borderLeftWidth: 2,
-          borderLeftColor: t.color.primary,
-          marginLeft: t.space.md * (depth + 0.5),
+          borderLeftColor: obj.commentColors,
+          marginLeft: t.space.md * (obj.depth + 0.5),
         } as const)
       : {}),
   })
