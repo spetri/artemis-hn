@@ -64,16 +64,16 @@ export const ThemeSettings: FC<SettingsProps> = () => {
     }
   };
 
-  const sectionTitles = [
-    { title: 'Comment Colors', data: appColors.commentColors },
-    { title: 'Theme Colors', data: appColors.themeColors },
-    { title: 'Accent Colors', data: appColors.accentColors }
-  ];
-
   return (
     <SafeAreaView style={container()}>
       <SectionList
-        sections={sectionTitles as any}
+        sections={
+          [
+            { title: 'Theme Colors', data: appColors.themeColors },
+            { title: 'Accent Colors', data: appColors.accentColors },
+            { title: 'Comment Colors', data: appColors.commentColors }
+          ] as any
+        }
         renderSectionHeader={({ section }) => (
           <Text style={sectionHeaderStyle()}>{section.title}</Text>
         )}
@@ -112,7 +112,7 @@ const colorSwatch = styles.lazy<{ color: string; selected: boolean }, ViewStyle>
     (t) => ({
       width: 30,
       height: 30,
-      backgroundColor: (t.color as any)[color],
+      backgroundColor: t.color[color],
       borderColor: selected ? t.color.textPrimary : 'transparent',
       borderWidth: 3,
       borderRadius: 4,
@@ -144,6 +144,7 @@ const header = styles.one<TextStyle>((t) => ({
 
 const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
   marginLeft: 10,
+  marginTop: 30,
   fontSize: 13,
   textTransform: 'uppercase',
   height: 30,

@@ -87,7 +87,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   ];
 
   const onSetDisplayRepliesChange = async (value) => {
-    value ? await setDisplayReplies(true) : await setDisplayReplies(false);
+    value ? await setDisplayReplies?.(true) : await setDisplayReplies?.(false);
   };
 
   useLayoutEffect(() => {

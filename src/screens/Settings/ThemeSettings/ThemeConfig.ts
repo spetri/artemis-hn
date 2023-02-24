@@ -4,7 +4,7 @@ export const AppColors = {
   commentColors: [
     {
       colors: [
-        '4D455D',
+        '#4D455D',
         '#E96479',
         '#F5E9CF',
         '#7DB9B6',
@@ -18,59 +18,74 @@ export const AppColors = {
     },
     {
       colors: [
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6',
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6'
+        '#D7FBE8',
+        '#9DF3C4',
+        '#62D2A2',
+        '#1FAB89',
+        '#D7FBE8',
+        '#9DF3C4',
+        '#62D2A2',
+        '#1FAB89'
       ],
-      name: 'HN Default',
-      displayName: 'HN Default'
+      name: 'forest',
+      displayName: 'Forest'
     },
     {
       colors: [
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6',
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6'
+        '#F4F4F2',
+        '#E8E8E8',
+        '#BBBFCA',
+        '#495464',
+        '#F4F4F2',
+        '#E8E8E8',
+        '#BBBFCA',
+        '#495464'
       ],
-      name: 'HN Default',
-      displayName: 'HN Default'
+      name: 'mono',
+      displayName: 'Mono'
     },
     {
       colors: [
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6',
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6'
+        '#E23E57',
+        '#88304E',
+        '#522546',
+        '#311D3F',
+        '#E23E57',
+        '#88304E',
+        '#522546',
+        '#311D3F'
       ],
-      name: 'HN Default',
-      displayName: 'HN Default'
+      name: 'sunset',
+      displayName: 'Sunset'
     },
     {
       colors: [
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6',
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6'
+        '#FFAAA5',
+        '#FFD3B6',
+        '#DCEDC1',
+        '#A8E6CF',
+        '#FFAAA5',
+        '#FFD3B6',
+        '#DCEDC1',
+        '#A8E6CF'
       ],
-      name: 'HN Default',
-      displayName: 'HN Default'
+      name: 'softie',
+      displayName: 'Softie'
+    },
+    {
+      colors: [
+        '#00A8CC',
+        '#0C7B93',
+        '#27496D',
+        '#142850',
+        '#00A8CC',
+        '#0C7B93',
+        '#27496D',
+        '#142850'
+      ],
+      color: 'something',
+      name: 'marine',
+      displayName: 'Marine Life'
     }
   ],
   accentColors: [

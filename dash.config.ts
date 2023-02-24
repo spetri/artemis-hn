@@ -280,7 +280,9 @@ export const colorSystem = {
   auroraBodyBg: '#D08770',
   auroraHeaderBg: '#D08770',
   auroraAccent: '#A3BE8C',
-  auroraAccentLight: '#8FBCBB'
+  auroraAccentLight: '#8FBCBB',
+
+  something: '#00A8CC'
 } as const
 
 export function createTypeSystem(baseSize = 16) {

@@ -39,7 +39,6 @@ import { Home } from './src/screens/Home/Home';
 import { SettingsListView } from './src/screens/Settings/SettingsListView/SettingsListView';
 import { Search } from './src/screens/Search/Search';
 import { GeneralSettings } from './src/screens/Settings/GeneralSettings/GeneralSettings';
-import { AppColorSettings } from './src/screens/Settings/GeneralSettings/AppColorSettings/AppColorSettings';
 import { listItems } from './src/screens/Home/HomeList';
 import { ThemeSettings } from './src/screens/Settings/ThemeSettings/ThemeSettings';
 
@@ -366,7 +365,6 @@ function SettingsScreens() {
       <SettingsStack.Screen name="Settings" component={SettingsListView} />
       <SettingsStack.Screen name="General" component={GeneralSettings} />
       <SettingsStack.Screen name="Theme" component={ThemeSettings} />
-      <SettingsStack.Screen name="App Color" component={AppColorSettings} />
     </SettingsStack.Navigator>
   );
 }

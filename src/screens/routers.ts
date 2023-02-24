@@ -13,19 +13,19 @@ export const SearchStack = createNativeStackNavigator<StackParamList>()
 export const Tab = createBottomTabNavigator<ParamListBase>()
 
 export type StackParamList = {
-  Stories: { filter: StoryFilters }
-  Topics: { filter: StoryFilters }
-  User: { id: string }
-  BrowserModal: { title: string | undefined, url: string }
-  Thread: { id: number }
-  Settings: Record<string, never>
-  Home: Record<string, never>
-  Search: Record<string, never>
-  SettingsListView: Record<string, never>
-  General: Record<string, never>
-  'App Color': Record<string, never>
-  Select: Record<string, never>
-}
+  Stories: { filter: StoryFilters };
+  Topics: { filter: StoryFilters };
+  User: { id: string };
+  BrowserModal: { title: string | undefined; url: string };
+  Thread: { id: number };
+  Settings: Record<string, never>;
+  Home: Record<string, never>;
+  Search: Record<string, never>;
+  SettingsListView: Record<string, never>;
+  General: Record<string, never>;
+  Select: Record<string, never>;
+  Theme: Record<string, never>;
+};
 
 export interface TabParamList {
   Home: undefined
