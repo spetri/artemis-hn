@@ -42,6 +42,7 @@ import { Dialog, ListItem } from "@rneui/themed";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { listItems } from "./src/screens/Home/HomeList";
 import { StoryFilters } from "./src/types/hn-api";
+import { ThemeSettings } from "./src/screens/Settings/ThemeSettings/ThemeSettings";
 
 registerRootComponent(App);
 
@@ -376,6 +377,7 @@ function SettingsScreens() {
     >
       <SettingsStack.Screen name="Settings" component={SettingsListView} />
       <SettingsStack.Screen name="General" component={GeneralSettings} />
+      <SettingsStack.Screen name="Theme" component={ThemeSettings} />
       <SettingsStack.Screen name="App Color" component={AppColorSettings} />
     </SettingsStack.Navigator>
   );

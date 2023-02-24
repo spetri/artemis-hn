@@ -1,17 +1,13 @@
 import { useAsync } from "@react-hook/async";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BottomSheet, Button, ListItem, Slider, Switch } from "@rneui/themed";
-import type {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { FC, useCallback, useLayoutEffect, useState } from "react";
 import {
   Text,
   SafeAreaView,
   TextStyle,
-  useColorScheme,
   View,
   ViewStyle,
   SectionList,
@@ -21,7 +17,6 @@ import {
 import { styles, useDash } from "../../../../dash.config";
 import { StackParamList } from "../../routers";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
 import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
 import {
   defaultPreferences,
@@ -57,7 +52,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     await AsyncStorage.multiSet(data);
     await loadPreferences();
   });
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
   const setStorage = useCallback(
     (settings: Partial<SetThemeType>) => {
@@ -69,18 +63,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   const listItems = [
     {
       id: "1",
-      header: "App Color",
-      subheader: "Select app color theme",
-      iconName: "color-palette-outline",
-      onPress: () => navigation.navigate("App Color"),
-      type: (
-        <Button buttonStyle={{ backgroundColor: color.bodyBg }}>
-          <ListItem.Chevron />
-        </Button>
-      ),
-    },
-    {
-      id: "2",
       header: "Text Size",
       subheader: "Select Text Size",
       iconName: "text-outline",
@@ -95,7 +77,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       ),
     },
     {
-      id: "3",
+      id: "2",
       header: "Display All Replies",
       subheader: "When selected, display all replies automatically",
       iconName: "file-tray-outline",

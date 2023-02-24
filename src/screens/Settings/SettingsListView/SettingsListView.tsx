@@ -19,6 +19,7 @@ type ListItemType = {
   id: string;
   header: string;
   iconName: string;
+  navigate: () => void;
 }[];
 
 export const SettingsListView: FC = () => {
@@ -32,26 +33,31 @@ export const SettingsListView: FC = () => {
       id: "1",
       header: "General",
       iconName: "ios-settings-outline",
+      navigate: () => navigation.navigate("General"),
     },
     {
       id: "2",
       header: "Theme",
       iconName: "ios-moon-outline",
+      navigate: () => navigation.navigate("Theme"),
     },
     {
       id: "3",
       header: "App Icon",
       iconName: "ios-logo-hackernews",
+      navigate: () => navigation.navigate("General"),
     },
     {
       id: "4",
       header: "About",
       iconName: "at-circle-outline",
+      navigate: () => navigation.navigate("General"),
     },
     {
       id: "5",
       header: "Email",
       iconName: "file-tray-full-outline",
+      navigate: () => navigation.navigate("General"),
     },
   ];
 
@@ -73,10 +79,7 @@ export const SettingsListView: FC = () => {
                 />
               </Text>
               <View style={row()}>
-                <Text
-                  style={header()}
-                  onPress={() => navigation.navigate("General")}
-                >
+                <Text style={header()} onPress={item.navigate}>
                   {item.header}
                 </Text>
               </View>
