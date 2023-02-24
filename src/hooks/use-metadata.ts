@@ -1,113 +1,113 @@
-import { parse as parseHtml } from "node-html-parser";
-import { useState, useRef, useEffect, useMemo } from "react";
-import useSWR from "swr";
-import memoize from "trie-memoize";
+import { parse as parseHtml } from 'node-html-parser'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import useSWR from 'swr'
+import memoize from 'trie-memoize'
 
 export function useMetadata(url: URL | undefined) {
-  const [timedOut, setTimedOut] = useState(false);
-  const didUnsubscribe = useRef(false);
+  const [timedOut, setTimedOut] = useState(false)
+  const didUnsubscribe = useRef(false)
   const html = useSWR(
     url?.host ? url.toString() : null,
-    (key) =>
-      fetch(key).then((res) => {
-        if (res.headers.get("content-type")?.includes("text/html")) {
-          return res.text();
+    async (key) =>
+      await fetch(key).then(async (res) => {
+        if (res.headers.get('content-type')?.includes('text/html')) {
+          return await res.text()
         }
 
-        return null;
+        return null
       }),
     {
       shouldRetryOnError: false,
-      onLoadingSlow: () => !didUnsubscribe.current && setTimedOut(true),
+      onLoadingSlow: () => { !didUnsubscribe.current && setTimedOut(true) }
     }
-  );
+  )
 
   useEffect(() => {
     setTimeout(() => {
       if (html.data || html.error) {
-        return;
+        return
       }
 
-      !didUnsubscribe.current && setTimedOut(true);
-    }, 4000);
+      !didUnsubscribe.current && setTimedOut(true)
+    }, 4000)
 
     return () => {
-      didUnsubscribe.current = true;
-    };
-  }, []);
+      didUnsubscribe.current = true
+    }
+  }, [])
 
   const parsedHtml =
-    typeof html.data === "string" ? parse(html.data) : html.data;
+    typeof html.data === 'string' ? parse(html.data) : html.data
 
   return useMemo(() => {
     if (
       !url?.host ||
       html.error ||
       parsedHtml === null ||
-      (!parsedHtml && timedOut)
+      ((parsedHtml == null) && timedOut)
     ) {
       return {
         favicon: undefined,
         image: undefined,
-        applicationName: undefined,
-      };
+        applicationName: undefined
+      }
     }
 
-    if (parsedHtml) {
+    if (parsedHtml != null) {
       return {
         favicon:
           [
-            ...parsedHtml.querySelectorAll("link[rel=apple-touch-icon]"),
-            ...parsedHtml.querySelectorAll("link[rel=icon]"),
-            ...parsedHtml.querySelectorAll("link[rel='shortcut icon']"),
+            ...parsedHtml.querySelectorAll('link[rel=apple-touch-icon]'),
+            ...parsedHtml.querySelectorAll('link[rel=icon]'),
+            ...parsedHtml.querySelectorAll("link[rel='shortcut icon']")
           ]
             .filter((link) => {
-              if (!link) return false;
-              const href = link.getAttribute("href");
-              if (!href) return false;
-              return !href.endsWith(".svg");
+              if (!link) return false
+              const href = link.getAttribute('href')
+              if (!href) return false
+              return !href.endsWith('.svg')
             })
             .map((link) =>
               new URL(
-                link.getAttribute("href")!,
-                url.protocol + "//" + url.host
+                link.getAttribute('href')!,
+                url.protocol + '//' + url.host
               ).toString()
-            )[0] || new URL("/favicon.ico", url.toString()).toString(),
+            )[0] || new URL('/favicon.ico', url.toString()).toString(),
         image: [
-          ...parsedHtml.querySelectorAll("meta[name=og:image]"),
-          ...parsedHtml.querySelectorAll("meta[name=og:image:url]"),
-          ...parsedHtml.querySelectorAll("meta[name=og:image:secure_url]"),
-          ...parsedHtml.querySelectorAll("meta[name=twitter:image]"),
-          ...parsedHtml.querySelectorAll("main article figure img"),
-          ...parsedHtml.querySelectorAll("article figure img"),
-          ...parsedHtml.querySelectorAll("main figure img"),
-          ...parsedHtml.querySelectorAll("figure img"),
+          ...parsedHtml.querySelectorAll('meta[name=og:image]'),
+          ...parsedHtml.querySelectorAll('meta[name=og:image:url]'),
+          ...parsedHtml.querySelectorAll('meta[name=og:image:secure_url]'),
+          ...parsedHtml.querySelectorAll('meta[name=twitter:image]'),
+          ...parsedHtml.querySelectorAll('main article figure img'),
+          ...parsedHtml.querySelectorAll('article figure img'),
+          ...parsedHtml.querySelectorAll('main figure img'),
+          ...parsedHtml.querySelectorAll('figure img')
         ]
           .filter((meta) => {
-            if (!meta) return false;
+            if (!meta) return false
             const content =
-              meta.getAttribute("content") || meta.getAttribute("src");
-            if (!content) return false;
-            return !content.endsWith(".svg");
+              meta.getAttribute('content') || meta.getAttribute('src')
+            if (!content) return false
+            return !content.endsWith('.svg')
           })
           .map((meta) =>
             new URL(
-              (meta.getAttribute("content") || meta.getAttribute("src"))!,
+              (meta.getAttribute('content') || meta.getAttribute('src'))!,
               url.toString()
             ).toString()
           )[0],
         applicationName: parsedHtml
-          .querySelectorAll("meta[name=application-name]")
+          .querySelectorAll('meta[name=application-name]')
           .filter((meta) => {
-            if (!meta) return false;
-            const content = meta.getAttribute("content");
-            if (!content) return false;
-            return !content.endsWith(".svg");
+            if (!meta) return false
+            const content = meta.getAttribute('content')
+            if (!content) return false
+            return !content.endsWith('.svg')
           })
-          .map((meta) => meta.getAttribute("content"))[0],
-      };
+          .map((meta) => meta.getAttribute('content'))[0]
+      }
     }
-  }, [html.error, parsedHtml, timedOut, url + ""]);
+  }, [html.error, parsedHtml, timedOut, url + ''])
 }
 
-const parse = memoize([Map], parseHtml);
+const parse = memoize([Map], parseHtml)

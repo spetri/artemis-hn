@@ -2,21 +2,21 @@ import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ListItem } from '@rneui/themed';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { FC, useCallback, useLayoutEffect } from 'react';
+import { type FC, useCallback, useLayoutEffect } from 'react';
 import {
-  Text,
-  SafeAreaView,
-  TextStyle,
-  View,
-  ViewStyle,
   Pressable,
+  SafeAreaView,
   SectionList,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle
 } from 'react-native';
 import { styles } from '../../../../dash.config';
-import { StackParamList } from '../../routers';
-import { defaultPreferences, preferencesVersion, SetThemeType, useTheme } from '../useTheme';
+import { type StackParamList } from '../../routers';
+import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } from '../useTheme';
 
-export interface SettingsProps extends NativeStackScreenProps<StackParamList, 'User'> {}
+export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
 export const ThemeSettings: FC<SettingsProps> = () => {
   const [preferences, loadPreferences] = useTheme();
@@ -25,8 +25,8 @@ export const ThemeSettings: FC<SettingsProps> = () => {
       {
         colors: ['4D455D', '#E96479', '#F5E9CF', '#7DB9B6'],
         name: 'HN Default',
-        displayName: 'HN Default',
-      },
+        displayName: 'HN Default'
+      }
       // { colors: ["red600"], name: "Deep Love", displayName: "Deep Love" },
       // { colors: ["amber500"], name: "Gold", displayName: "Gold" },
       // { colors: ["emerald200"], name: "Mint", displayName: "Mint" },
@@ -43,64 +43,64 @@ export const ThemeSettings: FC<SettingsProps> = () => {
       {
         color: 'green500',
         name: "Saint Patrick's Day",
-        displayName: "Saint Patrick's Day",
+        displayName: "Saint Patrick's Day"
       },
       { color: 'lime600', name: 'Olive', displayName: 'Olive' },
       { color: 'violet500', name: 'Magenta', displayName: 'Magenta' },
       { color: 'indigo500', name: 'Wild', displayName: 'Wild' },
       { color: 'fuchsia500', name: 'Pink', displayName: 'Pink' },
       { color: 'pink500', name: 'Party', displayName: 'Party' },
-      { color: 'rose500', name: 'Rose', displayName: 'Rose' },
+      { color: 'rose500', name: 'Rose', displayName: 'Rose' }
     ],
     themeColors: [
       {
         theme: styles.tokens.light.color,
         color: 'white',
         name: 'light',
-        displayName: 'Light',
+        displayName: 'Light'
       },
       {
         theme: styles.tokens.dark.color,
         color: 'warmGray900',
         name: 'dark',
-        displayName: 'Dark',
+        displayName: 'Dark'
       },
       {
         theme: styles.tokens.black.color,
         color: 'black',
         name: 'black',
-        displayName: 'Black',
+        displayName: 'Black'
       },
       {
         theme: styles.tokens.solarized.color,
         color: 'solarizedBodyBg',
         name: 'solarized',
-        displayName: 'Solarized',
+        displayName: 'Solarized'
       },
       {
         theme: styles.tokens.dracula.color,
         color: 'draculaBodyBg',
         name: 'dracula',
-        displayName: 'Dracula',
+        displayName: 'Dracula'
       },
       {
         theme: styles.tokens.nord.color,
         color: 'nordBodyBg',
         name: 'nord',
-        displayName: 'Nord',
+        displayName: 'Nord'
       },
       {
         theme: styles.tokens.aurora.color,
         color: 'auroraBodyBg',
         name: 'aurora',
-        displayName: 'Aurora',
-      },
-    ],
+        displayName: 'Aurora'
+      }
+    ]
   };
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
       data: preferences,
-      version: preferencesVersion,
+      version: preferencesVersion
     }).map(([key, value]) => [key, JSON.stringify(value)]);
     await AsyncStorage.multiSet(data);
     await loadPreferences();
@@ -116,25 +116,25 @@ export const ThemeSettings: FC<SettingsProps> = () => {
   useLayoutEffect(() => {
     if (
       preferences.status === 'success' &&
-      preferences.data &&
-      !Object.values(preferences.data).length
+      preferences.data != null &&
+      Object.values(preferences.data).length === 0
     ) {
       setStorage(defaultPreferences);
     }
   }, [preferences, setStorage]);
 
   const setColorStorage = (appColor) => {
-    if (!!appColor.item.theme) {
+    if (appColor.item.theme) {
       setStorage({
-        colorScheme: appColor.item.name,
+        colorScheme: appColor.item.name
       });
-    } else if (!!appColor.item.colors) {
+    } else if (appColor.item.colors) {
       setStorage({
-        commentColors: appColor.item.name,
+        commentColors: appColor.item.name
       });
     } else {
       setStorage({
-        primaryColor: appColor.item.color,
+        primaryColor: appColor.item.color
       });
     }
   };
@@ -145,7 +145,7 @@ export const ThemeSettings: FC<SettingsProps> = () => {
         sections={[
           { title: 'Comment Colors', data: appColors.commentColors },
           { title: 'Theme Colors', data: appColors.themeColors },
-          { title: 'Accent Colors', data: appColors.accentColors },
+          { title: 'Accent Colors', data: appColors.accentColors }
         ]}
         renderSectionHeader={({ section }) => (
           <Text style={sectionHeaderStyle()}>{section.title}</Text>
@@ -164,7 +164,7 @@ export const ThemeSettings: FC<SettingsProps> = () => {
                   <View
                     style={colorSwatch({
                       color: appColor.item.color,
-                      selected: appColor.item.color === preferences.data?.primaryColor,
+                      selected: appColor.item.color === preferences.data?.primaryColor
                     })}
                   />
                   <ListItem.Title style={header()}>
@@ -189,17 +189,17 @@ const colorSwatch = styles.lazy<{ color: string; selected: boolean }, ViewStyle>
       borderColor: selected ? t.color.textPrimary : 'transparent',
       borderWidth: 3,
       borderRadius: 4,
-      marginRight: 10,
+      marginRight: 10
     })
 );
 
 const containerBg = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
+  backgroundColor: t.color.bodyBg
 }));
 
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: '100%',
+  height: '100%'
 }));
 
 const listItems = styles.one<ViewStyle>((t) => ({
@@ -207,12 +207,12 @@ const listItems = styles.one<ViewStyle>((t) => ({
   height: 20,
   display: 'flex',
   flexDirection: 'row',
-  alignItems: 'center',
+  alignItems: 'center'
 }));
 
 const header = styles.one<TextStyle>((t) => ({
   fontSize: 15,
-  color: t.color.textPrimary,
+  color: t.color.textPrimary
 }));
 
 const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
@@ -223,5 +223,5 @@ const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
   display: 'flex',
   justifyContent: 'center',
   backgroundColor: t.color.bodyBg,
-  color: t.color.textPrimary,
+  color: t.color.textPrimary
 }));

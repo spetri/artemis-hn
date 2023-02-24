@@ -1,38 +1,23 @@
-import { styles, useDash } from "../../../dash.config";
-import Icon from "react-native-vector-icons/Ionicons";
-import { FC, useEffect, useState } from "react";
-import {
-  Pressable,
-  SafeAreaView,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
-import { LogoHeader } from "../../components/LogoHeader";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackParamList } from "../routers";
-import { useNavigation } from "@react-navigation/native";
-import { StoryFilters } from "../../types/hn-api";
-import { ListItem } from "@rneui/themed";
-import DraggableFlatList, {
-  ScaleDecorator,
-} from "react-native-draggable-flatlist";
-import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content";
-import { listItems, ListItemType } from "./HomeList";
-import { usePreferences } from "../Settings/usePreferences";
+import Icon from 'react-native-vector-icons/Ionicons';
+import { type FC, useEffect, useState } from 'react';
+import { Pressable, SafeAreaView, type TextStyle, View, type ViewStyle } from 'react-native';
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { ListItem } from '@rneui/themed';
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content';
+import { type StackParamList } from '../routers';
+import { styles, useDash } from '../../../dash.config';
+import { usePreferences } from '../Settings/usePreferences';
+import { listItems, type ListItemType } from './HomeList';
 
 export const Home: FC<ListItemType> = () => {
   useDash();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const [homeOrderList, setHomeOrderList] = usePreferences(
-    "homeOrderList",
-    listItems
-  );
-  const [homeItems, setHomeItems] = useState(
-    homeOrderList ? homeOrderList[0] : listItems
-  );
+  const [homeOrderList, setHomeOrderList] = usePreferences('homeOrderList', listItems);
+  const [homeItems, setHomeItems] = useState(homeOrderList != null ? homeOrderList[0] : listItems);
   const {
-    tokens: { color },
+    tokens: { color }
   } = useDash();
 
   const persistOrder = (itemList) => {
@@ -41,7 +26,7 @@ export const Home: FC<ListItemType> = () => {
   };
 
   useEffect(() => {
-    if (!!homeOrderList) {
+    if (homeOrderList != null) {
       setHomeItems(homeOrderList);
     }
   }, [homeOrderList]);
@@ -52,31 +37,24 @@ export const Home: FC<ListItemType> = () => {
         <DraggableFlatList
           data={homeItems}
           keyExtractor={(item: ListItemType) => item.id}
-          onDragEnd={({ data }) => persistOrder(data)}
+          onDragEnd={({ data }) => {
+            persistOrder(data);
+          }}
           renderItem={({ item, drag }) => (
             <ScaleDecorator>
               <Pressable
                 onLongPress={drag}
-                onPress={() =>
-                  navigation.navigate("Stories", {
-                    filter: item?.filter as StoryFilters,
-                  })
-                }
+                onPress={() => {
+                  navigation.navigate('Stories', {
+                    filter: item?.filter
+                  });
+                }}
               >
                 <ListItem bottomDivider containerStyle={content()}>
-                  <Icon
-                    name={item.iconName}
-                    color={color.textPrimary}
-                    size={25}
-                    style={image}
-                  />
+                  <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
                   <ListItemContent>
-                    <ListItem.Title style={header()}>
-                      {item.header}
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={subheader()}>
-                      {item.subheader}
-                    </ListItem.Subtitle>
+                    <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+                    <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
                   </ListItemContent>
                 </ListItem>
               </Pressable>
@@ -90,31 +68,31 @@ export const Home: FC<ListItemType> = () => {
 
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: "100%",
-  width: "100%",
+  height: '100%',
+  width: '100%'
 }));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
+  backgroundColor: t.color.bodyBg
 }));
 
 const content = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: 65,
+  height: 65
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: 12,
+  fontSize: 12
 }));
 
-const image = styles.one<ViewStyle>((t) => ({
-  height: "100%",
-  width: "100%",
+const image = styles.one<ViewStyle>(() => ({
+  height: '100%',
+  width: '100%'
 }));
 
 const header = styles.one<TextStyle>((t) => ({
   fontSize: 16,
-  fontWeight: "500",
-  color: t.color.textPrimary,
+  fontWeight: '500',
+  color: t.color.textPrimary
 }));

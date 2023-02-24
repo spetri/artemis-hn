@@ -1,63 +1,63 @@
-import useSWR, { useSWRConfig } from "swr";
-import { HACKER_NEWS_API } from "../constants/api";
+import useSWR, { useSWRConfig } from 'swr'
+import { HACKER_NEWS_API } from '../constants/api'
 import {
-  HackerNewsAsk,
-  HackerNewsComment,
-  HackerNewsPoll,
-  HackerNewsStory,
-} from "../types/hn-api";
+  type HackerNewsAsk,
+  type HackerNewsComment,
+  type HackerNewsPoll,
+  type HackerNewsStory
+} from '../types/hn-api'
 
 export function useParents(firstParent?: number | null) {
-  const { cache } = useSWRConfig();
+  const { cache } = useSWRConfig()
 
   return useSWR<
-    [
+  [
       story: HackerNewsStory | HackerNewsPoll | HackerNewsAsk,
       ...other: HackerNewsComment[]
-    ]
+  ]
   >(
     firstParent === void 0 || firstParent === null
       ? null
-      : [`${HACKER_NEWS_API}/item/${firstParent}.json`, "parents"],
+      : [`${HACKER_NEWS_API}/item/${firstParent}.json`, 'parents'],
     async (key) => {
       let next =
         cache.get(key) ??
         (await fetch(key, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
         }).then<
-          Promise<
-            HackerNewsStory | HackerNewsPoll | HackerNewsAsk | HackerNewsComment
-          >
-        >((res) => res.json()));
+        Promise<
+        HackerNewsStory | HackerNewsPoll | HackerNewsAsk | HackerNewsComment
+        >
+        >(async (res) => await res.json()))
       const parents: [
         story: HackerNewsStory | HackerNewsPoll | HackerNewsAsk,
         ...other: HackerNewsComment[]
-      ] = [next as any];
-      let foundStory = next.type === "story" || next.type === "poll";
-      cache.set(`${HACKER_NEWS_API}/item/${firstParent}.json`, next);
+      ] = [next as any]
+      let foundStory = next.type === 'story' || next.type === 'poll'
+      cache.set(`${HACKER_NEWS_API}/item/${firstParent}.json`, next)
 
       while (!foundStory) {
-        const key = `${HACKER_NEWS_API}/item/${next.parent}.json`;
+        const key = `${HACKER_NEWS_API}/item/${next.parent}.json`
         next =
           cache.get(key) ??
           (await fetch(key, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
           }).then<
-            Promise<
-              | HackerNewsStory
-              | HackerNewsPoll
-              | HackerNewsAsk
-              | HackerNewsComment
-            >
-          >((res) => res.json()));
-        parents.unshift(next);
-        cache.set(key, next);
-        foundStory = next.type === "story" || next.type === "poll";
+          Promise<
+          | HackerNewsStory
+          | HackerNewsPoll
+          | HackerNewsAsk
+          | HackerNewsComment
+          >
+          >(async (res) => await res.json()))
+        parents.unshift(next)
+        cache.set(key, next)
+        foundStory = next.type === 'story' || next.type === 'poll'
       }
 
-      return parents;
+      return parents
     }
-  );
+  )
 }

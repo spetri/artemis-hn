@@ -1,16 +1,16 @@
-import "react-native-url-polyfill/auto";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useState, useEffect, useMemo, useCallback, FC } from "react";
-import { LogBox, RefreshControl, FlatList, ViewStyle } from "react-native";
-import useSWR from "swr";
-import { StoryCard } from "../../components/StoryCard";
-import { useDash, styles } from "../../../dash.config";
-import { StackParamList } from "../routers";
-import { HACKER_NEWS_API } from "../../constants/api";
-import { keyExtractor } from "../../utils/util";
-import { EmbeddedSearch } from "../Search/EmbeddedSearch";
+import 'react-native-url-polyfill/auto';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FlatList, LogBox, RefreshControl, type ViewStyle } from 'react-native';
+import useSWR from 'swr';
+import { StoryCard } from '../../components/StoryCard';
+import { styles, useDash } from '../../../dash.config';
+import { type StackParamList } from '../routers';
+import { HACKER_NEWS_API } from '../../constants/api';
+import { keyExtractor } from '../../utils/util';
+import { EmbeddedSearch } from '../Search/EmbeddedSearch';
 
-type StoriesProps = {} & NativeStackScreenProps<StackParamList, "Stories">;
+type StoriesProps = {} & NativeStackScreenProps<StackParamList, 'Stories'>;
 
 export const Stories: FC<StoriesProps> = (props) => {
   useDash();
@@ -20,33 +20,25 @@ export const Stories: FC<StoriesProps> = (props) => {
 
   const stories = useSWR<number[]>(
     `${HACKER_NEWS_API}/${filter}stories.json`,
-    (key) =>
-      fetch(key, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }).then((res) => res.json())
+    async (key) =>
+      await fetch(key, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(async (res) => await res.json())
   );
 
-  const renderFlatListItem = ({
-    item,
-    index,
-  }: {
-    item: number;
-    index: number;
-  }) => {
-    return (
-      <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
-    );
+  const renderFlatListItem = ({ item, index }: { item: number; index: number }) => {
+    return <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />;
   };
 
   useEffect(() => {
-    if (stories.data) {
+    if (stories.data != null) {
       setDidMount(true);
     }
   }, [stories.data]);
 
   useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
 
   const flatListData = useMemo(() => stories.data?.slice(0), [stories.data]);
@@ -58,8 +50,8 @@ export const Stories: FC<StoriesProps> = (props) => {
   const refreshControl = useMemo(
     () => (
       <RefreshControl
-        refreshing={!stories.data && didMount}
-        onRefresh={() => stories.mutate()}
+        refreshing={stories.data == null && didMount}
+        onRefresh={async () => await stories.mutate()}
       />
     ),
     [stories.data, stories.mutate, didMount]
@@ -84,6 +76,6 @@ export const Stories: FC<StoriesProps> = (props) => {
 
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: "100%",
-  width: "100%",
+  height: '100%',
+  width: '100%'
 }));

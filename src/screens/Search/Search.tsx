@@ -1,30 +1,29 @@
-import { styles, useDash } from "../../../dash.config";
-import useSWR from "swr";
-import { useMemo, useState } from "react";
-import { FC } from "react";
-import { Dimensions, SafeAreaView, View, ViewStyle } from "react-native";
-import { HackerNewsStory } from "../../types/hn-api";
-import { SEARCH_API } from "../../constants/api";
-import { MinimalStory } from "../../components/StoryCard/MinimalStory/MinimalStory";
-import { SearchBar } from "@rneui/base";
+import useSWR from 'swr'
+import { type FC, useMemo, useState } from 'react'
+import { Dimensions, SafeAreaView, View, type ViewStyle } from 'react-native'
+import { SearchBar } from '@rneui/base'
+import { type HackerNewsStory } from '../../types/hn-api'
+import { SEARCH_API } from '../../constants/api'
+import { MinimalStory } from '../../components/StoryCard/MinimalStory/MinimalStory'
+import { styles, useDash } from '../../../dash.config'
 
 export const Search: FC = () => {
-  useDash();
-  const [search, setSearch] = useState("");
+  useDash()
+  const [search, setSearch] = useState('')
   const {
-    tokens: { color },
-  } = useDash();
+    tokens: { color }
+  } = useDash()
   const query = useSWR(
     `${SEARCH_API}/search?query=${search}`,
-    (key) =>
-      !!search &&
+    async (key) =>
+      await (!!search &&
       fetch(key, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }).then((res) => res.json())
-  );
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(async (res) => await res.json()))
+  )
 
-  const queryData = useMemo(() => query.data, [query.data]);
+  const queryData = useMemo(() => query.data, [query.data])
 
   return (
     <SafeAreaView style={containerBg()}>
@@ -51,33 +50,33 @@ export const Search: FC = () => {
                 time: query.created_at_i,
                 score: query.points,
                 descendants: query.num_comments,
-                url: query.url ?? "http://www.notaurl.com",
+                url: query.url ?? 'http://www.notaurl.com',
                 deleted: false,
-                dead: false,
-              },
-            };
+                dead: false
+              }
+            }
 
             return (
               <MinimalStory
                 data={story.data as HackerNewsStory}
                 index={story.data.id}
               />
-            );
+            )
           })}
         </View>
       )}
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: "100%",
-  width: Dimensions.get("screen").width,
-}));
+  height: '100%',
+  width: Dimensions.get('screen').width
+}))
 
 const inputContainerStyle = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.accent,
   height: 40,
-  marginLeft: 20,
-}));
+  marginLeft: 20
+}))

@@ -8,32 +8,40 @@ import * as Updates from 'expo-updates';
 import { enableScreens } from 'react-native-screens';
 import * as Sentry from 'sentry-expo';
 import { SWRConfig } from 'swr';
+import { useLayoutEffect, useState } from 'react';
+import {
+  AppState,
+  Pressable,
+  SafeAreaView,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Dialog, ListItem } from '@rneui/themed';
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DashProvider, styles, useDash } from './dash.config';
 import { useTheme } from './src/screens/Settings/useTheme';
 import {
   AllStack,
-  Tab,
   HomeStack,
   SearchStack,
   SettingsStack,
-  StackParamList,
+  type StackParamList,
+  Tab
 } from './src/screens/routers';
 import { Stories } from './src/screens/Stories/Stories';
 import { Thread } from './src/screens/Thread';
 import { User } from './src/screens/User';
 import { BrowserModal } from './src/screens/BrowserModal/BrowserModal';
-import { useLayoutEffect, useState } from 'react';
-import { Text, AppState, Pressable, SafeAreaView, TextStyle, View, ViewStyle } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { Home } from './src/screens/Home/Home';
 import { SettingsListView } from './src/screens/Settings/SettingsListView/SettingsListView';
 import { Search } from './src/screens/Search/Search';
 import { GeneralSettings } from './src/screens/Settings/GeneralSettings/GeneralSettings';
 import { AppColorSettings } from './src/screens/Settings/GeneralSettings/AppColorSettings/AppColorSettings';
-import { Dialog, ListItem } from '@rneui/themed';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { listItems } from './src/screens/Home/HomeList';
-import { StoryFilters } from './src/types/hn-api';
+import { type StoryFilters } from './src/types/hn-api';
 import { ThemeSettings } from './src/screens/Settings/ThemeSettings/ThemeSettings';
 
 registerRootComponent(App);
@@ -41,7 +49,7 @@ registerRootComponent(App);
 Sentry.init({
   dsn: 'https://74d59fdf426b4fd1a90f85ef738b23f5@o1049868.ingest.sentry.io/6031164',
   environment: process.env.STAGE ?? 'development',
-  enableInExpoDevelopment: true,
+  enableInExpoDevelopment: true
 });
 
 function App() {
@@ -73,7 +81,7 @@ function App() {
 
           const onAppStateChange = (nextAppState: typeof appState) => {
             /* If it's resuming from background or inactive mode to active one */
-            if (appState.match(/inactive|background/) && nextAppState === 'active') {
+            if (appState.match(/inactive|background/) != null && nextAppState === 'active') {
               callback();
             }
             appState = nextAppState;
@@ -85,7 +93,7 @@ function App() {
           return () => {
             listener.remove();
           };
-        },
+        }
       }}
     >
       <ActionSheetProvider>
@@ -117,7 +125,7 @@ function Tabs() {
   useDash();
   useTheme();
   const {
-    tokens: { color },
+    tokens: { color }
   } = useDash();
 
   return (
@@ -128,12 +136,12 @@ function Tabs() {
         screenOptions={{
           headerShown: false,
           headerStyle: {
-            backgroundColor: color.headerBg as string,
+            backgroundColor: color.headerBg as string
           },
           headerTintColor: color.primary,
           headerTitleStyle: {
-            color: color.textPrimary as string,
-          },
+            color: color.textPrimary as string
+          }
         }}
         tabBar={TabBar}
       >
@@ -142,7 +150,7 @@ function Tabs() {
           component={HomeScreens}
           options={{
             tabBarLabel: 'Posts',
-            tabBarIcon: () => <Icon name="ios-browsers" size={25} />,
+            tabBarIcon: () => <Icon name="ios-browsers" size={25} />
           }}
         />
         <Tab.Screen
@@ -151,7 +159,7 @@ function Tabs() {
           initialParams={{ id: 'pookieinc' }}
           options={{
             tabBarLabel: 'User',
-            tabBarIcon: () => <Icon name="person-circle" size={25} />,
+            tabBarIcon: () => <Icon name="person-circle" size={25} />
           }}
         />
         <Tab.Screen
@@ -159,7 +167,7 @@ function Tabs() {
           component={SearchScreens}
           options={{
             tabBarLabel: 'Search',
-            tabBarIcon: () => <Icon name="search" size={25} />,
+            tabBarIcon: () => <Icon name="search" size={25} />
           }}
         />
         <Tab.Screen
@@ -167,7 +175,7 @@ function Tabs() {
           component={SettingsScreens}
           options={{
             tabBarLabel: 'Settings',
-            tabBarIcon: () => <Icon name="settings-outline" size={25} />,
+            tabBarIcon: () => <Icon name="settings-outline" size={25} />
           }}
         />
       </Tab.Navigator>
@@ -208,7 +216,7 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
               const event = navigation.emit({
                 type: 'tabPress',
                 target: route.key,
-                canPreventDefault: true,
+                canPreventDefault: true
               });
 
               if (!isFocused && !event.defaultPrevented) {
@@ -221,18 +229,18 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
             onLongPress={() => {
               navigation.emit({
                 type: 'tabLongPress',
-                target: route.key,
+                target: route.key
               });
             }}
             style={tabBarTab(isFocused)}
           >
             <View style={{ display: 'flex', flexDirection: 'column' }}>
               <Text style={tabBarLabel(isFocused)}>
-                {!!options.tabBarIcon &&
+                {!(options.tabBarIcon == null) &&
                   options.tabBarIcon({
                     focused: true,
                     color: 'blue',
-                    size: 13,
+                    size: 13
                   })}
               </Text>
               <Text style={navigationText()}>{label as any}</Text>
@@ -248,7 +256,7 @@ function HomeScreens() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
   const {
-    tokens: { color },
+    tokens: { color }
   } = useDash();
 
   return (
@@ -257,11 +265,11 @@ function HomeScreens() {
         headerShown: true,
         headerTintColor: color.primary,
         headerStyle: {
-          backgroundColor: color.headerBg as string,
+          backgroundColor: color.headerBg as string
         },
         headerTitleStyle: {
-          color: color.textPrimary as string,
-        },
+          color: color.textPrimary as string
+        }
       }}
     >
       <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
@@ -274,18 +282,20 @@ function HomeScreens() {
             return (
               <>
                 <Pressable
-                  onPress={() => setSwitcher(true)}
+                  onPress={() => {
+                    setSwitcher(true);
+                  }}
                   style={{
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: 'center',
+                    alignItems: 'center'
                   }}
                 >
                   <Text
                     style={{
                       fontSize: 16,
                       fontWeight: '600',
-                      color: color.textPrimary,
+                      color: color.textPrimary
                     }}
                   >
                     Stories
@@ -297,15 +307,20 @@ function HomeScreens() {
                     name="chevron-down-outline"
                   />
                 </Pressable>
-                <Dialog isVisible={switcher} onBackdropPress={() => setSwitcher(false)}>
+                <Dialog
+                  isVisible={switcher}
+                  onBackdropPress={() => {
+                    setSwitcher(false);
+                  }}
+                >
                   <Dialog.Title title="Switch HN" />
                   {listItems.map((topic) => (
                     <Pressable
                       key={topic.id}
                       onPress={() => {
                         setSwitcher(false);
-                        return navigation.navigate('Stories', {
-                          filter: topic?.filter as StoryFilters,
+                        navigation.navigate('Stories', {
+                          filter: topic?.filter
                         });
                       }}
                     >
@@ -319,7 +334,7 @@ function HomeScreens() {
                 </Dialog>
               </>
             );
-          },
+          }
         }}
       />
       <HomeStack.Screen name="User" component={User} />
@@ -333,7 +348,7 @@ function HomeScreens() {
 
 function SettingsScreens() {
   const {
-    tokens: { color },
+    tokens: { color }
   } = useDash();
 
   return (
@@ -342,11 +357,11 @@ function SettingsScreens() {
         headerShown: true,
         headerTintColor: color.primary,
         headerStyle: {
-          backgroundColor: color.headerBg as string,
+          backgroundColor: color.headerBg as string
         },
         headerTitleStyle: {
-          color: color.textPrimary as string,
-        },
+          color: color.textPrimary as string
+        }
       }}
     >
       <SettingsStack.Screen name="Settings" component={SettingsListView} />
@@ -359,7 +374,7 @@ function SettingsScreens() {
 
 function SearchScreens() {
   const {
-    tokens: { color },
+    tokens: { color }
   } = useDash();
 
   return (
@@ -368,11 +383,11 @@ function SearchScreens() {
         headerShown: false,
         headerTintColor: color.primary,
         headerStyle: {
-          backgroundColor: color.headerBg as string,
+          backgroundColor: color.headerBg as string
         },
         headerTitleStyle: {
-          color: color.textPrimary as string,
-        },
+          color: color.textPrimary as string
+        }
       }}
     >
       <SearchStack.Screen name="Search" component={Search} />
@@ -385,7 +400,7 @@ function SearchScreens() {
 const navigationText = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: 11,
-  marginTop: 3,
+  marginTop: 3
 }));
 
 const tabBar = styles.one<ViewStyle>((t) => ({
@@ -393,7 +408,7 @@ const tabBar = styles.one<ViewStyle>((t) => ({
   width: '100%',
   backgroundColor: t.color.headerBg,
   borderTopWidth: t.borderWidth.hairline,
-  borderTopColor: t.color.accent,
+  borderTopColor: t.color.accent
 }));
 
 const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
@@ -401,7 +416,7 @@ const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
   fontSize: t.type.size.sm,
   fontWeight: '700',
   margin: 0,
-  textAlign: 'center',
+  textAlign: 'center'
 }));
 
 const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
@@ -410,11 +425,11 @@ const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
   flex: 1,
   padding: t.space.md,
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'center'
 }));
 
 const sceneContainer = styles.one<ViewStyle>((t) => ({
   height: '100%',
   width: '100%',
-  backgroundColor: t.color.bodyBg,
+  backgroundColor: t.color.bodyBg
 }));

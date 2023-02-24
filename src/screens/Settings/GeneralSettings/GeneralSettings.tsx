@@ -3,32 +3,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheet, Button, ListItem, Slider, Switch } from '@rneui/themed';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { FC, useCallback, useLayoutEffect, useState } from 'react';
+import { type FC, useCallback, useLayoutEffect, useState } from 'react';
 import {
-  Text,
-  SafeAreaView,
-  TextStyle,
-  View,
-  ViewStyle,
-  SectionList,
   Pressable,
+  SafeAreaView,
+  SectionList,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle
 } from 'react-native';
 
-import { styles, useDash } from '../../../../dash.config';
-import { StackParamList } from '../../routers';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content';
-import { defaultPreferences, preferencesVersion, SetThemeType, useTheme } from '../useTheme';
+import { styles, useDash } from '../../../../dash.config';
+import { type StackParamList } from '../../routers';
+import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } from '../useTheme';
 import { usePreferences } from '../usePreferences';
 
-export interface SettingsProps extends NativeStackScreenProps<StackParamList, 'User'> {}
+export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
 export const GeneralSettings: FC<SettingsProps> = () => {
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
   const [displayReplies, setDisplayReplies] = usePreferences('displayReplies', false);
   const [preferences, loadPreferences] = useTheme();
   const {
-    tokens: { color },
+    tokens: { color }
   } = useDash();
 
   const [isVisible, setIsVisible] = useState(false);
@@ -36,7 +36,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
       data: preferences,
-      version: preferencesVersion,
+      version: preferencesVersion
     }).map(([key, value]) => [key, JSON.stringify(value)]);
     await AsyncStorage.multiSet(data);
     await loadPreferences();
@@ -55,12 +55,19 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: 'Text Size',
       subheader: 'Select Text Size',
       iconName: 'text-outline',
-      onPress: () => setIsVisible(true),
+      onPress: () => {
+        setIsVisible(true);
+      },
       type: (
-        <Button buttonStyle={{ backgroundColor: color.bodyBg }} onPress={() => setIsVisible(true)}>
+        <Button
+          buttonStyle={{ backgroundColor: color.bodyBg }}
+          onPress={() => {
+            setIsVisible(true);
+          }}
+        >
           <ListItem.Chevron />
         </Button>
-      ),
+      )
     },
     {
       id: '2',
@@ -71,21 +78,23 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       type: (
         <Switch
           value={displayReplies}
-          onValueChange={(value) => onSetDisplayRepliesChange(value)}
+          onValueChange={async (value) => {
+            await onSetDisplayRepliesChange(value);
+          }}
         />
-      ),
-    },
+      )
+    }
   ];
 
-  const onSetDisplayRepliesChange = (value) => {
-    return value ? setDisplayReplies(true) : setDisplayReplies(false);
+  const onSetDisplayRepliesChange = async (value) => {
+    value ? await setDisplayReplies(true) : await setDisplayReplies(false);
   };
 
   useLayoutEffect(() => {
     if (
       preferences.status === 'success' &&
-      preferences.data &&
-      !Object.values(preferences.data).length
+      preferences.data != null &&
+      Object.values(preferences.data).length === 0
     ) {
       setStorage(defaultPreferences);
     }
@@ -94,7 +103,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   useLayoutEffect(() => {
     if (baseTypeSize) {
       setStorage({
-        baseTypeSize,
+        baseTypeSize
       });
     }
   }, [baseTypeSize]);
@@ -149,36 +158,36 @@ export const GeneralSettings: FC<SettingsProps> = () => {
 const container = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: '100%',
-  width: '100%',
+  width: '100%'
 }));
 
 const sliderContainer: ViewStyle = {
   width: '100%',
-  marginBottom: 100,
+  marginBottom: 100
 };
 
 const containerBg = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
+  backgroundColor: t.color.bodyBg
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: 12,
+  fontSize: 12
 }));
 
-const image = styles.one<ViewStyle>((t) => ({
+const image = styles.one<ViewStyle>(() => ({
   height: '100%',
-  width: '100%',
+  width: '100%'
 }));
 
 const header = styles.one<TextStyle>((t) => ({
   fontSize: 15,
   fontWeight: '500',
-  color: t.color.textPrimary,
+  color: t.color.textPrimary
 }));
 
 const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
   height: 0.3,
   width: '100%',
-  backgroundColor: t.color.accent,
+  backgroundColor: t.color.accent
 }));

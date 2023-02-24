@@ -1,17 +1,17 @@
-import { FC, useLayoutEffect, useState } from "react";
-import { Animated, ViewStyle } from "react-native";
-import { useDash, styles } from "../../../dash.config";
+import { type FC, useLayoutEffect, useState } from 'react'
+import { Animated, type ViewStyle } from 'react-native'
+import { styles, useDash } from '../../../dash.config'
 
-type SkeletonProps = {
-  variant?: SkeletonVariant;
-  style?: ViewStyle;
-};
+interface SkeletonProps {
+  variant?: SkeletonVariant
+  style?: ViewStyle
+}
 
-export type SkeletonVariant = "text" | "rect" | "circle";
+export type SkeletonVariant = 'text' | 'rect' | 'circle'
 
 export const Skeleton: FC<SkeletonProps> = (props) => {
-  useDash();
-  const [fadeAnim] = useState(() => new Animated.Value(0));
+  useDash()
+  const [fadeAnim] = useState(() => new Animated.Value(0))
 
   useLayoutEffect(() => {
     const animation = Animated.loop(
@@ -19,35 +19,35 @@ export const Skeleton: FC<SkeletonProps> = (props) => {
         Animated.timing(fadeAnim, {
           toValue: 0.5,
           duration: 670,
-          useNativeDriver: true,
+          useNativeDriver: true
         }),
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 670,
-          useNativeDriver: true,
-        }),
+          useNativeDriver: true
+        })
       ])
-    );
-    animation.start();
-  }, [fadeAnim]);
+    )
+    animation.start()
+  }, [fadeAnim])
 
   return (
     <Animated.View
       {...props}
       style={[
-        skeleton(props.variant ?? "rect"),
+        skeleton(props.variant ?? 'rect'),
         (props as any).style,
-        { opacity: fadeAnim },
+        { opacity: fadeAnim }
       ]}
     />
-  );
-};
+  )
+}
 
 const skeleton = styles.lazy<SkeletonVariant, ViewStyle>(
-  (variant = "rect") =>
+  (variant = 'rect') =>
     (t) => ({
       backgroundColor: t.color.accent,
-      height: variant === "text" ? t.type.size.sm : undefined,
-      borderRadius: variant === "circle" ? t.radius.full : t.radius.secondary,
+      height: variant === 'text' ? t.type.size.sm : undefined,
+      borderRadius: variant === 'circle' ? t.radius.full : t.radius.secondary
     })
-);
+)

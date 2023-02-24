@@ -1,17 +1,16 @@
-import { useParents } from "../../../hooks/use-parents";
-import { FAB } from "@rneui/themed";
-import { HackerNewsComment } from "../../../types/hn-api";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, RefreshControl, View, ViewStyle } from "react-native";
-import { CommentThreadHeader } from "./CommentThreadHeader/CommentThreadHeader";
-import { Comment } from "../Comment/Comment";
-import { styles } from "../../../../dash.config";
-import { fauxFlatComments, keyExtractor } from "../../../utils/util";
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FlatList, RefreshControl, View, type ViewStyle } from 'react-native';
+import { type HackerNewsComment } from '../../../types/hn-api';
+import { useParents } from '../../../hooks/use-parents';
+import { Comment } from '../Comment/Comment';
+import { styles } from '../../../../dash.config';
+import { fauxFlatComments, keyExtractor } from '../../../utils/util';
+import { CommentThreadHeader } from './CommentThreadHeader/CommentThreadHeader';
 
-type CommentThreadProps = {
+interface CommentThreadProps {
   data: HackerNewsComment;
   onRefresh: () => void;
-};
+}
 
 export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
   const parents = useParents(data.parent);
@@ -22,24 +21,20 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
   const listRef = useRef<FlatList>(null);
 
   useEffect(() => {
-    if (data && containerHeight && mainHeight && listRef.current && !didMount) {
+    if (data && containerHeight && mainHeight && listRef.current != null && !didMount) {
       listRef.current.scrollToOffset({
-        offset: containerHeight - mainHeight - 64,
+        offset: containerHeight - mainHeight - 64
       });
       setDidMount(true);
     }
   }, [didMount, data, containerHeight, mainHeight]);
 
   const refreshControl = useMemo(
-    () => (
-      <RefreshControl refreshing={!data && didMount} onRefresh={onRefresh} />
-    ),
+    () => <RefreshControl refreshing={!data && didMount} onRefresh={onRefresh} />,
     [data, didMount, onRefresh]
   );
 
-  const renderThreadedItem = ({ item, index }) => (
-    <Comment id={item} index={index} depth={3} />
-  );
+  const renderThreadedItem = ({ item, index }) => <Comment id={item} index={index} depth={3} />;
 
   return (
     <View style={container()}>
@@ -48,12 +43,12 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
           <CommentThreadHeader
             data={data}
             parentComments={parentComments}
-            setContainerHeight={(number: any) => setContainerHeight(number)}
-            setMainHeight={(number: any) => setMainHeight(number)}
+            setContainerHeight={(number) => setContainerHeight(number)}
+            setMainHeight={(number) => setMainHeight(number)}
           />
         }
         refreshControl={refreshControl}
-        data={!data ? fauxFlatComments : "kids" in data ? data.kids : []}
+        data={!data ? fauxFlatComments : 'kids' in data ? data.kids : []}
         keyExtractor={keyExtractor}
         initialNumToRender={4}
         maxToRenderPerBatch={5}
@@ -69,5 +64,5 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
 
 const container = styles.one<ViewStyle>((t) => ({
   flex: 1,
-  backgroundColor: t.color.bodyBg,
+  backgroundColor: t.color.bodyBg
 }));

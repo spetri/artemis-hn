@@ -1,57 +1,74 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import * as Application from 'expo-application';
 import * as Updates from 'expo-updates';
-import { SafeAreaView, SectionList, Text, TextStyle, View, ViewStyle } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+  SafeAreaView,
+  SectionList,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle
+} from 'react-native';
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { StackParamList } from '../../routers';
-import { styles, useDash } from '../../../../dash.config';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { type StackParamList } from '../../routers';
+import { styles, useDash } from '../../../../dash.config';
 
-type ListItemType = {
+type ListItemType = Array<{
   id: string;
   header: string;
   iconName: string;
   navigate: () => void;
-}[];
+}>;
 
 export const SettingsListView: FC = () => {
   useDash();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const {
-    tokens: { color },
+    tokens: { color }
   } = useDash();
   const listItems: ListItemType = [
     {
       id: '1',
       header: 'General',
       iconName: 'ios-settings-outline',
-      navigate: () => navigation.navigate('General'),
+      navigate: () => {
+        navigation.navigate('General');
+      }
     },
     {
       id: '2',
       header: 'Theme',
       iconName: 'ios-moon-outline',
-      navigate: () => navigation.navigate('Theme'),
+      navigate: () => {
+        navigation.navigate('Theme');
+      }
     },
     {
       id: '3',
       header: 'App Icon',
       iconName: 'ios-logo-hackernews',
-      navigate: () => navigation.navigate('General'),
+      navigate: () => {
+        navigation.navigate('General');
+      }
     },
     {
       id: '4',
       header: 'About',
       iconName: 'at-circle-outline',
-      navigate: () => navigation.navigate('General'),
+      navigate: () => {
+        navigation.navigate('General');
+      }
     },
     {
       id: '5',
       header: 'Email',
       iconName: 'file-tray-full-outline',
-      navigate: () => navigation.navigate('General'),
-    },
+      navigate: () => {
+        navigation.navigate('General');
+      }
+    }
   ];
 
   return (
@@ -78,7 +95,7 @@ export const SettingsListView: FC = () => {
             display: 'flex',
             alignSelf: 'center',
             color: color.textAccent,
-            fontSize: 10,
+            fontSize: 10
           }}
         >
           v{Application.nativeBuildVersion} {Updates.updateId && <>&bull; {Updates.updateId}</>}
@@ -91,37 +108,37 @@ export const SettingsListView: FC = () => {
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: '100%',
-  width: '100%',
+  width: '100%'
 }));
 
 const row = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   display: 'flex',
   width: '100%',
-  paddingVertical: 15,
+  paddingVertical: 15
 }));
 
 const imageContainer: ViewStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignSelf: 'center',
-  paddingHorizontal: 10,
+  paddingHorizontal: 10
 };
 
 const container = styles.one<ViewStyle>((t) => ({
   flex: 1,
   justifyContent: 'center',
-  backgroundColor: t.color.bodyBg,
+  backgroundColor: t.color.bodyBg
 }));
 
 const header = styles.one<TextStyle>((t) => ({
   fontSize: 15,
   fontWeight: '500',
-  color: t.color.textPrimary,
+  color: t.color.textPrimary
 }));
 
 const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
   height: 0.3,
   width: '100%',
-  backgroundColor: t.color.textAccent,
+  backgroundColor: t.color.textAccent
 }));

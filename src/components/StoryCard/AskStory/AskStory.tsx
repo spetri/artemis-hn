@@ -1,22 +1,14 @@
-import { HackerNewsAsk } from "../../../types/hn-api";
-import { useNavigation } from "@react-navigation/native";
-import * as htmlEntities from "html-entities";
-import stripTags from "striptags";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import {
-  Image,
-  ImageStyle,
-  Text,
-  TextStyle,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from "react-native";
-import { StackParamList } from "../../../screens/routers";
-import { ago } from "../../../utils/ago";
-import { styles } from "../../../../dash.config";
-import { pluralize } from "../../../utils/pluralize";
-import { FC } from "react";
+import { useNavigation } from '@react-navigation/native';
+import * as htmlEntities from 'html-entities';
+import stripTags from 'striptags';
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Text, type TextStyle, TouchableWithoutFeedback, View, type ViewStyle } from 'react-native';
+import { type FC } from 'react';
+import { type StackParamList } from '../../../screens/routers';
+import { ago } from '../../../utils/ago';
+import { styles } from '../../../../dash.config';
+import { pluralize } from '../../../utils/pluralize';
+import { type HackerNewsAsk } from '../../../types/hn-api';
 
 type AskStoryProps = {
   data: HackerNewsAsk;
@@ -29,31 +21,27 @@ export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
   return (
     <View style={storyContainer(index)}>
       <TouchableWithoutFeedback
-        onPress={() =>
-          navigation.push("Thread", {
-            id: data.id,
-          })
-        }
+        onPress={() => {
+          navigation.push('Thread', {
+            id: data.id
+          });
+        }}
       >
-        <Text
-          style={storyTitle(index)}
-          adjustsFontSizeToFit
-          numberOfLines={index === 0 ? 5 : 7}
-        >
+        <Text style={storyTitle(index)} adjustsFontSizeToFit numberOfLines={index === 0 ? 5 : 7}>
           {data.title}
         </Text>
       </TouchableWithoutFeedback>
 
       {data.text && (
         <TouchableWithoutFeedback
-          onPress={() =>
-            navigation.push("Thread", {
-              id: data.id,
-            })
-          }
+          onPress={() => {
+            navigation.push('Thread', {
+              id: data.id
+            });
+          }}
         >
           <Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
-            {stripTags(htmlEntities.decode(data.text), [], " ")}
+            {stripTags(htmlEntities.decode(data.text), [], ' ')}
           </Text>
         </TouchableWithoutFeedback>
       )}
@@ -61,23 +49,23 @@ export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
       <View>
         <View style={byLine}>
           <TouchableWithoutFeedback
-            onPress={() => navigation.push("User", { id: data.by })}
+            onPress={() => {
+              navigation.push('User', { id: data.by });
+            }}
           >
             <Text style={byStyle()}>{data.by}</Text>
           </TouchableWithoutFeedback>
-          <Text style={agoStyle()}>
-            {ago.format(new Date(data.time * 1000), "mini")}
-          </Text>
+          <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 
         <Text style={footerText()}>
-          <Text style={score()}>⇧{data.score}</Text> &bull;{" "}
+          <Text style={score()}>⇧{data.score}</Text> &bull;{' '}
           <TouchableWithoutFeedback
-            onPress={() => navigation.push("Thread", { id: data.id })}
+            onPress={() => {
+              navigation.push('Thread', { id: data.id });
+            }}
           >
-            <Text style={commentsStyle}>
-              {pluralize(data.descendants, "comment")}
-            </Text>
+            <Text style={commentsStyle}>{pluralize(data.descendants, 'comment')}</Text>
           </TouchableWithoutFeedback>
         </Text>
       </View>
@@ -86,60 +74,60 @@ export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
 };
 
 const storyContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
-  width: index === 0 || index > 4 ? "100%" : "50%",
+  width: index === 0 || index > 4 ? '100%' : '50%',
   padding: t.space.lg,
   paddingTop: index === 0 ? t.space.xl : index < 5 ? t.space.md : t.space.lg,
-  paddingBottom: index === 0 ? t.space.xl : index < 5 ? t.space.lg : t.space.lg,
+  paddingBottom: index === 0 ? t.space.xl : index < 5 ? t.space.lg : t.space.lg
 }));
 
 const score = styles.one<TextStyle>((t) => ({
   color: t.color.primary,
-  fontWeight: "700",
+  fontWeight: '700'
 }));
 
 const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
   color: t.color.textPrimary,
-  fontSize: t.type.size[index === 0 ? "6xl" : index < 5 ? "base" : "sm"],
-  fontWeight: index === 0 ? "900" : index < 5 ? "800" : "700",
+  fontSize: t.type.size[index === 0 ? '6xl' : index < 5 ? 'base' : 'sm'],
+  fontWeight: index === 0 ? '900' : index < 5 ? '800' : '700',
   letterSpacing: index < 4 ? t.type.tracking.tighter : t.type.tracking.tight,
   paddingTop: t.space.sm,
-  paddingBottom: t.space.sm,
+  paddingBottom: t.space.sm
 }));
 
 const storyText = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
-  fontWeight: "400",
+  fontWeight: '400',
   letterSpacing: t.type.tracking.tight,
   paddingTop: t.space.sm,
-  paddingBottom: t.space.sm,
+  paddingBottom: t.space.sm
 }));
 
 const byLine: ViewStyle = {
-  width: "100%",
-  flexDirection: "row",
-  justifyContent: "space-between",
+  width: '100%',
+  flexDirection: 'row',
+  justifyContent: 'space-between'
 };
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size["2xs"],
-  fontWeight: "300",
+  fontSize: t.type.size['2xs'],
+  fontWeight: '300',
   padding: t.space.sm,
   paddingTop: 0,
-  paddingLeft: 0,
+  paddingLeft: 0
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size["2xs"],
-  fontWeight: "300",
+  fontSize: t.type.size['2xs'],
+  fontWeight: '300'
 }));
 
 const footerText = styles.one<TextStyle>((t) => ({
-  fontWeight: "600",
+  fontWeight: '600',
   color: t.color.textAccent,
-  fontSize: t.type.size["2xs"],
+  fontSize: t.type.size['2xs']
 }));
 
-const commentsStyle: TextStyle = { fontWeight: "300" };
+const commentsStyle: TextStyle = { fontWeight: '300' };
