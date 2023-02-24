@@ -41,7 +41,6 @@ import { Search } from './src/screens/Search/Search';
 import { GeneralSettings } from './src/screens/Settings/GeneralSettings/GeneralSettings';
 import { AppColorSettings } from './src/screens/Settings/GeneralSettings/AppColorSettings/AppColorSettings';
 import { listItems } from './src/screens/Home/HomeList';
-import { type StoryFilters } from './src/types/hn-api';
 import { ThemeSettings } from './src/screens/Settings/ThemeSettings/ThemeSettings';
 
 registerRootComponent(App);
@@ -171,7 +170,7 @@ function Tabs() {
           }}
         />
         <Tab.Screen
-          name="Settings"
+          name="MainSettings"
           component={SettingsScreens}
           options={{
             tabBarLabel: 'Settings',

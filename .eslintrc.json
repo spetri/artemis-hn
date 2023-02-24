@@ -19,7 +19,6 @@
   },
   "plugins": ["react", "react-native"],
   "rules": {
-    // "semi": ["error", "never"],
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 2,
     "react-native/no-inline-styles": 2,
@@ -41,22 +40,5 @@
       }
     ],
     "no-duplicate-imports": "error"
-    // "@typescript-eslint/camelcase": "off",
-    // "@typescript-eslint/consistent-type-definitions": ["error", "type"],
-    // "@typescript-eslint/explicit-function-return-type": "off",
-    // "@typescript-eslint/prefer-nullish-coalescing": "error",
-    // "@typescript-eslint/prefer-optional-chain": "error",
-    // "@typescript-eslint/no-explicit-any": "off",
-    // "@typescript-eslint/no-use-before-define": "off",
-    // "@typescript-eslint/no-empty-function": "off",
-    // "@typescript-eslint/no-unused-vars": [
-    //   "warn",
-    //   {
-    //     "vars": "all",
-    //     "args": "after-used",
-    //     "ignoreRestSiblings": false
-    //   }
-    // ],
-    // "@typescript-eslint/explicit-module-boundary-types": "off"
   }
 }
