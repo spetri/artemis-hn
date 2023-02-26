@@ -13,18 +13,18 @@ export const defaultPreferences: SetThemeType = {
   colorScheme: undefined,
   primaryColor: 'orange500',
   commentColors: [
-    '#7DB9B6',
-    '#F5E9CF',
-    '#E96479',
-    '#4D455D',
-    '#7DB9B6',
-    '#F5E9CF',
-    '#E96479',
-    '#4D455D',
-    '#7DB9B6',
-    '#F5E9CF',
-    '#E96479',
-    '#4D455D'
+    'commentColorHN1',
+    'commentColorHN2',
+    'commentColorHN3',
+    'commentColorHN4',
+    'commentColorHN5',
+    'commentColorHN6',
+    'commentColorHN7',
+    'commentColorHN8',
+    'commentColorHN9',
+    'commentColorHN10',
+    'commentColorHN11',
+    'commentColorHN12'
   ],
   baseTypeSize: 14
 };
