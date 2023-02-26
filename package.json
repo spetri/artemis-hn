@@ -27,7 +27,7 @@
     "expo-device": "~5.2.1",
     "expo-linking": "~4.0.1",
     "expo-status-bar": "~1.4.2",
-    "expo-updates": "~0.16.1",
+    "expo-updates": "~0.16.3",
     "html-entities": "^2.3.3",
     "javascript-time-ago": "^2.5.9",
     "node-html-parser": "^6.1.4",

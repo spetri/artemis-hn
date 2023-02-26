@@ -1,6 +1,6 @@
-import { createStyles } from '@dash-ui/react-native'
-import type { RNStyles } from '@dash-ui/react-native'
-import * as RN from 'react-native'
+import { createStyles } from '@dash-ui/react-native';
+import type { RNStyles } from '@dash-ui/react-native';
+import * as RN from 'react-native';
 
 export const colorSystem = {
   current: 'currentColor',
@@ -282,8 +282,84 @@ export const colorSystem = {
   auroraAccent: '#A3BE8C',
   auroraAccentLight: '#8FBCBB',
 
-  something: '#00A8CC'
-} as const
+  commentColorHN1: '#7DB9B6',
+  commentColorHN2: '#F5E9CF',
+  commentColorHN3: '#E96479',
+  commentColorHN4: '#4D455D',
+  commentColorHN5: '#7DB9B6',
+  commentColorHN6: '#F5E9CF',
+  commentColorHN7: '#E96479',
+  commentColorHN8: '#4D455D',
+  commentColorHN9: '#7DB9B6',
+  commentColorHN10: '#F5E9CF',
+  commentColorHN11: '#E96479',
+  commentColorHN12: '#4D455D',
+
+  commentColorForest1: '#D7FBE8',
+  commentColorForest2: '#9DF3C4',
+  commentColorForest3: '#62D2A2',
+  commentColorForest4: '#1FAB89',
+  commentColorForest5: '#D7FBE8',
+  commentColorForest6: '#9DF3C4',
+  commentColorForest7: '#62D2A2',
+  commentColorForest8: '#1FAB89',
+  commentColorForest9: '#D7FBE8',
+  commentColorForest10: '#9DF3C4',
+  commentColorForest11: '#62D2A2',
+  commentColorForest12: '#1FAB89',
+
+  commentColorMono1: '#F4F4F2',
+  commentColorMono2: '#E8E8E8',
+  commentColorMono3: '#BBBFCA',
+  commentColorMono4: '#495464',
+  commentColorMono5: '#F4F4F2',
+  commentColorMono6: '#E8E8E8',
+  commentColorMono7: '#BBBFCA',
+  commentColorMono8: '#495464',
+  commentColorMono9: '#F4F4F2',
+  commentColorMono10: '#E8E8E8',
+  commentColorMono11: '#BBBFCA',
+  commentColorMono12: '#495464',
+
+  commentColorSunset1: '#E23E57',
+  commentColorSunset2: '#88304E',
+  commentColorSunset3: '#522546',
+  commentColorSunset4: '#311D3F',
+  commentColorSunset5: '#E23E57',
+  commentColorSunset6: '#88304E',
+  commentColorSunset7: '#522546',
+  commentColorSunset8: '#311D3F',
+  commentColorSunset9: '#E23E57',
+  commentColorSunset10: '#88304E',
+  commentColorSunset11: '#522546',
+  commentColorSunset12: '#311D3F',
+
+  commentColorSoftie1: '#FFAAA5',
+  commentColorSoftie2: '#FFD3B6',
+  commentColorSoftie3: '#DCEDC1',
+  commentColorSoftie4: '#A8E6CF',
+  commentColorSoftie5: '#FFAAA5',
+  commentColorSoftie6: '#FFD3B6',
+  commentColorSoftie7: '#DCEDC1',
+  commentColorSoftie8: '#A8E6CF',
+  commentColorSoftie9: '#FFAAA5',
+  commentColorSoftie10: '#FFD3B6',
+  commentColorSoftie11: '#DCEDC1',
+  commentColorSoftie12: '#A8E6CF',
+
+  commentColorMarine1: '#00A8CC',
+  commentColorMarine2: '#0C7B93',
+  commentColorMarine3: '#27496D',
+  commentColorMarine4: '#142850',
+  commentColorMarine5: '#00A8CC',
+  commentColorMarine6: '#0C7B93',
+  commentColorMarine7: '#27496D',
+  commentColorMarine8: '#142850',
+  commentColorMarine9: '#00A8CC',
+  commentColorMarine10: '#0C7B93',
+  commentColorMarine11: '#27496D',
+  commentColorMarine12: '#142850'
+} as const;
 
 export function createTypeSystem(baseSize = 16) {
   const size = {
@@ -298,12 +374,12 @@ export function createTypeSystem(baseSize = 16) {
     '4xl': responsiveSize(2.25 * baseSize),
     '5xl': responsiveSize(3 * baseSize),
     '6xl': responsiveSize(4 * baseSize)
-  } as const
+  } as const;
 
   return {
     size,
     leading(fontSize: keyof typeof size, leading: keyof typeof leadingScale) {
-      return leadingScale[leading] * size[fontSize]
+      return leadingScale[leading] * size[fontSize];
     },
     tracking: {
       tighter: responsiveSize(-0.05 * baseSize),
@@ -313,7 +389,7 @@ export function createTypeSystem(baseSize = 16) {
       wider: responsiveSize(0.05 * baseSize),
       widest: responsiveSize(0.1 * baseSize)
     }
-  } as const
+  } as const;
 }
 
 const leadingScale = {
@@ -323,10 +399,10 @@ const leadingScale = {
   normal: 1.5,
   relaxed: 1.625,
   loose: 2
-} as const
+} as const;
 
 export function isIphoneX() {
-  const { width, height } = RN.Dimensions.get('window')
+  const { width, height } = RN.Dimensions.get('window');
 
   return (
     RN.Platform.OS === 'ios' &&
@@ -342,7 +418,7 @@ export function isIphoneX() {
       width === 896 ||
       height === 926 ||
       width === 926)
-  )
+  );
 }
 
 export function getStatusBarHeight(safe: boolean) {
@@ -350,26 +426,20 @@ export function getStatusBarHeight(safe: boolean) {
     ios: isIphoneX() ? (safe ? 44 : 30) : 20,
     android: RN.StatusBar.currentHeight,
     default: 0
-  })
+  });
 }
 
 export function responsiveSize(fontSize: number, standardScreenHeight = 680) {
-  const { height, width } = RN.Dimensions.get('window')
-  const standardLength = width > height ? width : height
+  const { height, width } = RN.Dimensions.get('window');
+  const standardLength = width > height ? width : height;
   const offset =
-    width > height
-      ? 0
-      : RN.Platform.OS === 'ios'
-        ? 78
-        : RN.StatusBar.currentHeight || 0
+    width > height ? 0 : RN.Platform.OS === 'ios' ? 78 : RN.StatusBar.currentHeight || 0;
 
   const deviceHeight =
-    isIphoneX() || RN.Platform.OS === 'android'
-      ? standardLength - offset
-      : standardLength
+    isIphoneX() || RN.Platform.OS === 'android' ? standardLength - offset : standardLength;
 
-  const heightPercent = (fontSize * deviceHeight) / standardScreenHeight
-  return Math.round(heightPercent)
+  const heightPercent = (fontSize * deviceHeight) / standardScreenHeight;
+  return Math.round(heightPercent);
 }
 
 export const spaceScale = {
@@ -383,7 +453,7 @@ export const spaceScale = {
   '2xl': responsiveSize(64),
   '3xl': responsiveSize(128),
   '4xl': responsiveSize(256)
-} as const
+} as const;
 
 export const radiusScale = {
   none: responsiveSize(0),
@@ -395,7 +465,7 @@ export const radiusScale = {
   lg: responsiveSize(0.5 * 16),
   xl: responsiveSize(16),
   full: responsiveSize(10000 / 16)
-} as const
+} as const;
 
 export const zScale = {
   min: 0,
@@ -405,26 +475,23 @@ export const zScale = {
   high: 1000,
   higher: 10000,
   max: 2147483647
-} as const
+} as const;
 
 export const borderWidthScale = {
   none: 0,
   // Hairline borders
   hairline: RN.StyleSheet.hairlineWidth
-}
+};
 
 export function createShadowScale(
   shadowColor?:
-  | RN.ViewStyle['shadowColor']
-  | RN.ImageStyle['shadowColor']
-  | RN.TextStyle['shadowColor']
+    | RN.ViewStyle['shadowColor']
+    | RN.ImageStyle['shadowColor']
+    | RN.TextStyle['shadowColor']
 ): Record<
   'none' | 'primary' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl',
-  Pick<
-  RNStyles,
-  'shadowColor' | 'shadowOffset' | 'shadowOpacity' | 'shadowRadius'
-  >
-  > {
+  Pick<RNStyles, 'shadowColor' | 'shadowOffset' | 'shadowOpacity' | 'shadowRadius'>
+> {
   return {
     none: {
       shadowColor,
@@ -498,7 +565,7 @@ export function createShadowScale(
       shadowOpacity: 0.2,
       shadowRadius: responsiveSize(50)
     }
-  }
+  };
 }
 
 export const tokens = {
@@ -508,22 +575,22 @@ export const tokens = {
   radius: radiusScale,
   z: zScale,
   borderWidth: borderWidthScale
-}
+};
 
 export const themes: Record<
-'light' | 'dark' | 'black' | 'solarized' | 'dracula' | 'nord' | 'aurora',
-{
-  color: {
-    primary: RN.ColorValue
-    textPrimary: RN.ColorValue
-    textAccent: RN.ColorValue
-    bodyBg: RN.ColorValue
-    headerBg: RN.ColorValue
-    accent: RN.ColorValue
-    accentLight: RN.ColorValue
+  'light' | 'dark' | 'black' | 'solarized' | 'dracula' | 'nord' | 'aurora',
+  {
+    color: {
+      primary: RN.ColorValue;
+      textPrimary: RN.ColorValue;
+      textAccent: RN.ColorValue;
+      bodyBg: RN.ColorValue;
+      headerBg: RN.ColorValue;
+      accent: RN.ColorValue;
+      accentLight: RN.ColorValue;
+    };
+    shadow: ReturnType<typeof createShadowScale>;
   }
-  shadow: ReturnType<typeof createShadowScale>
-}
 > = {
   light: {
     color: {
@@ -621,18 +688,18 @@ export const themes: Record<
 
     shadow: createShadowScale(colorSystem.white)
   }
-}
+};
 
 export const { styles, styled, DashProvider, useDash } = createStyles({
   tokens,
   themes
-})
+});
 
 export function tokensAreEqual<Props extends {}>(
   [t]: [AppTokens] | [AppTokens, Props],
   [nt]: [AppTokens] | [AppTokens, Props]
 ) {
-  return t === nt
+  return t === nt;
 }
 
 export type AppTokens =
@@ -642,9 +709,9 @@ export type AppTokens =
   | typeof styles.tokens.solarized
   | typeof styles.tokens.dracula
   | typeof styles.tokens.nord
-  | typeof styles.tokens.aurora
-export type AppThemes = typeof themes
-export type AppThemeNames = keyof AppThemes
+  | typeof styles.tokens.aurora;
+export type AppThemes = typeof themes;
+export type AppThemeNames = keyof AppThemes;
 export type AppColors =
   | keyof typeof styles.tokens.light.color
   | keyof typeof styles.tokens.dark.color
@@ -652,4 +719,4 @@ export type AppColors =
   | keyof typeof styles.tokens.solarized.color
   | keyof typeof styles.tokens.dracula.color
   | keyof typeof styles.tokens.nord.color
-  | keyof typeof styles.tokens.aurora.color
+  | keyof typeof styles.tokens.aurora.color;

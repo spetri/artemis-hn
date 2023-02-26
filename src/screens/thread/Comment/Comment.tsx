@@ -2,10 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { MixedStyleRecord, RenderersProps } from 'react-native-render-html';
+import { MixedStyleRecord, RenderersProps, RenderHTML } from 'react-native-render-html';
 import useSWR from 'swr';
 
-import { type FC, memo, useMemo, useState } from 'react';
+import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import {
   Pressable,
   Text,
@@ -38,10 +38,10 @@ export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const [collapsed, setCollapsed] = useState(false);
     const actionSheet = useActionSheet();
-    const [commentColors] = usePreferences('commentColor', defaultPreferences.commentColor);
+    const [commentColors] = usePreferences('commentColors', defaultPreferences.commentColors);
 
-    const { theme } = useDash();
     const {
+      theme,
       tokens: { color }
     } = useDash();
     const displayReplies = usePreferences('displayReplies', false);
@@ -100,40 +100,16 @@ export const Comment: FC<CommentProps> = memo(
     const rightSwipeActions = () => {
       return collapsed ? (
         <Pressable onPress={onCollapse}>
-          <View
-            style={{
-              backgroundColor: color.primary,
-              justifyContent: 'center',
-              height: '100%'
-            }}
-          >
-            <Text
-              style={{
-                color: '#1b1a17',
-                paddingHorizontal: 50,
-                transform: [{ rotateY: '180deg' }]
-              }}
-            >
+          <View style={collapsedView()}>
+            <Text style={collapsedText()}>
               <MaterialIcon name="arrow-collapse-left" color={color.textPrimary} size={20} />
             </Text>
           </View>
         </Pressable>
       ) : (
         <Pressable onPress={onCollapse}>
-          <View
-            style={{
-              backgroundColor: color.primary,
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-              height: '100%'
-            }}
-          >
-            <Text
-              style={{
-                color: '#1b1a17',
-                paddingHorizontal: 50
-              }}
-            >
+          <View style={openView()}>
+            <Text style={openText()}>
               <MaterialIcon name="arrow-collapse-left" color={color.textPrimary} size={30} />
             </Text>
           </View>
@@ -182,28 +158,22 @@ export const Comment: FC<CommentProps> = memo(
       );
     };
 
-    console.log(commentColors?.[Math.floor(depth)], Math.floor(depth), commentColors);
-
     return (
       <>
         <ListItem.Swipeable
-          containerStyle={{
-            backgroundColor: color.bodyBg,
-            margin: 0,
-            padding: 0
-          }}
+          containerStyle={swipeableContainer()}
           key={comment.id}
           rightContent={rightSwipeActions}
           rightWidth={75}
           rightStyle={{ backgroundColor: color.bodyBg }}
-          style={{ margin: 0, padding: 0 }}
+          style={noMarginPadding()}
         >
-          <Pressable onPress={onCollapse} style={{ width: '100%' }}>
+          <Pressable onPress={onCollapse} style={width100()}>
             <View
               style={commentContainer({
                 depth,
                 commentColors:
-                  commentColors != null ? commentColors?.[Math.floor(depth)] : commentColors
+                  commentColors != null ? color[commentColors?.[Math.floor(depth)]] : commentColors
               })}
             >
               <View style={byLine(depth)}>
@@ -214,13 +184,7 @@ export const Comment: FC<CommentProps> = memo(
                 >
                   <Text style={byStyle()}>{comment.by}</Text>
                 </Pressable>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    marginRight: 10
-                  }}
-                >
+                <View style={pressableThread()}>
                   <Pressable
                     onPress={() => {
                       navigation.push('Thread', {
@@ -255,7 +219,7 @@ export const Comment: FC<CommentProps> = memo(
           </Pressable>
         </ListItem.Swipeable>
 
-        {(showingReplies || displayReplies[0] != null) &&
+        {(showingReplies || !displayReplies[0]) &&
           !collapsed &&
           comment.kids != null &&
           comment.kids.length > 0 &&
@@ -263,7 +227,7 @@ export const Comment: FC<CommentProps> = memo(
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids?.length > 0 && !showingReplies && displayReplies[0] == null && !collapsed && (
+        {comment.kids?.length > 0 && !showingReplies && displayReplies[0] && !collapsed && (
           <View
             style={commentContainerReply({
               depth,
@@ -287,6 +251,51 @@ export const Comment: FC<CommentProps> = memo(
   },
   (prev, next) => prev.id === next.id
 );
+
+const width100 = styles.one<TextStyle>(() => ({
+  width: '100%'
+}));
+
+const pressableThread = styles.one<TextStyle>(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  marginRight: 10
+}));
+
+const noMarginPadding = styles.one<TextStyle>(() => ({
+  margin: 0,
+  padding: 0
+}));
+
+const swipeableContainer = styles.one<TextStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  margin: 0,
+  padding: 0
+}));
+
+const collapsedView = styles.one<TextStyle>((t) => ({
+  backgroundColor: t.color.primary,
+  justifyContent: 'center',
+  height: '100%'
+}));
+
+const collapsedText = styles.one<TextStyle>(() => ({
+  color: '#1b1a17',
+  paddingHorizontal: 50,
+  transform: [{ rotateY: '180deg' }]
+}));
+
+const openView = styles.one<TextStyle>((t) => ({
+  backgroundColor: t.color.primary,
+  justifyContent: 'center',
+  alignItems: 'flex-end',
+  height: '100%'
+}));
+
+const openText = styles.one<TextStyle>(() => ({
+  color: '#1b1a17',
+  paddingHorizontal: 50
+}));
 
 const commentContainer = styles.lazy<any>(
   (obj: { depth: number; commentColors: number }) => (t) => ({

@@ -22,7 +22,7 @@ export const Home: FC<ListItemType> = () => {
 
   const persistOrder = (itemList) => {
     setHomeItems(itemList);
-    setHomeOrderList(itemList);
+    setHomeOrderList?.(itemList);
   };
 
   useEffect(() => {

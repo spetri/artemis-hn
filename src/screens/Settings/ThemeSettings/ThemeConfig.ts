@@ -1,89 +1,86 @@
-
-
 export const AppColors = {
   commentColors: [
     {
       colors: [
-        '#4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6',
-        '4D455D',
-        '#E96479',
-        '#F5E9CF',
-        '#7DB9B6'
+        'commentColorHN1',
+        'commentColorHN2',
+        'commentColorHN3',
+        'commentColorHN4',
+        'commentColorHN5',
+        'commentColorHN6',
+        'commentColorHN7',
+        'commentColorHN8'
       ],
       name: 'HN Default',
       displayName: 'HN Default'
     },
     {
       colors: [
-        '#D7FBE8',
-        '#9DF3C4',
-        '#62D2A2',
-        '#1FAB89',
-        '#D7FBE8',
-        '#9DF3C4',
-        '#62D2A2',
-        '#1FAB89'
+        'commentColorForest1',
+        'commentColorForest2',
+        'commentColorForest3',
+        'commentColorForest4',
+        'commentColorForest5',
+        'commentColorForest6',
+        'commentColorForest7',
+        'commentColorForest8'
       ],
       name: 'forest',
       displayName: 'Forest'
     },
     {
       colors: [
-        '#F4F4F2',
-        '#E8E8E8',
-        '#BBBFCA',
-        '#495464',
-        '#F4F4F2',
-        '#E8E8E8',
-        '#BBBFCA',
-        '#495464'
+        'commentColorMono1',
+        'commentColorMono2',
+        'commentColorMono3',
+        'commentColorMono4',
+        'commentColorMono5',
+        'commentColorMono6',
+        'commentColorMono7',
+        'commentColorMono8'
       ],
       name: 'mono',
       displayName: 'Mono'
     },
     {
       colors: [
-        '#E23E57',
-        '#88304E',
-        '#522546',
-        '#311D3F',
-        '#E23E57',
-        '#88304E',
-        '#522546',
-        '#311D3F'
+        'commentColorSunset1',
+        'commentColorSunset2',
+        'commentColorSunset3',
+        'commentColorSunset4',
+        'commentColorSunset5',
+        'commentColorSunset6',
+        'commentColorSunset7',
+        'commentColorSunset8'
       ],
       name: 'sunset',
       displayName: 'Sunset'
     },
     {
       colors: [
-        '#FFAAA5',
-        '#FFD3B6',
-        '#DCEDC1',
-        '#A8E6CF',
-        '#FFAAA5',
-        '#FFD3B6',
-        '#DCEDC1',
-        '#A8E6CF'
+        'commentColorSoftie1',
+        'commentColorSoftie2',
+        'commentColorSoftie3',
+        'commentColorSoftie4',
+        'commentColorSoftie5',
+        'commentColorSoftie6',
+        'commentColorSoftie7',
+        'commentColorSoftie8'
       ],
       name: 'softie',
       displayName: 'Softie'
     },
     {
       colors: [
-        '#00A8CC',
-        '#0C7B93',
-        '#27496D',
-        '#142850',
-        '#00A8CC',
-        '#0C7B93',
-        '#27496D',
-        '#142850'
+        'commentColorMarine1',
+        'commentColorMarine2',
+        'commentColorMarine3',
+        'commentColorMarine4',
+        'commentColorMarine5',
+        'commentColorMarine6',
+        'commentColorMarine7',
+        'commentColorMarine8'
       ],
-      color: 'something',
       name: 'marine',
       displayName: 'Marine Life'
     }
