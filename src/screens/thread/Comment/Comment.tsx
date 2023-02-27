@@ -219,7 +219,7 @@ export const Comment: FC<CommentProps> = memo(
           </Pressable>
         </ListItem.Swipeable>
 
-        {(showingReplies || !displayReplies[0]) &&
+        {(showingReplies || displayReplies[0]) &&
           !collapsed &&
           comment.kids != null &&
           comment.kids.length > 0 &&
@@ -227,7 +227,7 @@ export const Comment: FC<CommentProps> = memo(
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids?.length > 0 && !showingReplies && displayReplies[0] && !collapsed && (
+        {comment.kids?.length > 0 && !showingReplies && !displayReplies[0] && !collapsed && (
           <View
             style={commentContainerReply({
               depth,

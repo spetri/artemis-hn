@@ -26,6 +26,10 @@ export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 export const GeneralSettings: FC<SettingsProps> = () => {
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
   const [displayReplies, setDisplayReplies] = usePreferences('displayReplies', false);
+  const [displayLargeThumbnails, setDisplayLargeThumbnails] = usePreferences(
+    'displayLargeThumbnails',
+    false
+  );
   const [preferences, loadPreferences] = useTheme();
   const {
     tokens: { color }
@@ -74,7 +78,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: 'Display All Replies',
       subheader: 'When selected, display all replies automatically',
       iconName: 'file-tray-outline',
-      onPress: false,
+      onPress: () => setDisplayReplies?.(!displayReplies),
       type: (
         <Switch
           value={displayReplies}
@@ -83,8 +87,27 @@ export const GeneralSettings: FC<SettingsProps> = () => {
           }}
         />
       )
+    },
+    {
+      id: '3',
+      header: 'Toggle Large Thumbnails',
+      subheader: 'Larger story views',
+      iconName: 'ios-images-outline',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
     }
   ];
+
+  const onSetDisplayLargeThumbnailsChange = async (value) => {
+    value ? await setDisplayLargeThumbnails?.(true) : await setDisplayLargeThumbnails?.(false);
+  };
 
   const onSetDisplayRepliesChange = async (value) => {
     value ? await setDisplayReplies?.(true) : await setDisplayReplies?.(false);

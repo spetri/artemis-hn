@@ -1,69 +1,65 @@
-import { type NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useNavigation } from '@react-navigation/native'
-import { type FC } from 'react'
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { type FC } from 'react';
 import {
   Image,
   type ImageStyle,
+  Pressable,
   Text,
   type TextStyle,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle
-} from 'react-native'
-import { styles } from '../../../../dash.config'
-import { useMetadata } from '../../../hooks/use-metadata'
-import { type StackParamList } from '../../../screens/routers'
-import { type HackerNewsStory } from '../../../types/hn-api'
-import { Skeleton } from '../../Skeleton'
-import { pluralize } from '../../../utils/pluralize'
-import { ago } from '../../../utils/ago'
+} from 'react-native';
+import { styles } from '../../../../dash.config';
+import { useMetadata } from '../../../hooks/use-metadata';
+import { type StackParamList } from '../../../screens/routers';
+import { type HackerNewsStory } from '../../../types/hn-api';
+import { Skeleton } from '../../Skeleton';
+import { pluralize } from '../../../utils/pluralize';
+import { ago } from '../../../utils/ago';
 
-interface ComplexStoryProps {
-  data: HackerNewsStory
-  index: number
-}
+type ComplexStoryProps = {
+  data: HackerNewsStory;
+  index: number;
+};
 
 export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
-  const url = new URL(data.url)
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>()
-  const metadata = useMetadata(url)
+  const url = new URL(data.url);
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const metadata = useMetadata(url);
 
   if (metadata == null) {
     return (
       <View style={storyContainer(index)}>
         <Skeleton style={storySkeleton(index)} />
       </View>
-    )
+    );
   }
 
   return (
     <View style={storyContainer(index)}>
       {/* image */}
-      {metadata?.image
-        ? (
-        <TouchableWithoutFeedback
+      {metadata?.image ? (
+        <Pressable
           onPress={() => {
             navigation.push('BrowserModal', {
               title: data.title,
               url: url.toString()
-            })
-          }
-          }
+            });
+          }}
         >
           <Image style={storyImage(index)} source={{ uri: metadata?.image }} />
-        </TouchableWithoutFeedback>
-          )
-        : null}
+        </Pressable>
+      ) : null}
 
       {/* url */}
-      <TouchableWithoutFeedback
+      <Pressable
         onPress={() => {
           navigation.push('BrowserModal', {
             title: metadata.applicationName || url.hostname,
             url: url.origin
-          })
-        }
-        }
+          });
+        }}
       >
         <View style={hostContainerStyle}>
           <Image style={favicon()} source={{ uri: metadata.favicon }} />
@@ -72,99 +68,92 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
             {metadata.applicationName || url.host.replace(/^www\./, '')}
           </Text>
         </View>
-      </TouchableWithoutFeedback>
+      </Pressable>
 
       {/* titles */}
-      <TouchableWithoutFeedback
+      <Pressable
         onPress={() => {
           navigation.push('BrowserModal', {
             title: data.title,
             url: url.toString()
-          })
-        }
-        }
+          });
+        }}
       >
         <Text
           style={storyTitle(index)}
           adjustsFontSizeToFit
-          numberOfLines={
-            index === 0 && !metadata.image
-              ? 5
-              : index < 5 && metadata.image
-                ? 4
-                : 7
-          }
+          numberOfLines={index === 0 && !metadata.image ? 5 : index < 5 && metadata.image ? 4 : 7}
         >
           {data.title}
         </Text>
-      </TouchableWithoutFeedback>
+      </Pressable>
 
       {/* secondary info */}
       <View>
         <View style={byLine}>
-          <TouchableWithoutFeedback
-            onPress={() => { navigation.push('User', { id: data.by }) }}
+          <Pressable
+            onPress={() => {
+              navigation.push('User', { id: data.by });
+            }}
           >
             <Text style={byStyle()}>@{data.by}</Text>
-          </TouchableWithoutFeedback>
-          <Text style={agoStyle()}>
-            {ago.format(new Date(data.time * 1000), 'mini')}
-          </Text>
+          </Pressable>
+          <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 
         <Text style={footerText()}>
           <Text style={score()}>⇧{data.score}</Text> &bull;{' '}
-          <TouchableWithoutFeedback
-            onPress={() => { navigation.push('Thread', { id: data.id }) }}
+          <Pressable
+            onPress={() => {
+              navigation.push('Thread', { id: data.id });
+            }}
           >
-            <Text style={commentsStyle}>
-              {pluralize(data.descendants, 'comment')}
-            </Text>
-          </TouchableWithoutFeedback>
+            <Text style={commentsStyle}>{pluralize(data.descendants, 'comment')}</Text>
+          </Pressable>
         </Text>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const storyContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
   width: index === 0 || index > 4 ? '100%' : '50%',
   padding: t.space.lg,
   paddingTop: index === 0 ? t.space.xl : index < 5 ? t.space.md : t.space.lg,
   paddingBottom: index === 0 ? t.space.xl : index < 5 ? t.space.lg : t.space.lg
-}))
+}));
 
 const storySkeleton = styles.lazy<number, ViewStyle>((index) => (t) => ({
   width: '100%',
   height: index === 0 || index > 4 ? 172 : 96,
   marginBottom: t.space.md,
   borderRadius: t.radius.secondary
-}))
+}));
 
 const score = styles.one<TextStyle>((t) => ({
   color: t.color.primary,
   fontWeight: '700'
-}))
+}));
 
 const storyImage = styles.lazy<number, ImageStyle>((index: number) => (t) => ({
   width: '100%',
   height: index === 0 || index > 4 ? 172 : 96,
   marginBottom: t.space.md,
   borderRadius: t.radius.secondary
-}))
+}));
 
 const hostContainerStyle: ViewStyle = {
   width: '100%',
   flexDirection: 'row',
   alignItems: 'center'
-}
+};
 
 const favicon = styles.one<ImageStyle>((t) => ({
   width: t.type.size.base,
   height: t.type.size.base,
   borderRadius: t.radius.md,
   marginRight: t.space.sm
-}))
+}));
 
 const hostname = styles.one<TextStyle>((t) => ({
   flex: 1,
@@ -172,7 +161,7 @@ const hostname = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size['2xs'],
   fontWeight: '300'
-}))
+}));
 
 const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
   color: t.color.textPrimary,
@@ -181,13 +170,13 @@ const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
   letterSpacing: index < 4 ? t.type.tracking.tighter : t.type.tracking.tight,
   paddingTop: t.space.sm,
   paddingBottom: t.space.sm
-}))
+}));
 
 const byLine: ViewStyle = {
   width: '100%',
   flexDirection: 'row',
   justifyContent: 'space-between'
-}
+};
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
@@ -196,18 +185,18 @@ const byStyle = styles.one<TextStyle>((t) => ({
   padding: t.space.sm,
   paddingTop: 0,
   paddingLeft: 0
-}))
+}));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size['2xs'],
   fontWeight: '300'
-}))
+}));
 
 const footerText = styles.one<TextStyle>((t) => ({
   fontWeight: '600',
   color: t.color.textAccent,
   fontSize: t.type.size['2xs']
-}))
+}));
 
-const commentsStyle: TextStyle = { fontWeight: '300' }
+const commentsStyle: TextStyle = { fontWeight: '300' };

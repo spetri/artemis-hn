@@ -10,10 +10,14 @@ import { JobStory } from './JobStory/JobStory';
 import { AskStory } from './AskStory/AskStory';
 import { CommentStory } from './CommentStory/CommentStory';
 import { MinimalStory } from './MinimalStory/MinimalStory';
+import { ComplexStory } from './ComplexStory/ComplexStory';
+import { usePreferences } from '../../screens/Settings/usePreferences';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
+    const displayLargeThumbnails = usePreferences('displayLargeThumbnails', false);
+
     const story = useSWR<HackerNewsItem>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
       async (key) =>
@@ -53,6 +57,8 @@ export const StoryCard = memo(
       <CommentStory data={story.data} index={index} />
     ) : story.data.type === 'poll' ? (
       <PollStory data={story.data} index={index} />
+    ) : displayLargeThumbnails[0] ? (
+      <ComplexStory data={story.data} index={index} />
     ) : (
       <MinimalStory data={story.data} index={index} />
     );

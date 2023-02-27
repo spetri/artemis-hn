@@ -2,6 +2,7 @@ import { type FC } from 'react';
 import * as Application from 'expo-application';
 import * as Updates from 'expo-updates';
 import {
+  Pressable,
   SafeAreaView,
   SectionList,
   Text,
@@ -78,16 +79,16 @@ export const SettingsListView: FC = () => {
           ItemSeparatorComponent={() => <View style={listItemSeparatorStyle()} />}
           sections={[{ title: 'Topics', data: listItems }]}
           renderItem={({ item }) => (
-            <View style={{ display: 'flex', flexDirection: 'row' }}>
-              <Text style={imageContainer}>
-                <Icon name={item.iconName} color={color.textPrimary} size={18} />
-              </Text>
-              <View style={row()}>
-                <Text style={header()} onPress={item.navigate}>
-                  {item.header}
+            <Pressable onPress={item.navigate}>
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <Text style={imageContainer}>
+                  <Icon name={item.iconName} color={color.textPrimary} size={18} />
                 </Text>
+                <View style={row()}>
+                  <Text style={header()}>{item.header}</Text>
+                </View>
               </View>
-            </View>
+            </Pressable>
           )}
         />
         <Text

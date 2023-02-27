@@ -1,4 +1,4 @@
-import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import * as Updates from 'expo-updates';
 import { enableScreens } from 'react-native-screens';
 import * as Sentry from 'sentry-expo';
 import { SWRConfig } from 'swr';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import {
   AppState,
   Pressable,
@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Dialog, ListItem } from '@rneui/themed';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DashProvider, styles, useDash } from './dash.config';
-import { useTheme } from './src/screens/Settings/useTheme';
+import { defaultPreferences, useTheme } from './src/screens/Settings/useTheme';
 import {
   AllStack,
   HomeStack,
@@ -46,6 +46,7 @@ import {
   ThemeColorSection,
   ThemeSettings
 } from './src/screens/Settings/ThemeSettings/ThemeSettings';
+import { usePreferences } from './src/screens/Settings/usePreferences';
 
 registerRootComponent(App);
 
@@ -258,9 +259,82 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
 function HomeScreens() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
+  const [displayLargeThumbnails, setDisplayLargeThumbnails] = usePreferences(
+    'displayLargeThumbnails',
+    defaultPreferences.displayLargeThumbnails
+  );
+  const actionSheet = useActionSheet();
   const {
     tokens: { color }
   } = useDash();
+
+  const screenHeader = () => {
+    return (
+      <>
+        <Pressable
+          onPress={() => {
+            setSwitcher(true);
+          }}
+          style={switcherView()}
+        >
+          <Text style={switcherText()}>Stories</Text>
+          <IoniconIcon
+            color={color.textPrimary}
+            size={16}
+            style={switcherIcon()}
+            name="chevron-down-outline"
+          />
+        </Pressable>
+        <Dialog
+          isVisible={switcher}
+          onBackdropPress={() => {
+            setSwitcher(false);
+          }}
+        >
+          <Dialog.Title title="Switch HN" />
+          {listItems.map((topic) => (
+            <Pressable
+              key={topic.id}
+              onPress={() => {
+                setSwitcher(false);
+                navigation.navigate('Stories', {
+                  filter: topic?.filter
+                });
+              }}
+            >
+              <ListItem bottomDivider>
+                <ListItem.Content>
+                  <ListItem.Title>{topic.header}</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            </Pressable>
+          ))}
+        </Dialog>
+      </>
+    );
+  };
+
+  const actionSheetOptions = () => {
+    const largeThumbnailText = displayLargeThumbnails ? 'Compact Posts' : 'Large Thumbnails';
+    actionSheet.showActionSheetWithOptions(
+      {
+        options: [largeThumbnailText, 'Cancel'],
+        userInterfaceStyle: 'dark',
+        tintIcons: true
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0: {
+            setDisplayLargeThumbnails?.(!displayLargeThumbnails);
+            return;
+          }
+          case 1: {
+            return;
+          }
+        }
+      }
+    );
+  };
 
   return (
     <HomeStack.Navigator
@@ -281,63 +355,14 @@ function HomeScreens() {
         component={Stories}
         initialParams={{ filter: 'top' }}
         options={{
-          headerTitle: () => {
-            return (
-              <>
-                <Pressable
-                  onPress={() => {
-                    setSwitcher(true);
-                  }}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: '600',
-                      color: color.textPrimary
-                    }}
-                  >
-                    Stories
-                  </Text>
-                  <IoniconIcon
-                    color={color.textPrimary}
-                    size={16}
-                    style={{ marginLeft: 3 }}
-                    name="chevron-down-outline"
-                  />
-                </Pressable>
-                <Dialog
-                  isVisible={switcher}
-                  onBackdropPress={() => {
-                    setSwitcher(false);
-                  }}
-                >
-                  <Dialog.Title title="Switch HN" />
-                  {listItems.map((topic) => (
-                    <Pressable
-                      key={topic.id}
-                      onPress={() => {
-                        setSwitcher(false);
-                        navigation.navigate('Stories', {
-                          filter: topic?.filter
-                        });
-                      }}
-                    >
-                      <ListItem bottomDivider>
-                        <ListItem.Content>
-                          <ListItem.Title>{topic.header}</ListItem.Title>
-                        </ListItem.Content>
-                      </ListItem>
-                    </Pressable>
-                  ))}
-                </Dialog>
-              </>
-            );
-          }
+          headerTitle: () => screenHeader(),
+          headerRight: () => (
+            <Pressable onPress={actionSheetOptions}>
+              <View>
+                <Icon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
+              </View>
+            </Pressable>
+          )
         }}
       />
       <HomeStack.Screen name="User" component={User} />
@@ -437,4 +462,20 @@ const sceneContainer = styles.one<ViewStyle>((t) => ({
   height: '100%',
   width: '100%',
   backgroundColor: t.color.bodyBg
+}));
+
+const switcherView = styles.one<ViewStyle>(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center'
+}));
+
+const switcherText = styles.one<TextStyle>((t) => ({
+  fontSize: 16,
+  fontWeight: '600',
+  color: t.color.textPrimary
+}));
+
+const switcherIcon = styles.one<ViewStyle>(() => ({
+  marginLeft: 3
 }));

@@ -25,6 +25,9 @@ export type StackParamList = {
   General: Record<string, never>;
   Select: Record<string, never>;
   Theme: Record<string, never>;
+  ThemeColorSection: Record<string, never>;
+  AccentColorSection: Record<string, never>;
+  CommentColorSection: Record<string, never>;
 };
 
 export interface TabParamList {

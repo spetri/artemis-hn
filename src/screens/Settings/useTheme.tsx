@@ -9,6 +9,7 @@ import { type StackParamList } from '../routers';
 
 export const preferencesVersion = '1.1';
 export const defaultPreferences: SetThemeType = {
+  displayLargeThumbnails: false,
   displayReplies: false,
   colorScheme: undefined,
   primaryColor: 'orange500',
@@ -31,6 +32,7 @@ export const defaultPreferences: SetThemeType = {
 
 export interface SetThemeType {
   displayReplies: boolean;
+  displayLargeThumbnails: boolean;
   colorScheme:
     | 'dark'
     | 'light'
