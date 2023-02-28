@@ -1,6 +1,6 @@
 import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BottomSheet, Button, ListItem, Switch } from '@rneui/themed';
+import { BottomSheet, ListItem, Switch } from '@rneui/themed';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type FC, useCallback, useLayoutEffect, useState } from 'react';
@@ -103,6 +103,126 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: 'Toggle Large Thumbnails',
       subheader: 'Larger story views',
       iconName: 'ios-images-outline',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '4',
+      header: 'Show Jump Button',
+      subheader: 'Display / hide the jump comment button',
+      iconName: 'caret-down-circle-outline',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '5',
+      header: 'Jump Button Position',
+      subheader: 'Move jump button',
+      iconName: 'ios-move',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '6',
+      header: 'Open Links In Safari',
+      subheader: 'Open in Safari instead of built-in browser',
+      iconName: 'ios-compass-outline',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '7',
+      header: 'Display source',
+      subheader: 'Show link source',
+      iconName: 'ios-link-outline',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '8',
+      header: 'Thumbnail Size',
+      subheader: 'Adjust image size',
+      iconName: 'ios-image',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '9',
+      header: 'Thumbnail Position',
+      subheader: 'Right-handed or left-handed?',
+      iconName: 'ios-hand-left-outline',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '10',
+      header: 'Default Sort',
+      subheader: 'Set default sorting',
+      iconName: 'ios-filter-outline',
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
+      type: (
+        <Switch
+          value={displayLargeThumbnails}
+          onValueChange={async (value) => {
+            await onSetDisplayLargeThumbnailsChange(value);
+          }}
+        />
+      )
+    },
+    {
+      id: '11',
+      header: 'Set Home Landing',
+      subheader: 'When opening the app, set view',
+      iconName: 'ios-home-outline',
       onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
       type: (
         <Switch

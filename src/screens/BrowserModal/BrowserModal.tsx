@@ -1,13 +1,24 @@
 import { Feather, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import * as Linking from 'expo-linking';
-import React from 'react';
-import * as RN from 'react-native';
-import type { WebViewNavigation } from 'react-native-webview';
+import { WebView, WebViewNavigation } from 'react-native-webview';
 import { Icon } from '../../components/Icon';
 import { responsiveSize, styles, useDash } from '../../../dash.config';
 
 import { type StackParamList } from '../routers';
+import {
+  Platform,
+  Pressable,
+  SafeAreaView,
+  Share,
+  Text,
+  TextStyle,
+  useWindowDimensions,
+  View,
+  ViewStyle
+} from 'react-native';
+import { createElement, useRef, useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type BrowserModalProps = NativeStackScreenProps<StackParamList, 'BrowserModal'>;
 
@@ -15,26 +26,26 @@ export const BrowserModal = ({ navigation, route }: BrowserModalProps) => {
   const {
     tokens: { color }
   } = useDash();
-  const dimensions = RN.useWindowDimensions();
-  const ref = React.useRef<WebView>(null);
-  const [navigationState, setNavigationState] = React.useState<WebViewNavigation | null>(null);
+  const dimensions = useWindowDimensions();
+  const ref = useRef<WebView>(null);
+  const [navigationState, setNavigationState] = useState<WebViewNavigation | null>(null);
 
   return (
-    <RN.View style={container()}>
-      <RN.View style={modalHeader()}>
-        <RN.TouchableOpacity
+    <View style={container()}>
+      <View style={modalHeader()}>
+        <Pressable
           style={closeButton()}
           onPress={() => {
             navigation.goBack();
           }}
         >
           <Icon name="x" size={14} color="textAccent" />
-        </RN.TouchableOpacity>
+        </Pressable>
 
-        <RN.Text style={title()} numberOfLines={1} ellipsizeMode="tail">
+        <Text style={title()} numberOfLines={1} ellipsizeMode="tail">
           {route.params.title || ''}
-        </RN.Text>
-      </RN.View>
+        </Text>
+      </View>
 
       <WebView
         ref={ref}
@@ -49,8 +60,8 @@ export const BrowserModal = ({ navigation, route }: BrowserModalProps) => {
         style={browser(dimensions.width)}
       />
 
-      <RN.SafeAreaView style={footer()}>
-        <RN.TouchableOpacity
+      <SafeAreaView style={footer()}>
+        <Pressable
           style={footerButton()}
           onPress={() => {
             ref.current?.goBack();
@@ -61,9 +72,9 @@ export const BrowserModal = ({ navigation, route }: BrowserModalProps) => {
             size={responsiveSize(24)}
             color={navigationState?.canGoBack ? color.textPrimary : color.textAccent}
           />
-        </RN.TouchableOpacity>
+        </Pressable>
 
-        <RN.TouchableOpacity
+        <Pressable
           style={footerButton()}
           onPress={() => {
             ref.current?.goForward();
@@ -74,50 +85,47 @@ export const BrowserModal = ({ navigation, route }: BrowserModalProps) => {
             size={responsiveSize(24)}
             color={navigationState?.canGoBack ? color.textPrimary : color.textAccent}
           />
-        </RN.TouchableOpacity>
+        </Pressable>
 
-        <RN.TouchableOpacity
+        <Pressable
           style={footerButton()}
           onPress={async () =>
-            await RN.Share.share({
+            await Share.share({
               title: navigationState?.title ?? route.params.title,
               url: navigationState?.url ?? route.params.url
             })
           }
         >
-          {React.createElement(
-            (RN.Platform.OS === 'ios' ? Feather : MaterialCommunityIcons) as any,
-            {
-              name: 'share',
-              size: responsiveSize(20),
-              color: color.textPrimary
-            }
-          )}
-        </RN.TouchableOpacity>
+          {createElement((Platform.OS === 'ios' ? Feather : MaterialCommunityIcons) as any, {
+            name: 'share',
+            size: responsiveSize(20),
+            color: color.textPrimary
+          })}
+        </Pressable>
 
-        <RN.TouchableOpacity
+        <Pressable
           style={footerButton()}
           onPress={async () => await Linking.openURL(navigationState?.url ?? route.params.url)}
         >
           <FontAwesome5
-            name={RN.Platform.OS === 'ios' ? 'safari' : 'chrome'}
+            name={Platform.OS === 'ios' ? 'safari' : 'chrome'}
             size={responsiveSize(20)}
             color={color.textPrimary}
           />
-        </RN.TouchableOpacity>
-      </RN.SafeAreaView>
-    </RN.View>
+        </Pressable>
+      </SafeAreaView>
+    </View>
   );
 };
 
-const container = styles.one<RN.ViewStyle>((t) => ({
+const container = styles.one<ViewStyle>((t) => ({
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: t.color.bodyBg
 }));
 
-const modalHeader = styles.one<RN.ViewStyle>((t) => ({
+const modalHeader = styles.one<ViewStyle>((t) => ({
   flexDirection: 'row',
   alignItems: 'center',
   width: '100%',
@@ -126,7 +134,7 @@ const modalHeader = styles.one<RN.ViewStyle>((t) => ({
   borderBottomWidth: t.borderWidth.hairline
 }));
 
-const closeButton = styles.one<RN.ViewStyle>((t) => ({
+const closeButton = styles.one<ViewStyle>((t) => ({
   alignItems: 'center',
   justifyContent: 'center',
   width: 18 * (t.type.size.base / 16) + t.space.sm * 2,
@@ -136,19 +144,19 @@ const closeButton = styles.one<RN.ViewStyle>((t) => ({
   backgroundColor: t.color.accentLight
 }));
 
-const title = styles.one<RN.TextStyle>((t) => ({
+const title = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
   fontWeight: '700',
   flex: 1
 }));
 
-const browser = styles.lazy<number, RN.ViewStyle>((width) => ({
+const browser = styles.lazy<number, ViewStyle>((width) => ({
   width,
   height: '100%'
 }));
 
-const footer = styles.one<RN.ViewStyle>((t) => ({
+const footer = styles.one<ViewStyle>((t) => ({
   width: '100%',
   flexDirection: 'row',
   alignItems: 'center',
@@ -157,7 +165,7 @@ const footer = styles.one<RN.ViewStyle>((t) => ({
   borderTopWidth: t.borderWidth.hairline
 }));
 
-const footerButton = styles.one<RN.ViewStyle>((t) => ({
+const footerButton = styles.one<ViewStyle>((t) => ({
   padding: t.space.lg,
   paddingTop: t.space.md
 }));

@@ -36,6 +36,7 @@ export const Home: FC<ListItemType> = () => {
       <View style={container()}>
         <DraggableFlatList
           data={homeItems}
+          style={{ height: '100%' }}
           keyExtractor={(item: ListItemType) => item.id}
           onDragEnd={({ data }) => {
             persistOrder(data);
@@ -73,7 +74,8 @@ const container = styles.one<ViewStyle>((t) => ({
 }));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg
+  backgroundColor: t.color.bodyBg,
+  height: '100%'
 }));
 
 const content = styles.one<ViewStyle>((t) => ({
