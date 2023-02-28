@@ -30,7 +30,7 @@ export const defaultPreferences: SetThemeType = {
   baseTypeSize: 14
 };
 
-export interface SetThemeType {
+export type SetThemeType = {
   displayReplies: boolean;
   displayLargeThumbnails: boolean;
   colorScheme:
@@ -46,7 +46,7 @@ export interface SetThemeType {
   primaryColor: keyof typeof colorSystem;
   commentColors: string[];
   baseTypeSize: number;
-}
+};
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 

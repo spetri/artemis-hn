@@ -1,6 +1,6 @@
 import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BottomSheet, Button, ListItem, Slider, Switch } from '@rneui/themed';
+import { BottomSheet, Button, ListItem, Switch } from '@rneui/themed';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type FC, useCallback, useLayoutEffect, useState } from 'react';
@@ -20,6 +20,7 @@ import { styles, useDash } from '../../../../dash.config';
 import { type StackParamList } from '../../routers';
 import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } from '../useTheme';
 import { usePreferences } from '../usePreferences';
+import Slider from '@react-native-community/slider';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
@@ -59,18 +60,27 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: 'Text Size',
       subheader: 'Select Text Size',
       iconName: 'text-outline',
-      onPress: () => {
-        setIsVisible(true);
-      },
       type: (
-        <Button
-          buttonStyle={{ backgroundColor: color.bodyBg }}
-          onPress={() => {
-            setIsVisible(true);
-          }}
-        >
-          <ListItem.Chevron />
-        </Button>
+        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Slider
+            style={{ display: 'flex', marginRight: 1, width: 100 }}
+            minimumValue={12}
+            maximumValue={20}
+            step={2}
+            value={baseTypeSize ?? preferences.data?.baseTypeSize ?? 16}
+            onValueChange={setBaseTypeSize}
+          />
+          <Text
+            style={{
+              marginLeft: 10,
+              fontSize: baseTypeSize,
+              color: color.primary,
+              fontWeight: '600'
+            }}
+          >
+            {baseTypeSize ? baseTypeSize : defaultPreferences.baseTypeSize}
+          </Text>
+        </View>
       )
     },
     {
@@ -185,8 +195,7 @@ const container = styles.one<ViewStyle>((t) => ({
 }));
 
 const sliderContainer: ViewStyle = {
-  width: '100%',
-  marginBottom: 100
+  width: '100%'
 };
 
 const containerBg = styles.one<ViewStyle>((t) => ({

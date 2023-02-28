@@ -1,14 +1,12 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ListItem } from '@rneui/themed';
 import type {
   NativeStackNavigationProp,
   NativeStackScreenProps
 } from '@react-navigation/native-stack';
 import { type FC, useCallback, useLayoutEffect } from 'react';
 import {
-  Pressable,
   SafeAreaView,
   SectionList,
   Text,
@@ -46,17 +44,13 @@ export const ThemeSettings: FC<SettingsProps> = () => {
       id: '1',
       header: 'Set Theme',
       iconName: 'ios-settings-outline',
-      navigate: () => {
-        navigation.navigate('ThemeColorSection');
-      }
+      navigate: () => navigation.navigate('ThemeColorSection')
     },
     {
       id: '2',
       header: 'Set Accent',
       iconName: 'ios-moon-outline',
-      navigate: () => {
-        navigation.navigate('AccentColorSection');
-      }
+      navigate: () => navigation.navigate('AccentColorSection')
     },
     {
       id: '3',

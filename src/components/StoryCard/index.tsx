@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { Dimensions, View, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
 
@@ -12,11 +12,15 @@ import { CommentStory } from './CommentStory/CommentStory';
 import { MinimalStory } from './MinimalStory/MinimalStory';
 import { ComplexStory } from './ComplexStory/ComplexStory';
 import { usePreferences } from '../../screens/Settings/usePreferences';
+import { defaultPreferences } from '../../screens/Settings/useTheme';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
-    const displayLargeThumbnails = usePreferences('displayLargeThumbnails', false);
+    const [displayLargeThumbnails] = usePreferences(
+      'displayLargeThumbnails',
+      defaultPreferences.displayLargeThumbnails
+    );
 
     const story = useSWR<HackerNewsItem>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -57,7 +61,7 @@ export const StoryCard = memo(
       <CommentStory data={story.data} index={index} />
     ) : story.data.type === 'poll' ? (
       <PollStory data={story.data} index={index} />
-    ) : displayLargeThumbnails[0] ? (
+    ) : displayLargeThumbnails ? (
       <ComplexStory data={story.data} index={index} />
     ) : (
       <MinimalStory data={story.data} index={index} />

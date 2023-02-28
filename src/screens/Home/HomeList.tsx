@@ -1,12 +1,13 @@
-import { type StoryFilters } from '../../types/hn-api'
+import { type StoryFilters } from '../../types/hn-api';
 
-export interface ListItemType {
-  id: string
-  header: string
-  subheader: string
-  iconName: string
-  filter: StoryFilters
-}
+export type ListItemType = {
+  id: string;
+  header: string;
+  subheader?: string;
+  iconName: string;
+  filter?: StoryFilters;
+  navigate?: () => void;
+};
 
 export const listItems: ListItemType[] = [
   {
@@ -51,4 +52,4 @@ export const listItems: ListItemType[] = [
     iconName: 'file-tray-outline',
     filter: 'job'
   }
-]
+];
