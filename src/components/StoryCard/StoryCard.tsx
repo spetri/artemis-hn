@@ -11,12 +11,12 @@ import { AskStory } from './AskStory/AskStory';
 import { CommentStory } from './CommentStory/CommentStory';
 import { MinimalStory } from './MinimalStory/MinimalStory';
 import { ComplexStory } from './ComplexStory/ComplexStory';
-import { PreferencesContext } from '../../contexts/PreferencesContext';
+import { usePreferencesStore } from '../../contexts/store';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
-    const { displayLargeThumbnails } = useContext(PreferencesContext);
+    const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
 
     const story = useSWR<HackerNewsItem>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,

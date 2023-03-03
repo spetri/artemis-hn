@@ -1,6 +1,6 @@
 import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BottomSheet, ListItem, Switch } from '@rneui/themed';
+import { ListItem, Switch } from '@rneui/themed';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type FC, useCallback, useLayoutEffect, useState } from 'react';
@@ -21,22 +21,20 @@ import { type StackParamList } from '../../routers';
 import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } from '../useTheme';
 import { usePreferences } from '../usePreferences';
 import Slider from '@react-native-community/slider';
+import { usePreferencesStore } from '../../../contexts/store';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
 export const GeneralSettings: FC<SettingsProps> = () => {
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
   const [displayReplies, setDisplayReplies] = usePreferences('displayReplies', false);
-  const [displayLargeThumbnails, setDisplayLargeThumbnails] = usePreferences(
-    'displayLargeThumbnails',
-    false
-  );
+  const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
+  const setDisplayLargeThumbnails = usePreferencesStore((state) => state.setDisplayLargeThumbnails);
+
   const [preferences, loadPreferences] = useTheme();
   const {
     tokens: { color }
   } = useDash();
-
-  const [isVisible, setIsVisible] = useState(false);
 
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
@@ -107,8 +105,8 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       type: (
         <Switch
           value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
+          onValueChange={(value) => {
+            setDisplayLargeThumbnails(value);
           }}
         />
       )
@@ -118,120 +116,120 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       header: 'Show Jump Button',
       subheader: 'Display / hide the jump comment button',
       iconName: 'caret-down-circle-outline',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     },
     {
       id: '5',
       header: 'Jump Button Position',
       subheader: 'Move jump button',
       iconName: 'ios-move',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     },
     {
       id: '6',
       header: 'Open Links In Safari',
       subheader: 'Open in Safari instead of built-in browser',
       iconName: 'ios-compass-outline',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     },
     {
       id: '7',
       header: 'Display source',
       subheader: 'Show link source',
       iconName: 'ios-link-outline',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     },
     {
       id: '8',
       header: 'Thumbnail Size',
       subheader: 'Adjust image size',
       iconName: 'ios-image',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     },
     {
       id: '9',
       header: 'Thumbnail Position',
       subheader: 'Right-handed or left-handed?',
       iconName: 'ios-hand-left-outline',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     },
     {
       id: '10',
       header: 'Default Sort',
       subheader: 'Set default sorting',
       iconName: 'ios-filter-outline',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     },
     {
       id: '11',
       header: 'Set Home Landing',
       subheader: 'When opening the app, set view',
       iconName: 'ios-home-outline',
-      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails),
-      type: (
-        <Switch
-          value={displayLargeThumbnails}
-          onValueChange={async (value) => {
-            await onSetDisplayLargeThumbnailsChange(value);
-          }}
-        />
-      )
+      onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
+      // type: (
+      //   <Switch
+      //     value={displayLargeThumbnails}
+      //     onValueChange={async (value) => {
+      //       await onSetDisplayLargeThumbnailsChange(value);
+      //     }}
+      //   />
+      // )
     }
   ];
 
@@ -286,23 +284,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
           sections={[{ title: 'Topics', data: listItems }]}
           renderItem={({ item }) => twoColumn(item)}
         />
-        <BottomSheet
-          modalProps={{}}
-          isVisible={isVisible}
-          children={
-            <View style={sliderContainer}>
-              <Slider
-                minimumValue={12}
-                maximumValue={20}
-                step={2}
-                value={baseTypeSize ?? preferences.data?.baseTypeSize ?? 16}
-                onValueChange={setBaseTypeSize}
-                minimumTrackTintColor="#FFFFFF"
-                maximumTrackTintColor="#000000"
-              />
-            </View>
-          }
-        ></BottomSheet>
       </View>
     </SafeAreaView>
   );
@@ -313,10 +294,6 @@ const container = styles.one<ViewStyle>((t) => ({
   height: '100%',
   width: '100%'
 }));
-
-const sliderContainer: ViewStyle = {
-  width: '100%'
-};
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg

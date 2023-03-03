@@ -8,7 +8,7 @@ import * as Updates from 'expo-updates';
 import { enableScreens } from 'react-native-screens';
 import * as Sentry from 'sentry-expo';
 import { SWRConfig } from 'swr';
-import { useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import {
   AppState,
   Pressable,
@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Dialog, ListItem } from '@rneui/themed';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DashProvider, styles, useDash } from './dash.config';
-import { defaultPreferences, useTheme } from './src/screens/Settings/useTheme';
+import { useTheme } from './src/screens/Settings/useTheme';
 import {
   AllStack,
   HomeStack,
@@ -45,7 +45,7 @@ import {
   ThemeColorSection,
   ThemeSettings
 } from './src/screens/Settings/ThemeSettings/ThemeSettings';
-import { listItems, PreferencesContext } from './src/contexts/PreferencesContext';
+import { listItems, usePreferencesStore } from './src/contexts/store';
 
 registerRootComponent(App);
 
@@ -258,9 +258,8 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
 function HomeScreens() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
-  const [displayLargeThumbnails, setDisplayLargeThumbnails] = useState(
-    defaultPreferences.displayLargeThumbnails
-  );
+  const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
+  const setDisplayLargeThumbnails = usePreferencesStore((state) => state.setDisplayLargeThumbnails);
 
   const actionSheet = useActionSheet();
   const {
@@ -336,42 +335,40 @@ function HomeScreens() {
   };
 
   return (
-    <PreferencesContext.Provider value={{ displayLargeThumbnails }}>
-      <HomeStack.Navigator
-        screenOptions={{
-          headerShown: true,
-          headerTintColor: color.primary,
-          headerStyle: {
-            backgroundColor: color.headerBg as string
-          },
-          headerTitleStyle: {
-            color: color.textPrimary as string
-          }
+    <HomeStack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerTintColor: color.primary,
+        headerStyle: {
+          backgroundColor: color.headerBg as string
+        },
+        headerTitleStyle: {
+          color: color.textPrimary as string
+        }
+      }}
+    >
+      <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
+      <AllStack.Screen
+        name="Stories"
+        component={Stories}
+        initialParams={{ filter: 'top' }}
+        options={{
+          headerTitle: () => screenHeader(),
+          headerRight: () => (
+            <Pressable onPress={actionSheetOptions}>
+              <View>
+                <Icon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
+              </View>
+            </Pressable>
+          )
         }}
-      >
-        <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
-        <AllStack.Screen
-          name="Stories"
-          component={Stories}
-          initialParams={{ filter: 'top' }}
-          options={{
-            headerTitle: () => screenHeader(),
-            headerRight: () => (
-              <Pressable onPress={actionSheetOptions}>
-                <View>
-                  <Icon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
-                </View>
-              </Pressable>
-            )
-          }}
-        />
-        <HomeStack.Screen name="User" component={User} />
-        <HomeStack.Screen name="Thread" component={Thread} />
-        <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
-          <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
-        </HomeStack.Group>
-      </HomeStack.Navigator>
-    </PreferencesContext.Provider>
+      />
+      <HomeStack.Screen name="User" component={User} />
+      <HomeStack.Screen name="Thread" component={Thread} />
+      <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
+        <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
+      </HomeStack.Group>
+    </HomeStack.Navigator>
   );
 }
 

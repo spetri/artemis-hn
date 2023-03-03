@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { create } from 'zustand';
 import { defaultPreferences } from '../screens/Settings/useTheme';
 import { StoryFilters } from '../types/hn-api';
 
@@ -56,16 +56,17 @@ export const listItems: ListItemType[] = [
   }
 ];
 
-export const PreferencesContext = createContext({
-  defaults: defaultPreferences,
+type PreferencesState = {
+  displayLargeThumbnails: boolean;
+  setDisplayLargeThumbnails: (displayLargeThumbnails: boolean) => void;
+  homeOrderList: ListItemType[];
+  setHomeOrderList: () => [];
+};
+
+export const usePreferencesStore = create<PreferencesState>((set) => ({
   displayLargeThumbnails: defaultPreferences.displayLargeThumbnails,
-  setDisplayLargeThumbnails: () => {},
+  setDisplayLargeThumbnails: () =>
+    set((state) => ({ displayLargeThumbnails: !state.displayLargeThumbnails })),
   homeOrderList: listItems,
   setHomeOrderList: () => []
-});
-
-// export const PreferencesContextProvider = (value, { children }) => {
-//   const [displayLargeThumbnails, setDisplayLargeThumbnails] = useState();
-
-//   return <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>;
-// };
+}));
