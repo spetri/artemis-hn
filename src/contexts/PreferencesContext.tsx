@@ -1,6 +1,15 @@
-import { createContext, useContext, useMemo, useState } from 'react';
-import { ListItemType } from '../screens/Home/HomeList';
+import { createContext } from 'react';
 import { defaultPreferences } from '../screens/Settings/useTheme';
+import { StoryFilters } from '../types/hn-api';
+
+export type ListItemType = {
+  id: string;
+  header: string;
+  subheader?: string;
+  iconName: string;
+  filter?: StoryFilters;
+  navigate?: () => void;
+};
 
 export const listItems: ListItemType[] = [
   {

@@ -3,7 +3,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, LogBox, RefreshControl, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
-import { StoryCard } from '../../components/StoryCard';
+import { StoryCard } from '../../components/StoryCard/StoryCard';
 import { styles, useDash } from '../../../dash.config';
 import { type StackParamList } from '../routers';
 import { HACKER_NEWS_API } from '../../constants/api';

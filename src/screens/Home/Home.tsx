@@ -9,7 +9,7 @@ import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content';
 import { type StackParamList } from '../routers';
 import { styles, useDash } from '../../../dash.config';
 import { usePreferences } from '../Settings/usePreferences';
-import { listItems, type ListItemType } from './HomeList';
+import { listItems, ListItemType } from '../../contexts/PreferencesContext';
 
 export const Home: FC<ListItemType> = () => {
   useDash();

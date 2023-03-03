@@ -39,14 +39,13 @@ import { Home } from './src/screens/Home/Home';
 import { SettingsListView } from './src/screens/Settings/SettingsListView/SettingsListView';
 import { Search } from './src/screens/Search/Search';
 import { GeneralSettings } from './src/screens/Settings/GeneralSettings/GeneralSettings';
-import { listItems } from './src/screens/Home/HomeList';
 import {
   AccentColorSection,
   CommentColorSection,
   ThemeColorSection,
   ThemeSettings
 } from './src/screens/Settings/ThemeSettings/ThemeSettings';
-import { PreferencesContext } from './src/contexts/PreferencesContext';
+import { listItems, PreferencesContext } from './src/contexts/PreferencesContext';
 
 registerRootComponent(App);
 
