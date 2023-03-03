@@ -8,7 +8,7 @@ import * as Updates from 'expo-updates';
 import { enableScreens } from 'react-native-screens';
 import * as Sentry from 'sentry-expo';
 import { SWRConfig } from 'swr';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import {
   AppState,
   Pressable,
@@ -46,7 +46,7 @@ import {
   ThemeColorSection,
   ThemeSettings
 } from './src/screens/Settings/ThemeSettings/ThemeSettings';
-import { usePreferences } from './src/screens/Settings/usePreferences';
+import { PreferencesContext } from './src/contexts/PreferencesContext';
 
 registerRootComponent(App);
 
@@ -259,10 +259,10 @@ function TabBarBase({ state, descriptors, navigation }: BottomTabBarProps) {
 function HomeScreens() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
-  const [displayLargeThumbnails, setDisplayLargeThumbnails] = usePreferences(
-    'displayLargeThumbnails',
+  const [displayLargeThumbnails, setDisplayLargeThumbnails] = useState(
     defaultPreferences.displayLargeThumbnails
   );
+
   const actionSheet = useActionSheet();
   const {
     tokens: { color }
@@ -325,7 +325,7 @@ function HomeScreens() {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0: {
-            setDisplayLargeThumbnails?.(!displayLargeThumbnails);
+            setDisplayLargeThumbnails(!displayLargeThumbnails);
             return;
           }
           case 1: {
@@ -337,40 +337,42 @@ function HomeScreens() {
   };
 
   return (
-    <HomeStack.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerTintColor: color.primary,
-        headerStyle: {
-          backgroundColor: color.headerBg as string
-        },
-        headerTitleStyle: {
-          color: color.textPrimary as string
-        }
-      }}
-    >
-      <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
-      <AllStack.Screen
-        name="Stories"
-        component={Stories}
-        initialParams={{ filter: 'top' }}
-        options={{
-          headerTitle: () => screenHeader(),
-          headerRight: () => (
-            <Pressable onPress={actionSheetOptions}>
-              <View>
-                <Icon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
-              </View>
-            </Pressable>
-          )
+    <PreferencesContext.Provider value={{ displayLargeThumbnails }}>
+      <HomeStack.Navigator
+        screenOptions={{
+          headerShown: true,
+          headerTintColor: color.primary,
+          headerStyle: {
+            backgroundColor: color.headerBg as string
+          },
+          headerTitleStyle: {
+            color: color.textPrimary as string
+          }
         }}
-      />
-      <HomeStack.Screen name="User" component={User} />
-      <HomeStack.Screen name="Thread" component={Thread} />
-      <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
-        <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
-      </HomeStack.Group>
-    </HomeStack.Navigator>
+      >
+        <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
+        <AllStack.Screen
+          name="Stories"
+          component={Stories}
+          initialParams={{ filter: 'top' }}
+          options={{
+            headerTitle: () => screenHeader(),
+            headerRight: () => (
+              <Pressable onPress={actionSheetOptions}>
+                <View>
+                  <Icon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
+                </View>
+              </Pressable>
+            )
+          }}
+        />
+        <HomeStack.Screen name="User" component={User} />
+        <HomeStack.Screen name="Thread" component={Thread} />
+        <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
+          <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
+        </HomeStack.Group>
+      </HomeStack.Navigator>
+    </PreferencesContext.Provider>
   );
 }
 

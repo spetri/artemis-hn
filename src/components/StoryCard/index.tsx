@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo, useContext } from 'react';
 import { Dimensions, View, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
 
@@ -11,16 +11,12 @@ import { AskStory } from './AskStory/AskStory';
 import { CommentStory } from './CommentStory/CommentStory';
 import { MinimalStory } from './MinimalStory/MinimalStory';
 import { ComplexStory } from './ComplexStory/ComplexStory';
-import { usePreferences } from '../../screens/Settings/usePreferences';
-import { defaultPreferences } from '../../screens/Settings/useTheme';
+import { PreferencesContext } from '../../contexts/PreferencesContext';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
-    const [displayLargeThumbnails] = usePreferences(
-      'displayLargeThumbnails',
-      defaultPreferences.displayLargeThumbnails
-    );
+    const { displayLargeThumbnails } = useContext(PreferencesContext);
 
     const story = useSWR<HackerNewsItem>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
