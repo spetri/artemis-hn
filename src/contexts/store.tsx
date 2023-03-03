@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { defaultPreferences } from '../screens/Settings/useTheme';
 import { StoryFilters } from '../types/hn-api';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type ListItemType = {
   id: string;
@@ -63,10 +65,17 @@ type PreferencesState = {
   setHomeOrderList: () => [];
 };
 
-export const usePreferencesStore = create<PreferencesState>((set) => ({
+const preferencesStore = (set) => ({
   displayLargeThumbnails: defaultPreferences.displayLargeThumbnails,
   setDisplayLargeThumbnails: () =>
     set((state) => ({ displayLargeThumbnails: !state.displayLargeThumbnails })),
   homeOrderList: listItems,
   setHomeOrderList: () => []
-}));
+});
+
+export const usePreferencesStore = create(
+  persist<PreferencesState>(preferencesStore, {
+    name: 'todos',
+    storage: createJSONStorage(() => AsyncStorage)
+  })
+);
