@@ -18,6 +18,7 @@ import {
 import { Comment } from '../Comment/Comment';
 import { fauxFlatComments, keyExtractor } from '../../../utils/util';
 import { StoryThreadHeader } from './StoryThreadHeader/StoryThreadHeader';
+import { usePreferencesStore } from '../../../contexts/store';
 
 interface StoryThreadProps {
   data: HackerNewsStory | HackerNewsJob | HackerNewsPoll | HackerNewsAsk;
@@ -31,6 +32,9 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   } = useDash();
   const scrollViewRef = useRef<any>();
   const [viewportOffsetTopComment, setViewportOffsetTopComment] = useState<[{ index: number }]>();
+  const showJumpButton = usePreferencesStore((state) => state.showJumpButton);
+  const jumpButtonPosition = usePreferencesStore((state) => state.jumpButtonPosition);
+  console.log(jumpButtonPosition);
 
   const url = useMemo(() => ('url' in data && data.url ? new URL(data.url) : undefined), [data]);
 
@@ -100,17 +104,15 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
         viewabilityConfig={viewConfigRef.current}
         ref={scrollViewRef}
       />
-      <FAB
-        placement="right"
-        icon={{ name: 'keyboard-arrow-down', color: color.textPrimary }}
-        color={color.primary as string}
-        onPress={() => {
-          pressed(false);
-        }}
-        onLongPress={() => {
-          pressed(true);
-        }}
-      />
+      {showJumpButton && (
+        <FAB
+          placement={jumpButtonPosition}
+          icon={{ name: 'keyboard-arrow-down', color: color.textPrimary }}
+          color={color.primary as string}
+          onPress={() => pressed(false)}
+          onLongPress={() => pressed(true)}
+        />
+      )}
     </View>
   );
 };

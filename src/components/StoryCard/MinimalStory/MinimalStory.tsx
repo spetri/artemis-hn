@@ -18,6 +18,7 @@ import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsStory } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
+import { usePreferencesStore } from '../../../contexts/store';
 
 type MinimalStoryProps = {
   data: HackerNewsStory;
@@ -28,6 +29,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const url = new URL(data.url);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
+  const displaySource = usePreferencesStore((state) => state.displaySource);
   const {
     tokens: { color }
   } = useDash();
@@ -96,11 +98,13 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                 {data.title}
               </Text>
             </View>
-            <View>
-              <Text style={appName()}>
-                ({metadata.applicationName || url.host.replace(/^www\./, '')})
-              </Text>
-            </View>
+            {displaySource ? (
+              <View>
+                <Text style={appName()}>
+                  ({metadata.applicationName || url.host.replace(/^www\./, '')})
+                </Text>
+              </View>
+            ) : null}
             <View style={footerText()}>
               <View>
                 <Pressable

@@ -61,21 +61,47 @@ export const listItems: ListItemType[] = [
 type PreferencesState = {
   displayLargeThumbnails: boolean;
   setDisplayLargeThumbnails: (displayLargeThumbnails: boolean) => void;
-  homeOrderList: ListItemType[];
-  setHomeOrderList: () => [];
+  displayReplies: boolean;
+  setDisplayReplies: (displayReplies: boolean) => void;
+  showJumpButton: boolean;
+  setShowJumpButton: (showJumpButton: boolean) => void;
+  displaySource: boolean;
+  setDisplaySource: (displaySource: boolean) => void;
+
+  // TODO
+  jumpButtonPosition: 'left' | 'right';
+  setJumpButtonPosition: (jumpButtonPosition: 'left' | 'right') => void;
 };
 
 const preferencesStore = (set) => ({
   displayLargeThumbnails: defaultPreferences.displayLargeThumbnails,
   setDisplayLargeThumbnails: () =>
     set((state) => ({ displayLargeThumbnails: !state.displayLargeThumbnails })),
-  homeOrderList: listItems,
-  setHomeOrderList: () => []
+  displayReplies: defaultPreferences.displayReplies,
+  setDisplayReplies: () => set((state) => ({ displayReplies: !state.displayReplies })),
+  showJumpButton: defaultPreferences.showJumpButton,
+  setShowJumpButton: () => set((state) => ({ showJumpButton: !state.showJumpButton })),
+  displaySource: defaultPreferences.displaySource,
+  setDisplaySource: () => set((state) => ({ displaySource: !state.displaySource })),
+
+  // TODO
+  jumpButtonPosition: defaultPreferences.jumpButtonPosition,
+  setJumpButtonPosition: () => set((state) => ({ jumpButtonPosition: state.jumpButtonPosition }))
 });
 
 export const usePreferencesStore = create(
   persist<PreferencesState>(preferencesStore, {
-    name: 'todos',
+    name: 'preferences',
     storage: createJSONStorage(() => AsyncStorage)
   })
 );
+
+export function useMulti(useFunc, ...items) {
+  return items.reduce(
+    (carry, item) => ({
+      ...carry,
+      [item]: useFunc((state) => state[item])
+    }),
+    {}
+  );
+}

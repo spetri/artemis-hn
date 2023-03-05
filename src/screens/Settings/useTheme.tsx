@@ -10,7 +10,10 @@ import { type StackParamList } from '../routers';
 export const preferencesVersion = '1.1';
 export const defaultPreferences: SetThemeType = {
   displayLargeThumbnails: false,
+  displaySource: true,
   displayReplies: false,
+  jumpButtonPosition: 'right',
+  showJumpButton: true,
   colorScheme: undefined,
   primaryColor: 'orange500',
   commentColors: [
@@ -33,6 +36,8 @@ export const defaultPreferences: SetThemeType = {
 export type SetThemeType = {
   displayReplies: boolean;
   displayLargeThumbnails: boolean;
+  displaySource: boolean;
+  jumpButtonPosition: 'left' | 'right';
   colorScheme:
     | 'dark'
     | 'light'
@@ -46,6 +51,7 @@ export type SetThemeType = {
   primaryColor: keyof typeof colorSystem;
   commentColors: string[];
   baseTypeSize: number;
+  showJumpButton: boolean;
 };
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;

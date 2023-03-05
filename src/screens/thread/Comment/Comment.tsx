@@ -27,6 +27,7 @@ import { HACKER_NEWS_API } from '../../../constants/api';
 import { linkify } from '../../../utils/util';
 import { usePreferences } from '../../Settings/usePreferences';
 import { defaultPreferences } from '../../Settings/useTheme';
+import { usePreferencesStore } from '../../../contexts/store';
 
 interface CommentProps {
   id: number;
@@ -44,7 +45,7 @@ export const Comment: FC<CommentProps> = memo(
       theme,
       tokens: { color }
     } = useDash();
-    const displayReplies = usePreferences('displayReplies', false);
+    const displayReplies = usePreferencesStore((state) => state.displayReplies);
 
     const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -219,7 +220,7 @@ export const Comment: FC<CommentProps> = memo(
           </Pressable>
         </ListItem.Swipeable>
 
-        {(showingReplies || displayReplies[0]) &&
+        {(showingReplies || displayReplies) &&
           !collapsed &&
           comment.kids != null &&
           comment.kids.length > 0 &&
@@ -227,7 +228,7 @@ export const Comment: FC<CommentProps> = memo(
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids?.length > 0 && !showingReplies && !displayReplies[0] && !collapsed && (
+        {comment.kids?.length > 0 && !showingReplies && !displayReplies && !collapsed && (
           <View
             style={commentContainerReply({
               depth,
