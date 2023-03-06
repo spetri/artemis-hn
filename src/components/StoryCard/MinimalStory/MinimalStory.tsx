@@ -6,6 +6,7 @@ import { type FC } from 'react';
 import {
   Dimensions,
   Image,
+  Linking,
   Pressable,
   Text,
   type TextStyle,
@@ -30,6 +31,10 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
   const displaySource = usePreferencesStore((state) => state.displaySource);
+  const thumbnailSize = usePreferencesStore((state) => state.thumbnailSize);
+  const thumbnailPosition = usePreferencesStore((state) => state.thumbnailPosition);
+  const openLinkInBrowser = usePreferencesStore((state) => state.openLinkInBrowser);
+
   const {
     tokens: { color }
   } = useDash();
@@ -52,31 +57,24 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   }
 
   const displayImage = () => {
+    const inAppBrowser = () => {
+      navigation.push('BrowserModal', {
+        title: data.title,
+        url: url.toString()
+      });
+    };
+    const systemBrowser = async () => await Linking.openURL(url.toString());
     if (metadata?.image) {
       return (
-        <Pressable
-          onPress={() => {
-            navigation.push('BrowserModal', {
-              title: data.title,
-              url: url.toString()
-            });
-          }}
-        >
-          <Image style={storyImage} source={{ uri: metadata?.image }} />
+        <Pressable onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
+          <Image style={storyImage(thumbnailSize)} source={{ uri: metadata?.image }} />
         </Pressable>
       );
     } else {
       return (
-        <Pressable
-          onPress={() => {
-            navigation.push('BrowserModal', {
-              title: metadata.applicationName || url.hostname,
-              url: url.origin
-            });
-          }}
-        >
+        <Pressable onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
           <View>
-            <Image style={storyImage} source={{ uri: metadata.favicon }} />
+            <Image style={storyImage(thumbnailSize)} source={{ uri: metadata.favicon }} />
           </View>
         </Pressable>
       );
@@ -85,14 +83,14 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
 
   return (
     metadata && (
-      <View style={storyContainer(index)} key={data.id}>
+      <View style={storyContainer(thumbnailPosition)} key={data.id}>
         <View style={imageColumn(index)}>{displayImage()}</View>
         <Pressable
           onPress={() => {
             navigation.push('Thread', { id: data.id });
           }}
         >
-          <View style={bodyColumn(index)}>
+          <View style={bodyColumn(thumbnailPosition)}>
             <View>
               <Text style={storyTitle(index)} numberOfLines={4}>
                 {data.title}
@@ -164,9 +162,9 @@ const rotate90 = {
   transform: [{ rotateY: '180deg' }]
 };
 
-const storyContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+const storyContainer = styles.lazy<number, ViewStyle>((thumbnailPosition) => (t) => ({
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: thumbnailPosition === 'Right' ? 'row-reverse' : 'row',
   height: 85,
   width: Dimensions.get('window').width,
   borderBottomColor: t.color.accent,
@@ -181,11 +179,14 @@ const imageColumn = styles.lazy<number, ViewStyle>(() => () => ({
   justifyContent: 'center'
 }));
 
-const bodyColumn = styles.lazy<number, ViewStyle>(() => () => ({
+const bodyColumn = styles.lazy<number, ViewStyle>((thumbnailPosition) => () => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
-  width: Dimensions.get('window').width,
+  width:
+    thumbnailPosition === 'Right'
+      ? -Dimensions.get('window').width
+      : Dimensions.get('window').width,
   justifyContent: 'space-around',
   marginVertical: 8,
   flex: 1
@@ -235,11 +236,11 @@ const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
   backgroundColor: t.color.accent
 }));
 
-const storyImage = {
-  width: 55,
-  height: 55,
+const storyImage = styles.lazy<number, ViewStyle>((size) => (t) => ({
+  width: size,
+  height: size,
   borderRadius: 4
-};
+}));
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.primary,

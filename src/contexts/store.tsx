@@ -1,8 +1,11 @@
 import { create } from 'zustand';
-import { defaultPreferences } from '../screens/Settings/useTheme';
 import { StoryFilters } from '../types/hn-api';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { defaultPreferences } from '../screens/Settings/useTheme';
+
+type ThumbnailSizeType = 55 | 65 | 75;
+type PositionType = 'Left' | 'Right';
 
 export type ListItemType = {
   id: string;
@@ -59,34 +62,61 @@ export const listItems: ListItemType[] = [
 ];
 
 type PreferencesState = {
+  // BOOLEAN TOGGLES
   displayLargeThumbnails: boolean;
   setDisplayLargeThumbnails: (displayLargeThumbnails: boolean) => void;
+
   displayReplies: boolean;
   setDisplayReplies: (displayReplies: boolean) => void;
+
   showJumpButton: boolean;
   setShowJumpButton: (showJumpButton: boolean) => void;
+
   displaySource: boolean;
   setDisplaySource: (displaySource: boolean) => void;
 
-  // TODO
-  jumpButtonPosition: 'left' | 'right';
-  setJumpButtonPosition: (jumpButtonPosition: 'left' | 'right') => void;
+  openLinkInBrowser: boolean;
+  setOpenLinkInBrowser: (setOpenLinkInBrowser: boolean) => void;
+
+  // BOTTOM SHEET TOGGLES
+  thumbnailSize: ThumbnailSizeType;
+  setThumbnailSize: (thumbnailSize: ThumbnailSizeType) => void;
+
+  thumbnailPosition: PositionType;
+  setThumbnailPosition: (thumbnailPosition: PositionType) => void;
+
+  jumpButtonPosition: PositionType;
+  setJumpButtonPosition: (jumpButtonPosition: PositionType) => void;
 };
 
 const preferencesStore = (set) => ({
   displayLargeThumbnails: defaultPreferences.displayLargeThumbnails,
-  setDisplayLargeThumbnails: () =>
-    set((state) => ({ displayLargeThumbnails: !state.displayLargeThumbnails })),
-  displayReplies: defaultPreferences.displayReplies,
-  setDisplayReplies: () => set((state) => ({ displayReplies: !state.displayReplies })),
-  showJumpButton: defaultPreferences.showJumpButton,
-  setShowJumpButton: () => set((state) => ({ showJumpButton: !state.showJumpButton })),
-  displaySource: defaultPreferences.displaySource,
-  setDisplaySource: () => set((state) => ({ displaySource: !state.displaySource })),
+  setDisplayLargeThumbnails: (displayLargeThumbnails) =>
+    set(() => ({ displayLargeThumbnails: !displayLargeThumbnails })),
 
-  // TODO
+  displayReplies: defaultPreferences.displayReplies,
+  setDisplayReplies: (displayReplies) => set(() => ({ displayReplies: !displayReplies })),
+
+  showJumpButton: defaultPreferences.showJumpButton,
+  setShowJumpButton: (showJumpButton) => set(() => ({ showJumpButton: !showJumpButton })),
+
+  displaySource: defaultPreferences.displaySource,
+  setDisplaySource: (displaySource) => set(() => ({ displaySource: !displaySource })),
+
+  thumbnailSize: defaultPreferences.thumbnailSize,
+  setThumbnailSize: (thumbnailSize) => set(() => ({ thumbnailSize: thumbnailSize })),
+
+  thumbnailPosition: defaultPreferences.thumbnailPosition,
+  setThumbnailPosition: (thumbnailPosition) =>
+    set(() => ({ thumbnailPosition: thumbnailPosition })),
+
   jumpButtonPosition: defaultPreferences.jumpButtonPosition,
-  setJumpButtonPosition: () => set((state) => ({ jumpButtonPosition: state.jumpButtonPosition }))
+  setJumpButtonPosition: (jumpButtonPosition) =>
+    set(() => ({ jumpButtonPosition: jumpButtonPosition })),
+
+  openLinkInBrowser: defaultPreferences.openLinkInBrowser,
+  setOpenLinkInBrowser: (openLinkInBrowser) =>
+    set(() => ({ openLinkInBrowser: !openLinkInBrowser }))
 });
 
 export const usePreferencesStore = create(

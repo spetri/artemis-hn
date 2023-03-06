@@ -7,14 +7,25 @@ import { useColorScheme } from 'react-native';
 import { colorSystem, createTypeSystem, useDash } from '../../../dash.config';
 import { type StackParamList } from '../routers';
 
+type ThumbnailSizeType = 55 | 65 | 75;
+type PositionType = 'Left' | 'Right';
+
+enum Position {
+  LEFT = 'Left',
+  RIGHT = 'Right'
+}
+
 export const preferencesVersion = '1.1';
 export const defaultPreferences: SetThemeType = {
   displayLargeThumbnails: false,
+  thumbnailSize: 55,
   displaySource: true,
   displayReplies: false,
-  jumpButtonPosition: 'right',
+  jumpButtonPosition: Position.RIGHT,
+  thumbnailPosition: Position.LEFT,
   showJumpButton: true,
   colorScheme: undefined,
+  openLinkInBrowser: false,
   primaryColor: 'orange500',
   commentColors: [
     'commentColorHN1',
@@ -37,7 +48,10 @@ export type SetThemeType = {
   displayReplies: boolean;
   displayLargeThumbnails: boolean;
   displaySource: boolean;
-  jumpButtonPosition: 'left' | 'right';
+  openLinkInBrowser: boolean;
+  jumpButtonPosition: PositionType;
+  thumbnailPosition: PositionType;
+  thumbnailSize: ThumbnailSizeType;
   colorScheme:
     | 'dark'
     | 'light'

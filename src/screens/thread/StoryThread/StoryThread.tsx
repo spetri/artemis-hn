@@ -34,7 +34,6 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   const [viewportOffsetTopComment, setViewportOffsetTopComment] = useState<[{ index: number }]>();
   const showJumpButton = usePreferencesStore((state) => state.showJumpButton);
   const jumpButtonPosition = usePreferencesStore((state) => state.jumpButtonPosition);
-  console.log(jumpButtonPosition);
 
   const url = useMemo(() => ('url' in data && data.url ? new URL(data.url) : undefined), [data]);
 

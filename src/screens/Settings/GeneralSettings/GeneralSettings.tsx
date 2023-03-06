@@ -8,7 +8,6 @@ import {
   Pressable,
   SafeAreaView,
   SectionList,
-  Share,
   Text,
   type TextStyle,
   View,
@@ -29,36 +28,57 @@ export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
 export const GeneralSettings: FC<SettingsProps> = () => {
   const actionSheet = useActionSheet();
-
-  const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
-  // const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
-  // const setDisplayLargeThumbnails = usePreferencesStore((state) => state.setDisplayLargeThumbnails);
-  // const displayReplies = usePreferencesStore((state) => state.displayReplies);
-  // const setDisplayReplies = usePreferencesStore((state) => state.setDisplayReplies);
-  // const showJumpButton = usePreferencesStore((state) => state.showJumpButton);
-  // const setShowJumpButton = usePreferencesStore((state) => state.setShowJumpButton);
-  const jumpButtonPosition = usePreferencesStore((state) => state.jumpButtonPosition);
-  const setJumpButtonPosition = usePreferencesStore((state) => state.jumpButtonPosition);
-  const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition);
-  const displaySource = usePreferencesStore((state) => state.displaySource);
-  const setDisplaySource = usePreferencesStore((state) => state.setDisplaySource);
   const {
     displayLargeThumbnails,
     setDisplayLargeThumbnails,
     displayReplies,
     setDisplayReplies,
+    displaySource,
+    setDisplaySource,
     showJumpButton,
-    setShowJumpButton
+    setShowJumpButton,
+    thumbnailSize,
+    setThumbnailSize,
+    jumpButtonPosition,
+    setJumpButtonPosition,
+    openLinkInBrowser,
+    setOpenLinkInBrowser,
+    thumbnailPosition,
+    setThumbnailPosition
   } = usePreferencesStore(
     (state) => ({
       displayLargeThumbnails: state.displayLargeThumbnails,
       setDisplayLargeThumbnails: state.setDisplayLargeThumbnails,
+
+      displaySource: state.displaySource,
+      setDisplaySource: state.setDisplaySource,
+
       displayReplies: state.displayReplies,
       setDisplayReplies: state.setDisplayReplies,
+
       showJumpButton: state.showJumpButton,
-      setShowJumpButton: state.setShowJumpButton
+      setShowJumpButton: state.setShowJumpButton,
+
+      thumbnailSize: state.thumbnailSize,
+      setThumbnailSize: state.setThumbnailSize,
+
+      jumpButtonPosition: state.jumpButtonPosition,
+      setJumpButtonPosition: state.setJumpButtonPosition,
+
+      openLinkInBrowser: state.openLinkInBrowser,
+      setOpenLinkInBrowser: state.setOpenLinkInBrowser,
+
+      setThumbnailPosition: state.setThumbnailPosition,
+      thumbnailPosition: state.thumbnailPosition
     }),
     shallow
+  );
+
+  const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
+  const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition ?? 'Right');
+  const [buttonThumbnailSize, setButtonThumbnailSize] = useState(thumbnailSize ?? 'Small');
+  const [buttonThumbnailPosition, setButtonThumbnailPosition] = useState(
+    thumbnailPosition ?? 'Small'
   );
 
   const [preferences, loadPreferences] = useTheme();
@@ -150,7 +170,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       type: (
         <Switch
           value={showJumpButton}
-          onValueChange={async (value) => {
+          onValueChange={(value) => {
             setShowJumpButton(value);
           }}
         />
@@ -173,14 +193,12 @@ export const GeneralSettings: FC<SettingsProps> = () => {
               (index) => {
                 switch (index) {
                   case 0:
-                    console.log('leftt');
-                    setButtonJumpText('left');
-                    setJumpButtonPosition('left');
+                    setJumpButtonPosition('Left');
+                    setButtonJumpText('Left');
                     break;
                   case 1:
-                    console.log('rightt');
-                    setButtonJumpText('right');
-                    setJumpButtonPosition('right');
+                    setButtonJumpText('Right');
+                    setJumpButtonPosition('Right');
                     break;
                   case 2:
                     break;
@@ -189,7 +207,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             );
           }}
         >
-          {buttonJumpText}
+          <Text>{buttonJumpText}</Text>
         </Button>
       )
     },
@@ -197,16 +215,11 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       id: '6',
       header: 'Open Links In Safari',
       subheader: 'Open in Safari instead of built-in browser',
-      iconName: 'ios-compass-outline'
-      // onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
-      // type: (
-      //   <Switch
-      //     value={displayLargeThumbnails}
-      //     onValueChange={async (value) => {
-      //       await onSetDisplayLargeThumbnailsChange(value);
-      //     }}
-      //   />
-      // )
+      iconName: 'ios-compass-outline',
+      onPress: () => setOpenLinkInBrowser(!openLinkInBrowser),
+      type: (
+        <Switch value={openLinkInBrowser} onValueChange={(value) => setOpenLinkInBrowser(value)} />
+      )
     },
     {
       id: '7',
@@ -220,31 +233,77 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       id: '8',
       header: 'Thumbnail Size',
       subheader: 'Adjust image size',
-      iconName: 'ios-image'
-      // onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
-      // type: (
-      //   <Switch
-      //     value={displayLargeThumbnails}
-      //     onValueChange={async (value) => {
-      //       await onSetDisplayLargeThumbnailsChange(value);
-      //     }}
-      //   />
-      // )
+      iconName: 'ios-image',
+      type: (
+        <Button
+          containerStyle={{ backgroundColor: color.primary }}
+          titleStyle={{ color: color.textPrimary }}
+          onPress={() => {
+            actionSheet.showActionSheetWithOptions(
+              {
+                options: ['Small', 'Medium', 'Large', 'Cancel']
+              },
+              (index) => {
+                switch (index) {
+                  case 0:
+                    setThumbnailSize(55);
+                    setButtonThumbnailSize('Small');
+                    break;
+                  case 1:
+                    setThumbnailSize(65);
+                    setButtonThumbnailSize('Medium');
+                    break;
+                  case 2:
+                    setThumbnailSize(75);
+                    setButtonThumbnailSize('Large');
+                    break;
+
+                  case 3:
+                    break;
+                }
+              }
+            );
+          }}
+        >
+          <Text>{buttonThumbnailSize ?? 'Small'}</Text>
+        </Button>
+      )
     },
     {
       id: '9',
       header: 'Thumbnail Position',
       subheader: 'Right-handed or left-handed?',
-      iconName: 'ios-hand-left-outline'
-      // onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
-      // type: (
-      //   <Switch
-      //     value={displayLargeThumbnails}
-      //     onValueChange={async (value) => {
-      //       await onSetDisplayLargeThumbnailsChange(value);
-      //     }}
-      //   />
-      // )
+      iconName: 'ios-hand-left-outline',
+      type: (
+        <Button
+          containerStyle={{ backgroundColor: color.primary }}
+          titleStyle={{ color: color.textPrimary }}
+          onPress={() => {
+            actionSheet.showActionSheetWithOptions(
+              {
+                options: ['Left', 'Right', 'Cancel']
+              },
+              (index) => {
+                switch (index) {
+                  case 0:
+                    setThumbnailPosition('Left');
+                    setButtonThumbnailPosition('Left');
+                    break;
+                  case 1:
+                    setThumbnailPosition('Right');
+                    setButtonThumbnailPosition('Right');
+                    break;
+
+                  case 2:
+                    break;
+                }
+              }
+            );
+          }}
+        >
+          <Text>{buttonThumbnailPosition ?? 'Small'}</Text>
+        </Button>
+      )
     },
     {
       id: '10',
