@@ -116,7 +116,7 @@ const row = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   display: 'flex',
   width: '100%',
-  paddingVertical: 15
+  paddingVertical: 18
 }));
 
 const imageContainer: ViewStyle = {
