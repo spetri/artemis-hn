@@ -183,8 +183,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-move',
       type: (
         <Button
-          containerStyle={{ backgroundColor: color.primary }}
-          titleStyle={{ color: color.textPrimary }}
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
@@ -236,8 +234,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-image',
       type: (
         <Button
-          containerStyle={{ backgroundColor: color.primary }}
-          titleStyle={{ color: color.textPrimary }}
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
@@ -276,8 +272,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-hand-left-outline',
       type: (
         <Button
-          containerStyle={{ backgroundColor: color.primary }}
-          titleStyle={{ color: color.textPrimary }}
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {

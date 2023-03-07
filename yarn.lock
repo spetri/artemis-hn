@@ -1997,7 +1997,7 @@
 
 "@sentry/browser@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-7.29.0.tgz#eb162b50adec33ac49ecd3dc930bdffbfda8098e"
+  resolved "https://registry.npmjs.org/@sentry/browser/-/browser-7.29.0.tgz"
   integrity sha512-Af+dIcntaw405Wt7myDOMGDxiszfy4aBdshrEKYbGgcfHjgXBIdF3iKlNatvl6nrOm+IOVuKgSpCLOr2hiCwzw==
   dependencies:
     "@sentry/core" "7.29.0"
@@ -2006,7 +2006,7 @@
     "@sentry/utils" "7.29.0"
     tslib "^1.9.3"
 
-"@sentry/cli@1.74.4":
+"@sentry/cli@1.74.4", "@sentry/cli@^1.72.0":
   version "1.74.4"
   resolved "https://registry.npmjs.org/@sentry/cli/-/cli-1.74.4.tgz"
   integrity sha512-BMfzYiedbModsNBJlKeBOLVYUtwSi99LJ8gxxE4Bp5N8hyjNIN0WVrozAVZ27mqzAuy6151Za3dpmOLO86YlGw==
@@ -2019,21 +2019,9 @@
     proxy-from-env "^1.1.0"
     which "^2.0.2"
 
-"@sentry/cli@^1.72.0":
-  version "1.75.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.75.0.tgz#4a5e71b5619cd4e9e6238cc77857c66f6b38d86a"
-  integrity sha512-vT8NurHy00GcN8dNqur4CMIYvFH3PaKdkX3qllVvi4syybKqjwoz+aWRCvprbYv0knweneFkLt1SmBWqazUMfA==
-  dependencies:
-    https-proxy-agent "^5.0.0"
-    mkdirp "^0.5.5"
-    node-fetch "^2.6.7"
-    progress "^2.0.3"
-    proxy-from-env "^1.1.0"
-    which "^2.0.2"
-
 "@sentry/core@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.29.0.tgz#bc4b54d56cf7652598d4430cf43ea97cc069f6fe"
+  resolved "https://registry.npmjs.org/@sentry/core/-/core-7.29.0.tgz"
   integrity sha512-+e9aIp2ljtT4EJq3901z6TfEVEeqZd5cWzbKEuQzPn2UO6If9+Utd7kY2Y31eQYb4QnJgZfiIEz1HonuYY6zqQ==
   dependencies:
     "@sentry/types" "7.29.0"
@@ -2042,7 +2030,7 @@
 
 "@sentry/hub@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-7.29.0.tgz#916f818617b3c3993853737db3e752c21f8f8445"
+  resolved "https://registry.npmjs.org/@sentry/hub/-/hub-7.29.0.tgz"
   integrity sha512-nIV2NtTn16VukTtWFhROHJ35NyUIXgEGtesG8a1i7D4iRSvkfLkLrQ9i6D0BAE2huqKqQemO3zGEPR00szqsiA==
   dependencies:
     "@sentry/core" "7.29.0"
@@ -2052,7 +2040,7 @@
 
 "@sentry/integrations@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-7.29.0.tgz#12595ac8d964b8006148618b8d5fad294e623c7f"
+  resolved "https://registry.npmjs.org/@sentry/integrations/-/integrations-7.29.0.tgz"
   integrity sha512-BkZe3ALij320VtC5bNkeSz3OUhT9oxZsj2lf5rCuRFqcqw4tvVNADF/Y98mf0L4VCy582M9MlNXmwfewJjxGOA==
   dependencies:
     "@sentry/types" "7.29.0"
@@ -2062,7 +2050,7 @@
 
 "@sentry/react-native@4.13.0":
   version "4.13.0"
-  resolved "https://registry.yarnpkg.com/@sentry/react-native/-/react-native-4.13.0.tgz#d1b532f481080aed16532ac2778b20c1275391af"
+  resolved "https://registry.npmjs.org/@sentry/react-native/-/react-native-4.13.0.tgz"
   integrity sha512-CxQd5jWPKEPgR1SH5ppf555h7DMhSBZMU3eSZ/VNT+BocgzxxBnf/tcJj92+gpwrzt2m7MiZ3uDfyfQOgyMc8Q==
   dependencies:
     "@sentry/browser" "7.29.0"
@@ -2078,7 +2066,7 @@
 
 "@sentry/react@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-7.29.0.tgz#a1c2ef522a4ccf1e948d77584e59e1254e09c92b"
+  resolved "https://registry.npmjs.org/@sentry/react/-/react-7.29.0.tgz"
   integrity sha512-pJ138QTChfAiYzFrCgycBgXrAVARV6TdVvLB8z/HsqbHzPq17RhyF9M1xPE4ffeLDQAEuSudwED9CLOpJqKnAw==
   dependencies:
     "@sentry/browser" "7.29.0"
@@ -2089,7 +2077,7 @@
 
 "@sentry/replay@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/replay/-/replay-7.29.0.tgz#75d5bb9df39e0a31994be245032c9998af62a304"
+  resolved "https://registry.npmjs.org/@sentry/replay/-/replay-7.29.0.tgz"
   integrity sha512-Gw7HgviJQu6pX5RFQGVY38Av4qFn9otrZdwSSl/QK5hIyg6yhlh5h7U0ydZkrYYGiW6Z6SYYRpEWCJc/Wbh+ZQ==
   dependencies:
     "@sentry/core" "7.29.0"
@@ -2098,7 +2086,7 @@
 
 "@sentry/tracing@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.29.0.tgz#767f309cbff46ab12bec6ab3c266f7f03fec91fd"
+  resolved "https://registry.npmjs.org/@sentry/tracing/-/tracing-7.29.0.tgz"
   integrity sha512-MAN/G6XROtRhzo/KDjddb6VJn/Q1TaPLwdyj9vvfkUkBNtlt5k16oXp+u7eHWX0uujER9wnZtj2ivXaPeqq0VA==
   dependencies:
     "@sentry/core" "7.29.0"
@@ -2108,12 +2096,12 @@
 
 "@sentry/types@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.29.0.tgz#ed829b6014ee19049035fec6af2b4fea44ff28b8"
+  resolved "https://registry.npmjs.org/@sentry/types/-/types-7.29.0.tgz"
   integrity sha512-DmoEpoqHPty3VxqubS/5gxarwebHRlcBd/yuno+PS3xy++/i9YPjOWLZhU2jYs1cW68M9R6CcCOiC9f2ckJjdw==
 
 "@sentry/utils@7.29.0":
   version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.29.0.tgz#cbf8f87dd851b0fdc7870db9c68014c321c3bab8"
+  resolved "https://registry.npmjs.org/@sentry/utils/-/utils-7.29.0.tgz"
   integrity sha512-ICcBwTiBGK8NQA8H2BJo0JcMN6yCeKLqNKNMVampRgS6wSfSk1edvcTdhRkW3bSktIGrIPZrKskBHyMwDGF2XQ==
   dependencies:
     "@sentry/types" "7.29.0"
@@ -2121,7 +2109,7 @@
 
 "@sentry/wizard@1.4.0":
   version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@sentry/wizard/-/wizard-1.4.0.tgz#9356ae2cb9e81ee6fa64418d15638607f1a957bd"
+  resolved "https://registry.npmjs.org/@sentry/wizard/-/wizard-1.4.0.tgz"
   integrity sha512-Q/f9wJAAAr/YB6oWUzMQP/y5LIgx9la1SanMHNr3hMtVPKkMhvIZO5UWVn2G763yi85zARqSCLDx31/tZd4new==
   dependencies:
     "@sentry/cli" "^1.72.0"
@@ -8371,7 +8359,7 @@ send@0.18.0, send@^0.18.0:
 
 sentry-expo@~6.1.0:
   version "6.1.0"
-  resolved "https://registry.yarnpkg.com/sentry-expo/-/sentry-expo-6.1.0.tgz#c6892a89aea3ad953de3e4bce082394679919c02"
+  resolved "https://registry.npmjs.org/sentry-expo/-/sentry-expo-6.1.0.tgz"
   integrity sha512-K0gC10Uj0+E26RK6oCNDq3ozctqDObt4fL649rElZW0YVJw82WraRLiaN5zWADXQnsEumpQs4meQo+RL9w2J8g==
   dependencies:
     "@expo/spawn-async" "^1.7.0"
@@ -9775,8 +9763,8 @@ yocto-queue@^0.1.0:
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
 zustand@^4.3.5:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.3.5.tgz#011d2997534f8a187ea7b1d75db56df31f58453d"
-  integrity sha512-2iPUzfwx+g3f0PagOMz2vDO9mZzEp2puFpNe7vrAymVPOEIEUjCPkC4/zy84eAscxIWmTU4j9g6upXYkJdzEFQ==
+  version "4.3.6"
+  resolved "https://registry.npmjs.org/zustand/-/zustand-4.3.6.tgz"
+  integrity sha512-6J5zDxjxLE+yukC2XZWf/IyWVKnXT9b9HUv09VJ/bwGCpKNcaTqp7Ws28Xr8jnbvnZcdRaidztAPsXFBIqufiw==
   dependencies:
     use-sync-external-store "1.2.0"
