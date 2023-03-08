@@ -16,12 +16,12 @@ import {
   type NativeStackNavigationProp,
   type NativeStackScreenProps
 } from '@react-navigation/native-stack';
-import { Icon } from '../../../../components/Icon';
 import { ago } from '../../../../utils/ago';
 import { type StackParamList } from '../../../routers';
 import { styles, useDash } from '../../../../../dash.config';
 import { linkify } from '../../../../utils/util';
 import { type HackerNewsComment } from '../../../../types/hn-api';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { ParentComment } from '../ParentComment/ParentComment';
 
 interface CommentThreadHeaderProps {

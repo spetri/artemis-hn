@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ListItem } from '@rneui/themed';
-import { Skeleton } from '../../../components/Skeleton';
+import { Skeleton } from '../../../components/skeleton';
 import { styles, useDash } from '../../../../dash.config';
 import { type HackerNewsComment } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';

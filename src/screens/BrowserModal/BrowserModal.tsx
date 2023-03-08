@@ -2,7 +2,6 @@ import { Feather, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icon
 
 import * as Linking from 'expo-linking';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { Icon } from '../../components/Icon';
 import { responsiveSize, styles, useDash } from '../../../dash.config';
 
 import { type StackParamList } from '../routers';
@@ -19,6 +18,7 @@ import {
 } from 'react-native';
 import { createElement, useRef, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export type BrowserModalProps = NativeStackScreenProps<StackParamList, 'BrowserModal'>;
 

@@ -14,7 +14,7 @@ import { styles } from '../../../../dash.config';
 import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsStory } from '../../../types/hn-api';
-import { Skeleton } from '../../Skeleton';
+import { Skeleton } from '../../skeleton';
 import { pluralize } from '../../../utils/pluralize';
 import { ago } from '../../../utils/ago';
 

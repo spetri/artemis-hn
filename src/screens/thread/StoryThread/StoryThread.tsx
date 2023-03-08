@@ -45,18 +45,39 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   }, [data]);
 
   const pressed = (isLongPressed: boolean) => {
-    if (viewportOffsetTopComment != null && viewportOffsetTopComment.length > 0) {
-      if (isLongPressed) {
-        scrollViewRef?.current.scrollToIndex({
-          index: viewportOffsetTopComment[0].index - 1,
-          animated: true
-        });
-      } else {
-        scrollViewRef?.current.scrollToIndex({
-          index: viewportOffsetTopComment[0].index + 1,
-          animated: true,
-          viewOffset: -10
-        });
+    const totalCommentCount = data?.kids.length - 1;
+    if (
+      viewportOffsetTopComment != null &&
+      viewportOffsetTopComment[0].index === 0 &&
+      viewportOffsetTopComment.length === 1
+    ) {
+      scrollViewRef?.current.scrollToIndex({
+        index: 0,
+        animated: true
+      });
+    } else if (
+      viewportOffsetTopComment != null &&
+      viewportOffsetTopComment[0].index === totalCommentCount
+    ) {
+      return;
+    } else {
+      if (viewportOffsetTopComment != null && viewportOffsetTopComment.length > 0) {
+        if (isLongPressed) {
+          if (viewportOffsetTopComment[0].index < 1) {
+            return;
+          } else {
+            scrollViewRef?.current.scrollToIndex({
+              index: viewportOffsetTopComment[0].index - 1,
+              animated: true
+            });
+          }
+        } else {
+          scrollViewRef?.current.scrollToIndex({
+            index: viewportOffsetTopComment[0].index + 1,
+            animated: true,
+            viewOffset: -10
+          });
+        }
       }
     }
   };

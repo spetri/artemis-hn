@@ -32,8 +32,7 @@ import {
   Tab
 } from './src/screens/routers';
 import { Stories } from './src/screens/Stories/Stories';
-import { Thread } from './src/screens/Thread';
-import { User } from './src/screens/User';
+import { User } from './src/screens/user';
 import { BrowserModal } from './src/screens/BrowserModal/BrowserModal';
 import { Home } from './src/screens/Home/Home';
 import { SettingsListView } from './src/screens/Settings/SettingsListView/SettingsListView';
@@ -46,6 +45,7 @@ import {
   ThemeSettings
 } from './src/screens/Settings/ThemeSettings/ThemeSettings';
 import { listItems, usePreferencesStore } from './src/contexts/store';
+import { Thread } from './src/screens/thread';
 
 registerRootComponent(App);
 
