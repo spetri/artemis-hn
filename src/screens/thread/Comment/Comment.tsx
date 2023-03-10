@@ -4,6 +4,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MixedStyleRecord, RenderersProps, RenderHTML } from 'react-native-render-html';
 import useSWR from 'swr';
+import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import {
@@ -94,13 +95,14 @@ export const Comment: FC<CommentProps> = memo(
 
     const comment = commentData.data;
 
-    const onCollapse = () => {
+    const onCollapse = (reset) => {
       collapsed ? setCollapsed(false) : setCollapsed(true);
+      reset();
     };
 
-    const rightSwipeActions = () => {
+    const rightSwipeActions = (reset) => {
       return collapsed ? (
-        <Pressable onPress={onCollapse}>
+        <Pressable onPress={() => onCollapse(reset)}>
           <View style={collapsedView()}>
             <Text style={collapsedText()}>
               <MaterialIcon name="arrow-collapse-left" color={color.textPrimary} size={20} />
@@ -108,7 +110,7 @@ export const Comment: FC<CommentProps> = memo(
           </View>
         </Pressable>
       ) : (
-        <Pressable onPress={onCollapse}>
+        <Pressable onPress={() => onCollapse(reset)}>
           <View style={openView()}>
             <Text style={openText()}>
               <MaterialIcon name="arrow-collapse-left" color={color.textPrimary} size={30} />
@@ -136,7 +138,7 @@ export const Comment: FC<CommentProps> = memo(
         (buttonIndex) => {
           switch (buttonIndex) {
             case 0: {
-              onCollapse();
+              onCollapse(() => collapsed);
               return;
             }
             case 1: {
@@ -169,7 +171,7 @@ export const Comment: FC<CommentProps> = memo(
           rightStyle={{ backgroundColor: color.bodyBg }}
           style={noMarginPadding()}
         >
-          <Pressable onPress={onCollapse} style={width100()}>
+          <Pressable onPress={() => onCollapse(() => collapsed)} style={width100()}>
             <View
               style={commentContainer({
                 depth,
@@ -203,18 +205,20 @@ export const Comment: FC<CommentProps> = memo(
                 </View>
               </View>
 
-              {htmlSource != null && !collapsed && (
-                <RenderHTML
-                  contentWidth={dimensions.width}
-                  source={htmlSource}
-                  baseStyle={commentContent(depth)}
-                  tagsStyles={htmlTagStyles}
-                  defaultTextProps={htmlDefaultTextProps}
-                  renderersProps={htmlRenderersProps}
-                  enableExperimentalBRCollapsing
-                  enableExperimentalGhostLinesPrevention
-                  enableExperimentalMarginCollapsing
-                />
+              {htmlSource != null && (
+                <Collapsible collapsed={collapsed}>
+                  <RenderHTML
+                    contentWidth={dimensions.width}
+                    source={htmlSource}
+                    baseStyle={commentContent(depth)}
+                    tagsStyles={htmlTagStyles}
+                    defaultTextProps={htmlDefaultTextProps}
+                    renderersProps={htmlRenderersProps}
+                    enableExperimentalBRCollapsing
+                    enableExperimentalGhostLinesPrevention
+                    enableExperimentalMarginCollapsing
+                  />
+                </Collapsible>
               )}
             </View>
           </Pressable>
