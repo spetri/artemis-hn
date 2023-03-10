@@ -42,7 +42,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
       {url != null && metadata?.image ? (
         <TouchableWithoutFeedback
           onPress={() => {
-            navigation.push('BrowserModal', {
+            navigation.push('Browser', {
               title: data.title,
               url: url.toString()
             });
@@ -55,7 +55,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
       {url != null && (
         <TouchableWithoutFeedback
           onPress={() => {
-            navigation.push('BrowserModal', {
+            navigation.push('Browser', {
               title: metadata.applicationName || url.hostname,
               url: url.origin
             });
@@ -74,7 +74,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
       <TouchableWithoutFeedback
         onPress={() => {
           if (url != null) {
-            navigation.push('BrowserModal', {
+            navigation.push('Browser', {
               title: data.title,
               url: url.toString()
             });
@@ -98,7 +98,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
         <TouchableWithoutFeedback
           onPress={() => {
             if (url != null) {
-              navigation.push('BrowserModal', {
+              navigation.push('Browser', {
                 title: data.title,
                 url: url.toString()
               });

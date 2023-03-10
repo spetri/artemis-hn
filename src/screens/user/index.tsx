@@ -46,7 +46,7 @@ export function User(props: UserProps) {
                 });
                 break;
               case 1:
-                props.navigation.push('BrowserModal', {
+                props.navigation.push('Browser', {
                   title: id,
                   url: `https://news.ycombinator.com/user?id=${id}`
                 });

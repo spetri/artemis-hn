@@ -18,11 +18,11 @@ import {
 } from 'react-native';
 import { createElement, useRef, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Icon } from '../../components/icon';
 
-export type BrowserModalProps = NativeStackScreenProps<StackParamList, 'BrowserModal'>;
+export type BrowserProps = NativeStackScreenProps<StackParamList, 'Browser'>;
 
-export const BrowserModal = ({ navigation, route }: BrowserModalProps) => {
+export const Browser = ({ navigation, route }: BrowserProps) => {
   const {
     tokens: { color }
   } = useDash();

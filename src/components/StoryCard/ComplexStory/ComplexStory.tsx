@@ -42,7 +42,7 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
       {metadata?.image ? (
         <Pressable
           onPress={() => {
-            navigation.push('BrowserModal', {
+            navigation.push('Browser', {
               title: data.title,
               url: url.toString()
             });
@@ -55,7 +55,7 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
       {/* url */}
       <Pressable
         onPress={() => {
-          navigation.push('BrowserModal', {
+          navigation.push('Browser', {
             title: metadata.applicationName || url.hostname,
             url: url.origin
           });
@@ -73,7 +73,7 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
       {/* titles */}
       <Pressable
         onPress={() => {
-          navigation.push('BrowserModal', {
+          navigation.push('Browser', {
             title: data.title,
             url: url.toString()
           });

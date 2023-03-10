@@ -63,7 +63,7 @@ export const Comment: FC<CommentProps> = memo(
       () => ({
         a: {
           onPress(_, url) {
-            navigation.navigate('BrowserModal', { title: url, url });
+            navigation.navigate('Browser', { title: url, url });
           }
         }
       }),

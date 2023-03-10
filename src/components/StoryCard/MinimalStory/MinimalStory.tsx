@@ -58,7 +58,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
 
   const displayImage = () => {
     const inAppBrowser = () => {
-      navigation.push('BrowserModal', {
+      navigation.push('Browser', {
         title: data.title,
         url: url.toString()
       });

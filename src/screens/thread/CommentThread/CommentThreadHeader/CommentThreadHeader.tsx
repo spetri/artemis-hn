@@ -46,7 +46,7 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
     () => ({
       a: {
         onPress(_, url) {
-          navigation.navigate('BrowserModal', { title: url, url });
+          navigation.navigate('Browser', { title: url, url });
         }
       }
     }),

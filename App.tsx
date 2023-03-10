@@ -33,7 +33,7 @@ import {
 } from './src/screens/routers';
 import { Stories } from './src/screens/Stories/Stories';
 import { User } from './src/screens/user';
-import { BrowserModal } from './src/screens/BrowserModal/BrowserModal';
+import { Browser } from './src/screens/Browser/Browser';
 import { Home } from './src/screens/Home/Home';
 import { SettingsListView } from './src/screens/Settings/SettingsListView/SettingsListView';
 import { Search } from './src/screens/Search/Search';
@@ -366,7 +366,7 @@ function HomeScreens() {
       <HomeStack.Screen name="User" component={User} />
       <HomeStack.Screen name="Thread" component={Thread} />
       <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
-        <HomeStack.Screen name="BrowserModal" component={BrowserModal} />
+        <HomeStack.Screen name="Browser" component={Browser} />
       </HomeStack.Group>
     </HomeStack.Navigator>
   );
@@ -420,7 +420,7 @@ function SearchScreens() {
     >
       <SearchStack.Screen name="Search" component={Search} />
       <SearchStack.Screen name="Thread" component={Thread} />
-      <SearchStack.Screen name="BrowserModal" component={BrowserModal} />
+      <SearchStack.Screen name="Browser" component={Browser} />
     </SearchStack.Navigator>
   );
 }

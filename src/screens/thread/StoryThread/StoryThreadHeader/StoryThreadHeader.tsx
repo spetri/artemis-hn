@@ -48,7 +48,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
     () => ({
       a: {
         onPress(_, url) {
-          navigation.navigate('BrowserModal', { title: url, url });
+          navigation.navigate('Browser', { title: url, url });
         }
       }
     }),
@@ -71,7 +71,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
         onPress={() => {
           data &&
             url &&
-            navigation.navigate('BrowserModal', {
+            navigation.navigate('Browser', {
               title: data.title,
               url: url.toString()
             });
@@ -83,7 +83,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
       {metadata && url && (
         <Pressable
           onPress={() => {
-            navigation.navigate('BrowserModal', {
+            navigation.navigate('Browser', {
               title: metadata.applicationName || url.hostname,
               url: url.origin
             });
@@ -103,7 +103,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
         onPress={() => {
           data &&
             url &&
-            navigation.navigate('BrowserModal', {
+            navigation.navigate('Browser', {
               title: data.title,
               url: url.toString()
             });

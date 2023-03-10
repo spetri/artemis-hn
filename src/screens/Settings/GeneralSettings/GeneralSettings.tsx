@@ -134,7 +134,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     {
       id: '2',
       header: 'Display All Replies',
-      subheader: 'When selected, display all replies automatically',
+      subheader: 'When selected, display all replies automatically. This will impact performance.',
       iconName: 'file-tray-outline',
       onPress: () => setDisplayReplies(!displayReplies),
       type: (
