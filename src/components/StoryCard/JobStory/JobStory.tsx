@@ -6,9 +6,9 @@ import { type FC } from 'react';
 import {
   Image,
   type ImageStyle,
+  Pressable,
   Text,
   type TextStyle,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle
 } from 'react-native';
@@ -40,7 +40,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
   return (
     <View style={storyContainer(index)}>
       {url != null && metadata?.image ? (
-        <TouchableWithoutFeedback
+        <Pressable
           onPress={() => {
             navigation.push('Browser', {
               title: data.title,
@@ -49,11 +49,11 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
           }}
         >
           <Image style={storyImage(index)} source={{ uri: metadata?.image }} />
-        </TouchableWithoutFeedback>
+        </Pressable>
       ) : null}
 
       {url != null && (
-        <TouchableWithoutFeedback
+        <Pressable
           onPress={() => {
             navigation.push('Browser', {
               title: metadata.applicationName || url.hostname,
@@ -68,10 +68,10 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
               {metadata.applicationName || url.host.replace(/^www\./, '')}
             </Text>
           </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
       )}
 
-      <TouchableWithoutFeedback
+      <Pressable
         onPress={() => {
           if (url != null) {
             navigation.push('Browser', {
@@ -92,10 +92,10 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
         >
           {data.title}
         </Text>
-      </TouchableWithoutFeedback>
+      </Pressable>
 
       {data.text && (
-        <TouchableWithoutFeedback
+        <Pressable
           onPress={() => {
             if (url != null) {
               navigation.push('Browser', {
@@ -112,18 +112,18 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
           <Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
             {stripTags(htmlEntities.decode(data.text), [], ' ')}
           </Text>
-        </TouchableWithoutFeedback>
+        </Pressable>
       )}
 
       <View>
         <View style={byLine}>
-          <TouchableWithoutFeedback
+          <Pressable
             onPress={() => {
               navigation.push('User', { id: data.by });
             }}
           >
             <Text style={byStyle()}>@{data.by}</Text>
-          </TouchableWithoutFeedback>
+          </Pressable>
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
       </View>

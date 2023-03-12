@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sabbapetri.artemis",
@@ -39,8 +37,6 @@
         "projectId": "3ecd10d9-8547-438d-a507-b2a662a13c80"
       }
     },
-    "plugins": [
-      "sentry-expo"
-    ]
+    "plugins": ["sentry-expo"]
   }
 }

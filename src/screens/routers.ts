@@ -1,15 +1,15 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ParamListBase } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { type StoryFilters } from '../types/hn-api';
 
-export const HomeStack = createNativeStackNavigator<StackParamList>();
-export const AllStack = createNativeStackNavigator<StackParamList>();
-export const ShowStack = createNativeStackNavigator<StackParamList>();
-export const AskStack = createNativeStackNavigator<StackParamList>();
-export const JobsStack = createNativeStackNavigator<StackParamList>();
-export const SettingsStack = createNativeStackNavigator<StackParamList>();
-export const SearchStack = createNativeStackNavigator<StackParamList>();
+export const HomeStack = createStackNavigator<StackParamList>();
+export const AllStack = createStackNavigator<StackParamList>();
+export const ShowStack = createStackNavigator<StackParamList>();
+export const AskStack = createStackNavigator<StackParamList>();
+export const JobsStack = createStackNavigator<StackParamList>();
+export const SettingsStack = createStackNavigator<StackParamList>();
+export const SearchStack = createStackNavigator<StackParamList>();
 export const Tab = createBottomTabNavigator<ParamListBase>();
 
 export type StackParamList = {
@@ -30,7 +30,7 @@ export type StackParamList = {
   CommentColorSection: Record<string, never>;
 };
 
-export interface TabParamList {
+export type TabParamList = {
   Home: undefined;
   User: undefined;
   Search: undefined;

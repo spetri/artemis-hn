@@ -30,7 +30,7 @@ import { usePreferences } from '../../Settings/usePreferences';
 import { defaultPreferences } from '../../Settings/useTheme';
 import { usePreferencesStore } from '../../../contexts/store';
 
-interface CommentProps {
+type CommentProps = {
   id: number;
   index: number;
   depth: number;
@@ -105,7 +105,7 @@ export const Comment: FC<CommentProps> = memo(
         <Pressable onPress={() => onCollapse(reset)}>
           <View style={collapsedView()}>
             <Text style={collapsedText()}>
-              <MaterialIcon name="arrow-collapse-left" color={color.textPrimary} size={20} />
+              <MaterialIcon name="arrow-collapse-down" color={color.textPrimary} size={20} />
             </Text>
           </View>
         </Pressable>
@@ -113,7 +113,7 @@ export const Comment: FC<CommentProps> = memo(
         <Pressable onPress={() => onCollapse(reset)}>
           <View style={openView()}>
             <Text style={openText()}>
-              <MaterialIcon name="arrow-collapse-left" color={color.textPrimary} size={30} />
+              <MaterialIcon name="arrow-collapse-up" color={color.textPrimary} size={30} />
             </Text>
           </View>
         </Pressable>

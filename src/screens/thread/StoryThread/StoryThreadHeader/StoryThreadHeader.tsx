@@ -28,7 +28,7 @@ import {
   type HackerNewsStory
 } from '../../../../types/hn-api';
 
-interface StoryThreadHeaderProps {
+type StoryThreadHeaderProps = {
   data:
     | HackerNewsStory
     | HackerNewsJob

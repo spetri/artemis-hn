@@ -45,7 +45,7 @@ import {
   ThemeSettings
 } from './src/screens/Settings/ThemeSettings/ThemeSettings';
 import { listItems, usePreferencesStore } from './src/contexts/store';
-import { Thread } from './src/screens/thread';
+import { Thread } from './src/screens/thread/Thread';
 
 registerRootComponent(App);
 

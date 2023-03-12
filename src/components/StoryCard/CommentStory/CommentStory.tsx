@@ -12,7 +12,7 @@ import { pluralize } from '../../../utils/pluralize';
 import { useParents } from '../../../hooks/use-parents';
 import { Skeleton } from '../../skeleton';
 
-interface CommentStoryProps {
+type CommentStoryProps = {
   data: HackerNewsComment;
   index: number;
 }
