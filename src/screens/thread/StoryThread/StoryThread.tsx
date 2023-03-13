@@ -20,7 +20,7 @@ import { fauxFlatComments, keyExtractor } from '../../../utils/util';
 import { StoryThreadHeader } from './StoryThreadHeader/StoryThreadHeader';
 import { usePreferencesStore } from '../../../contexts/store';
 
-interface StoryThreadProps {
+type StoryThreadProps = {
   data: HackerNewsStory | HackerNewsJob | HackerNewsPoll | HackerNewsAsk;
   onRefresh: () => unknown;
 }

@@ -14,7 +14,7 @@ import { type FC } from 'react'
 import { styles, useDash } from '../../../dash.config'
 import { type StackParamList } from '../../screens/routers'
 
-export interface NavigableHeaderProps {
+export type NavigableHeaderProps = {
   title: string
   actions?: {
     options: Parameters<ActionSheetProps['showActionSheetWithOptions']>[0]

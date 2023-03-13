@@ -24,7 +24,7 @@ import { type HackerNewsComment } from '../../../../types/hn-api';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ParentComment } from '../ParentComment/ParentComment';
 
-interface CommentThreadHeaderProps {
+type CommentThreadHeaderProps = {
   data: HackerNewsComment;
   parentComments: any;
   setContainerHeight: (number: number) => void;
