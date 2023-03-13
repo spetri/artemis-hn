@@ -232,7 +232,7 @@ const byLine: ViewStyle = {
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '700',
   padding: t.space.sm,
   paddingTop: 0,
@@ -241,7 +241,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300'
 }));
 

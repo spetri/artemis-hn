@@ -87,8 +87,8 @@ const score = styles.one<TextStyle>((t) => ({
 
 const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
   color: t.color.textPrimary,
-  fontSize: t.type.size[index === 0 ? '6xl' : index < 5 ? 'base' : 'sm'],
-  fontWeight: index === 0 ? '900' : index < 5 ? '800' : '700',
+  fontSize: t.type.size[index === 0 ? '4xl' : index < 5 ? 'base' : 'sm'],
+  fontWeight: index === 0 ? '700' : index < 5 ? '600' : '700',
   letterSpacing: index < 4 ? t.type.tracking.tighter : t.type.tracking.tight,
   paddingTop: t.space.sm,
   paddingBottom: t.space.sm
@@ -96,9 +96,8 @@ const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
 
 const storyText = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size.xs,
+  fontSize: t.type.size.sm,
   fontWeight: '400',
-  letterSpacing: t.type.tracking.tight,
   paddingTop: t.space.sm,
   paddingBottom: t.space.sm
 }));
@@ -111,7 +110,7 @@ const byLine: ViewStyle = {
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300',
   padding: t.space.sm,
   paddingTop: 0,
@@ -120,14 +119,14 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300'
 }));
 
 const footerText = styles.one<TextStyle>((t) => ({
   fontWeight: '600',
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs']
+  fontSize: t.type.size.xs
 }));
 
 const commentsStyle: TextStyle = { fontWeight: '300' };

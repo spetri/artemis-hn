@@ -1,9 +1,7 @@
 import { Feather, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-
 import * as Linking from 'expo-linking';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { responsiveSize, styles, useDash } from '../../../dash.config';
-
 import { type StackParamList } from '../routers';
 import {
   Platform,
@@ -18,7 +16,7 @@ import {
 } from 'react-native';
 import { createElement, useRef, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Icon } from '../../components/Icon';
+import { Icon } from '../../components/Icon/Icon';
 
 export type BrowserProps = NativeStackScreenProps<StackParamList, 'Browser'>;
 

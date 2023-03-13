@@ -25,9 +25,10 @@ export const SettingScreen = () => {
       <SettingsStack.Screen name="Settings" component={SettingsListView} />
       <SettingsStack.Screen name="General" component={GeneralSettings} />
       <SettingsStack.Screen name="Theme" component={ThemeSettings} />
-      <SettingsStack.Screen name="ThemeColorSection" component={ThemeColorSection} />
-      <SettingsStack.Screen name="AccentColorSection" component={AccentColorSection} />
-      <SettingsStack.Screen name="CommentColorSection" component={CommentColorSection} />
+      <SettingsStack.Screen name="ThemeColorSection" component={ThemeColorSection} options={{ title: 'Select Theme' }}
+      />
+      <SettingsStack.Screen name="AccentColorSection" component={AccentColorSection} options={{ title: 'Select Accent Color' }} />
+      <SettingsStack.Screen name="CommentColorSection" component={CommentColorSection} options={{ title: 'Select Comment Color' }} />
     </SettingsStack.Navigator>
   );
 }

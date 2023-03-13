@@ -114,12 +114,12 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                 </Pressable>
               </View>
               <View style={restText()}>
-                <Text style={restIcon()}>
+                <Text style={rest()}>
                   <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
                   <Text>{data.score}</Text>
                 </Text>
                 <View>
-                  <View style={restIcon()}>
+                  <View style={rest()}>
                     <Text style={rotate90}>
                       <IoniconIcon size={13} name="chatbubble-outline" color={color.textAccent} />
                     </Text>
@@ -127,7 +127,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                   </View>
                 </View>
                 <View>
-                  <Text style={restIcon()}>
+                  <Text style={rest()}>
                     <IoniconIcon size={13} name="time-outline" color={color.textAccent} />
                     <Text>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
                   </Text>
@@ -141,9 +141,9 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   );
 };
 
-const restIcon = styles.one<TextStyle>((t) => ({
+const rest = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: 12,
+  fontSize: t.type.size.xs,
   marginHorizontal: 4,
   display: 'flex',
   flexDirection: 'row',
@@ -154,7 +154,7 @@ const restIcon = styles.one<TextStyle>((t) => ({
 
 const chatText = styles.lazy<number, ViewStyle>(() => (t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   marginLeft: 3
 }));
 
@@ -194,7 +194,7 @@ const bodyColumn = styles.lazy<number, ViewStyle>((thumbnailPosition) => () => (
 
 const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({
   color: t.color.textPrimary,
-  fontSize: 15,
+  fontSize: t.type.size.sm,
   fontWeight: '500',
   display: 'flex',
   flexWrap: 'wrap',
@@ -236,7 +236,7 @@ const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
   backgroundColor: t.color.accent
 }));
 
-const storyImage = styles.lazy<number, ViewStyle>((size) => (t) => ({
+const storyImage = styles.lazy<number, ViewStyle>((size) => () => ({
   width: size,
   height: size,
   borderRadius: 4
@@ -244,14 +244,14 @@ const storyImage = styles.lazy<number, ViewStyle>((size) => (t) => ({
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.primary,
-  fontSize: 13,
+  fontSize: t.type.size.xs,
   fontWeight: '500',
   marginRight: 5
 }));
 
 const appName = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: 12,
+  fontSize: t.type.size["2xs"],
   fontWeight: '300'
 }));
 
@@ -263,7 +263,6 @@ const footerText = styles.one<TextStyle>(() => ({
 }));
 
 const restText = styles.one<TextStyle>((t) => ({
-  fontSize: t.type.size['2xs'],
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row'

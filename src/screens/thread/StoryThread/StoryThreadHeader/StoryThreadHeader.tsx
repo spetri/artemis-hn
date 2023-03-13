@@ -30,12 +30,12 @@ import {
 
 type StoryThreadHeaderProps = {
   data:
-    | HackerNewsStory
-    | HackerNewsJob
-    | HackerNewsStory
-    | HackerNewsJob
-    | HackerNewsPoll
-    | HackerNewsAsk;
+  | HackerNewsStory
+  | HackerNewsJob
+  | HackerNewsStory
+  | HackerNewsJob
+  | HackerNewsPoll
+  | HackerNewsAsk;
   metadata: any;
   url: any;
 }
@@ -151,7 +151,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
 
 const title = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
-  fontSize: t.type.size.xl,
+  fontSize: t.type.size.lg,
   fontWeight: '900',
   padding: t.space.lg,
   paddingTop: t.space.md,
@@ -197,7 +197,7 @@ const hostname = styles.one<TextStyle>((t) => ({
   flex: 1,
   width: '100%',
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300'
 }));
 
@@ -221,7 +221,7 @@ const storyByLine = styles.one<ViewStyle>((t) => ({
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '700',
   padding: t.space.sm,
   paddingTop: 0,
@@ -230,7 +230,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300'
 }));
 

@@ -61,16 +61,16 @@ const logoContainer = styles.one<ViewStyle>({
   width: Dimensions.get('window').width - 50
 })
 
-const icon = styles.one<ViewStyle>((t) => ({
+const icon = styles.one<ViewStyle>(() => ({
   flex: 1,
   justifyContent: 'center'
 }))
 
 const headerText = styles.one<TextStyle>((t) => ({
-  fontSize: t.type.size.lg,
+  // fontSize: t.type.size.lg,
   color: t.color.textPrimary,
   fontWeight: '900',
   alignItems: 'center'
 }))
 
-const rightItem = styles.one<any>((t) => ({ flex: 1 }))
+const rightItem = styles.one(() => ({ flex: 1 }))

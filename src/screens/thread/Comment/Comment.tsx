@@ -6,7 +6,7 @@ import { MixedStyleRecord, RenderersProps, RenderHTML } from 'react-native-rende
 import useSWR from 'swr';
 import Collapsible from 'react-native-collapsible';
 
-import { type FC, memo, useEffect, useMemo, useState } from 'react';
+import { type FC, memo, useMemo, useState } from 'react';
 import {
   Pressable,
   Text,
@@ -311,10 +311,10 @@ const commentContainer = styles.lazy<any>(
     borderTopColor: t.color.accent,
     ...(obj.depth > 1
       ? ({
-          borderLeftWidth: 2,
-          borderLeftColor: obj.commentColors,
-          marginLeft: t.space.md * (obj.depth - 1)
-        } as const)
+        borderLeftWidth: 2,
+        borderLeftColor: obj.commentColors,
+        marginLeft: t.space.md * (obj.depth - 1)
+      } as const)
       : {})
   })
 );
@@ -327,22 +327,22 @@ const commentContainerReply = styles.lazy<any>(
     borderTopColor: t.color.accent,
     ...(obj.depth > 0
       ? ({
-          borderLeftWidth: 2,
-          borderLeftColor: obj.commentColors,
-          marginLeft: t.space.md * (obj.depth + 0.5)
-        } as const)
+        borderLeftWidth: 2,
+        borderLeftColor: obj.commentColors,
+        marginLeft: t.space.md * (obj.depth + 0.5)
+      } as const)
       : {})
   })
 );
 
 const commentContent = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   color: t.color.textPrimary,
-  fontSize: t.type.size.xs,
+  fontSize: t.type.size.sm,
   fontWeight: '300',
   ...(depth > 0
     ? ({
-        marginRight: t.space.md * (depth + 0.5)
-      } as const)
+      marginRight: t.space.md * (depth + 0.5)
+    } as const)
     : {})
 }));
 
@@ -351,14 +351,14 @@ const byLine = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   justifyContent: 'space-between',
   ...(depth > 0
     ? ({
-        marginRight: t.space.md * (depth - 1.5)
-      } as const)
+      marginRight: t.space.md * (depth - 1.5)
+    } as const)
     : {})
 }));
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '700',
   padding: t.space.sm,
   paddingTop: 0,
@@ -367,7 +367,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const replies = styles.one<any>((t, depth) => ({
   color: t.color.lightBlue300,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size["2xs"],
   fontWeight: '700',
   padding: t.space.sm,
   paddingTop: t.space.md,
@@ -375,14 +375,14 @@ const replies = styles.one<any>((t, depth) => ({
   width: '100%',
   ...(depth > 0
     ? ({
-        marginLeft: t.space.md * (depth - 2)
-      } as const)
+      marginLeft: t.space.md * (depth - 2)
+    } as const)
     : {})
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300',
   paddingRight: 10
 }));
@@ -400,7 +400,7 @@ const pre = styles.one((t) => ({
   borderRadius: t.radius.xl,
   padding: t.space.lg,
   paddingBottom: t.space.sm,
-  fontSize: t.type.size['2xs']
+  fontSize: t.type.size.xs,
 }));
 
 const htmlDefaultTextProps: TextProps = {

@@ -19,7 +19,7 @@ import { type HackerNewsJob } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
 import { Skeleton } from '../../Skeleton/Skeleton';
 
-interface JobsStory {
+type JobsStory = {
   data: HackerNewsJob;
   index: number;
 }
@@ -169,7 +169,7 @@ const hostname = styles.one<TextStyle>((t) => ({
   flex: 1,
   width: '100%',
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300'
 }));
 
@@ -184,7 +184,7 @@ const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
 
 const storyText = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size.xs,
+  fontSize: t.type.size.sm,
   fontWeight: '400',
   letterSpacing: t.type.tracking.tight,
   paddingTop: t.space.sm,
@@ -199,7 +199,7 @@ const byLine: ViewStyle = {
 
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300',
   padding: t.space.sm,
   paddingTop: 0,
@@ -208,6 +208,6 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size['2xs'],
+  fontSize: t.type.size.xs,
   fontWeight: '300'
 }));

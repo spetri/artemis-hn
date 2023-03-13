@@ -232,7 +232,7 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
 
 const navigationText = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
-  fontSize: 11,
+  fontSize: t.type.size.xs,
   marginTop: 3
 }));
 

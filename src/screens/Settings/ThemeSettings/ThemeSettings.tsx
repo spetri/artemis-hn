@@ -19,8 +19,8 @@ import { type StackParamList } from '../../routers';
 import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } from '../useTheme';
 import { AppColors } from './ThemeConfig';
 import { useNavigation } from '@react-navigation/native';
-import { ListItemType } from '../../Home/HomeList';
 import { ThemeGridList } from '../../../components/ThemeGridList/ThemeGridList';
+import { ListItemType } from '../../../contexts/store';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
@@ -135,7 +135,7 @@ export const CommentColorSection: FC = () => {
 };
 
 const colorListItem = styles.one<TextStyle>((t) => ({
-  fontSize: 15,
+  fontSize: t.type.size.sm,
   color: t.color.textPrimary
 }));
 

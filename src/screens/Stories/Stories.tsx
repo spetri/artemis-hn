@@ -10,7 +10,7 @@ import { HACKER_NEWS_API } from '../../constants/api';
 import { keyExtractor } from '../../utils/util';
 import { EmbeddedSearch } from '../Search/EmbeddedSearch';
 
-type StoriesProps = {} & NativeStackScreenProps<StackParamList, 'Stories'>;
+type StoriesProps = NativeStackScreenProps<StackParamList, 'Stories'>;
 
 export const Stories: FC<StoriesProps> = (props) => {
   useDash();

@@ -53,22 +53,6 @@ export const SettingsListView: FC = () => {
       navigate: () => {
         navigation.navigate('General');
       }
-    },
-    {
-      id: '4',
-      header: 'About',
-      iconName: 'at-circle-outline',
-      navigate: () => {
-        navigation.navigate('General');
-      }
-    },
-    {
-      id: '5',
-      header: 'Email',
-      iconName: 'file-tray-full-outline',
-      navigate: () => {
-        navigation.navigate('General');
-      }
     }
   ];
 
@@ -106,7 +90,7 @@ const version = styles.one<ViewStyle>((t) => ({
   display: 'flex',
   alignSelf: 'center',
   color: t.color.textAccent,
-  fontSize: 10
+  fontSize: t.type.size['3xs'],
 }));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
@@ -136,7 +120,7 @@ const container = styles.one<ViewStyle>((t) => ({
 }));
 
 const header = styles.one<TextStyle>((t) => ({
-  fontSize: 15,
+  fontSize: t.type.size.sm,
   fontWeight: '500',
   color: t.color.textPrimary
 }));

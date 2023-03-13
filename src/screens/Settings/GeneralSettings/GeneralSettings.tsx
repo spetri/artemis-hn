@@ -361,7 +361,7 @@ const containerBg = styles.one<ViewStyle>((t) => ({
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: 12
+  fontSize: t.type.size.xs,
 }));
 
 const image = styles.one<ViewStyle>(() => ({
@@ -370,7 +370,7 @@ const image = styles.one<ViewStyle>(() => ({
 }));
 
 const header = styles.one<TextStyle>((t) => ({
-  fontSize: 15,
+  fontSize: t.type.size.sm,
   fontWeight: '500',
   color: t.color.textPrimary
 }));

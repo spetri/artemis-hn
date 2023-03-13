@@ -1,4 +1,4 @@
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 import { Dimensions, View, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
 

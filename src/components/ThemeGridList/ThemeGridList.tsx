@@ -94,9 +94,6 @@ export const ThemeGridList: FC<ThemeGridListType> = ({ sections }) => {
     <SectionList
       style={{ backgroundColor: color.bodyBg }}
       sections={sections}
-      renderSectionHeader={({ section }) => (
-        <Text style={sectionHeaderStyle()}>{section.title}</Text>
-      )}
       renderItem={(appColor) => {
         return (
           <Pressable
@@ -143,24 +140,12 @@ const listItems = styles.one<ViewStyle>((t) => ({
   alignItems: 'center'
 }));
 
-const sectionHeaderStyle = styles.one<TextStyle>((t) => ({
-  marginLeft: 10,
-  marginTop: 30,
-  fontSize: 13,
-  textTransform: 'uppercase',
-  height: 30,
-  display: 'flex',
-  justifyContent: 'center',
-  backgroundColor: t.color.bodyBg,
-  color: t.color.textPrimary
-}));
-
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg
 }));
 
 const header = styles.one<TextStyle>((t) => ({
-  fontSize: 15,
+  fontSize: t.type.size.sm,
   fontWeight: '500',
   color: t.color.textPrimary
 }));

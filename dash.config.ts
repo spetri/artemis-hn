@@ -363,6 +363,9 @@ export const colorSystem = {
 
 export function createTypeSystem(baseSize = 16) {
   const size = {
+    '5xs': responsiveSize(0.45 * baseSize),
+    '4xs': responsiveSize(0.5 * baseSize),
+    '3xs': responsiveSize(0.6 * baseSize),
     '2xs': responsiveSize(0.67 * baseSize),
     xs: responsiveSize(0.75 * baseSize),
     sm: responsiveSize(0.875 * baseSize),

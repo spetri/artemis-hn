@@ -46,9 +46,9 @@ export const Home: FC<ListItemType> = () => {
               <Pressable
                 onLongPress={drag}
                 onPress={() => {
-                  navigation.navigate('Stories', {
+                  navigation.navigate('Stories', item?.filter ? {
                     filter: item?.filter
-                  });
+                  } : { filter: "home" });
                 }}
               >
                 <ListItem bottomDivider containerStyle={content()}>
@@ -85,7 +85,7 @@ const content = styles.one<ViewStyle>((t) => ({
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: 12
+  fontSize: t.type.size.xs,
 }));
 
 const image = styles.one<ViewStyle>(() => ({
@@ -94,7 +94,7 @@ const image = styles.one<ViewStyle>(() => ({
 }));
 
 const header = styles.one<TextStyle>((t) => ({
-  fontSize: 16,
+  fontSize: t.type.size.sm,
   fontWeight: '500',
   color: t.color.textPrimary
 }));

@@ -36,7 +36,7 @@ export const Skeleton: FC<SkeletonProps> = (props) => {
       {...props}
       style={[
         skeleton(props.variant ?? 'rect'),
-        (props as any).style,
+        props.style,
         { opacity: fadeAnim }
       ]}
     />

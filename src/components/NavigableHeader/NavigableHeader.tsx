@@ -1,5 +1,4 @@
-import { useActionSheet } from '@expo/react-native-action-sheet'
-import type { ActionSheetProps } from '@expo/react-native-action-sheet'
+import { ActionSheetProps, useActionSheet } from '@expo/react-native-action-sheet'
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -48,21 +47,21 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
 
         {(actions != null)
           ? (
-          <Pressable
-            style={navButton('visible')}
-            onPress={() => {
-              actionSheet.showActionSheetWithOptions(
-                actions.options,
-                actions.callback
-              )
-            }}
-          >
-            <Icon name="ellipsis-horizontal" style={icon()} size={18} />
-          </Pressable>
-            )
+            <Pressable
+              style={navButton('visible')}
+              onPress={() => {
+                actionSheet.showActionSheetWithOptions(
+                  actions.options,
+                  actions.callback
+                )
+              }}
+            >
+              <Icon name="ellipsis-horizontal" style={icon()} size={18} />
+            </Pressable>
+          )
           : (
-          <View style={navButton('hidden')} />
-            )}
+            <View style={navButton('hidden')} />
+          )}
       </View>
     </SafeAreaView>
   )

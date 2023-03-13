@@ -64,9 +64,9 @@ export const HomeScreen = () => {
               key={topic.id}
               onPress={() => {
                 setSwitcher(false);
-                navigation.navigate('Stories', {
+                navigation.navigate('Stories', topic?.filter ? {
                   filter: topic?.filter
-                });
+                } : { filter: "home" });
               }}
             >
               <ListItem bottomDivider>
@@ -148,7 +148,7 @@ const switcherView = styles.one<ViewStyle>(() => ({
 }));
 
 const switcherText = styles.one<TextStyle>((t) => ({
-  fontSize: 16,
+  fontSize: t.type.size.base,
   fontWeight: '600',
   color: t.color.textPrimary
 }));
