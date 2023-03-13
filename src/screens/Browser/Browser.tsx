@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import { createElement, useRef, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/Icon';
 
 export type BrowserProps = NativeStackScreenProps<StackParamList, 'Browser'>;
 

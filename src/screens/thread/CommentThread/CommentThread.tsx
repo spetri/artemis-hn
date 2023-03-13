@@ -7,7 +7,7 @@ import { styles } from '../../../../dash.config';
 import { fauxFlatComments, keyExtractor } from '../../../utils/util';
 import { CommentThreadHeader } from './CommentThreadHeader/CommentThreadHeader';
 
-interface CommentThreadProps {
+type CommentThreadProps = {
   data: HackerNewsComment;
   onRefresh: () => void;
 }

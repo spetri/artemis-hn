@@ -17,7 +17,7 @@ import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsJob } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
-import { Skeleton } from '../../skeleton';
+import { Skeleton } from '../../Skeleton/Skeleton';
 
 interface JobsStory {
   data: HackerNewsJob;

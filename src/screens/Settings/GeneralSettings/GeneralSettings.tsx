@@ -76,7 +76,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
 
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
   const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition ?? 'Right');
-  const [buttonThumbnailSize, setButtonThumbnailSize] = useState(thumbnailSize ?? 'Small');
+  const [buttonThumbnailSize, setButtonThumbnailSize] = useState<string | number>(thumbnailSize ?? 'Small');
   const [buttonThumbnailPosition, setButtonThumbnailPosition] = useState(
     thumbnailPosition ?? 'Small'
   );
@@ -109,9 +109,9 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       subheader: 'Select Text Size',
       iconName: 'text-outline',
       type: (
-        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <View style={sliderContainer()}>
           <Slider
-            style={{ display: 'flex', marginRight: 1, width: 100 }}
+            style={slider()}
             minimumValue={12}
             maximumValue={20}
             step={2}
@@ -298,36 +298,6 @@ export const GeneralSettings: FC<SettingsProps> = () => {
           <Text>{buttonThumbnailPosition ?? 'Small'}</Text>
         </Button>
       )
-    },
-    {
-      id: '10',
-      header: 'Default Sort',
-      subheader: 'Set default sorting',
-      iconName: 'ios-filter-outline'
-      // onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
-      // type: (
-      //   <Switch
-      //     value={displayLargeThumbnails}
-      //     onValueChange={async (value) => {
-      //       await onSetDisplayLargeThumbnailsChange(value);
-      //     }}
-      //   />
-      // )
-    },
-    {
-      id: '11',
-      header: 'Set Home Landing',
-      subheader: 'When opening the app, set view',
-      iconName: 'ios-home-outline'
-      // onPress: () => setDisplayLargeThumbnails?.(!displayLargeThumbnails)
-      // type: (
-      //   <Switch
-      //     value={displayLargeThumbnails}
-      //     onValueChange={async (value) => {
-      //       await onSetDisplayLargeThumbnailsChange(value);
-      //     }}
-      //   />
-      // )
     }
   ];
 
@@ -409,4 +379,16 @@ const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
   height: 0.3,
   width: '100%',
   backgroundColor: t.color.accent
+}));
+
+const sliderContainer = styles.one<TextStyle>((t) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center'
+}));
+
+const slider = styles.one<TextStyle>((t) => ({
+  display: 'flex',
+  marginRight: 1,
+  width: 100
 }));

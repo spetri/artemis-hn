@@ -36,7 +36,7 @@ export const listItems: ListItemType[] = [
     header: 'New HN',
     subheader: 'Newest posts',
     iconName: 'ios-time-outline',
-    filter: 'best'
+    filter: 'new'
   },
   {
     id: '4',

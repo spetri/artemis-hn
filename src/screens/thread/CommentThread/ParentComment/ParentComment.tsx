@@ -15,7 +15,7 @@ import { linkify } from '../../../../utils/util';
 import { styles } from '../../../../../dash.config';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-interface ParentCommentType {
+type ParentCommentType = {
   comment: HackerNewsComment;
   contentWidth: number;
   htmlRenderersProps: Partial<RenderersProps>;

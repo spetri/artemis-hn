@@ -2,7 +2,7 @@ import { type FC, useLayoutEffect, useState } from 'react'
 import { Animated, type ViewStyle } from 'react-native'
 import { styles, useDash } from '../../../dash.config'
 
-interface SkeletonProps {
+type SkeletonProps = {
   variant?: SkeletonVariant
   style?: ViewStyle
 }

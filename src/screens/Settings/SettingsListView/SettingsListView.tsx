@@ -92,12 +92,7 @@ export const SettingsListView: FC = () => {
           )}
         />
         <Text
-          style={{
-            display: 'flex',
-            alignSelf: 'center',
-            color: color.textAccent,
-            fontSize: 10
-          }}
+          style={version()}
         >
           v{Application.nativeBuildVersion} {Updates.updateId && <>&bull; {Updates.updateId}</>}
         </Text>
@@ -105,6 +100,14 @@ export const SettingsListView: FC = () => {
     </SafeAreaView>
   );
 };
+
+
+const version = styles.one<ViewStyle>((t) => ({
+  display: 'flex',
+  alignSelf: 'center',
+  color: t.color.textAccent,
+  fontSize: 10
+}));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,

@@ -53,15 +53,15 @@ export type SetThemeType = {
   thumbnailPosition: PositionType;
   thumbnailSize: ThumbnailSizeType;
   colorScheme:
-    | 'dark'
-    | 'light'
-    | 'black'
-    | 'solarized'
-    | 'dracula'
-    | 'nord'
-    | 'aurora'
-    | null
-    | undefined;
+  | 'dark'
+  | 'light'
+  | 'black'
+  | 'solarized'
+  | 'dracula'
+  | 'nord'
+  | 'aurora'
+  | null
+  | undefined;
   primaryColor: keyof typeof colorSystem;
   commentColors: string[];
   baseTypeSize: number;

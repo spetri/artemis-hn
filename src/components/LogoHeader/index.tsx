@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { styles, useDash } from '../../../dash.config'
 import { type StackParamList } from '../../screens/routers'
 
-export interface LogoHeaderProps {
+export type LogoHeaderProps = {
   title: string
 }
 

@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons';
 import { memo } from 'react';
 import { type AppColors, responsiveSize, useDash } from '../../../dash.config';
 
-export interface IconProps {
+export type IconProps = {
   color: AppColors;
   name: any;
   size: number;

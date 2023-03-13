@@ -30,6 +30,7 @@ export const ThemeSettings: FC<SettingsProps> = () => {
   const {
     tokens: { color }
   } = useDash();
+
   const [, setStorage_] = useAsync(async (preferences: SetThemeType) => {
     const data = Object.entries({
       data: preferences,

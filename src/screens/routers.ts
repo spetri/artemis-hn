@@ -36,3 +36,4 @@ export type TabParamList = {
   Search: undefined;
   Settings: undefined;
 }
+
