@@ -1,6 +1,6 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import { type FC, useEffect, useState } from 'react';
-import { Pressable, SafeAreaView, type TextStyle, View, type ViewStyle } from 'react-native';
+import { Animated, Pressable, SafeAreaView, type TextStyle, View, type ViewStyle } from 'react-native';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { ListItem } from '@rneui/themed';
@@ -31,47 +31,63 @@ export const Home: FC<ListItemType> = () => {
     }
   }, [homeOrderList]);
 
+  const Item = (item, drag) => {
+
+    const animated = new Animated.Value(1);
+
+    const fadeIn = () => {
+      Animated.timing(animated, {
+        toValue: 0.1,
+        duration: 100,
+        useNativeDriver: true,
+      }).start();
+    };
+    const fadeOut = () => {
+      Animated.timing(animated, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    };
+
+    return <ScaleDecorator>
+      <Pressable
+        onPressIn={fadeIn}
+        onPressOut={fadeOut}
+        onLongPress={drag}
+        onPress={() => {
+          navigation.navigate('Stories', item?.filter ? {
+            filter: item?.filter
+          } : { filter: "home" });
+        }}
+      >
+        <Animated.View style={{ opacity: animated }}>
+          <ListItem bottomDivider containerStyle={content()}>
+            <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
+            <ListItemContent>
+              <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+              <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
+            </ListItemContent>
+          </ListItem>
+        </Animated.View>
+      </Pressable>
+    </ScaleDecorator>
+  }
+
   return (
     <SafeAreaView style={containerBg()}>
-      <View style={container()}>
-        <DraggableFlatList
-          data={homeItems}
-          style={{ height: '100%' }}
-          keyExtractor={(item: ListItemType) => item.id}
-          onDragEnd={({ data }) => {
-            persistOrder(data);
-          }}
-          renderItem={({ item, drag }) => (
-            <ScaleDecorator>
-              <Pressable
-                onLongPress={drag}
-                onPress={() => {
-                  navigation.navigate('Stories', item?.filter ? {
-                    filter: item?.filter
-                  } : { filter: "home" });
-                }}
-              >
-                <ListItem bottomDivider containerStyle={content()}>
-                  <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
-                  <ListItemContent>
-                    <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-                    <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
-                  </ListItemContent>
-                </ListItem>
-              </Pressable>
-            </ScaleDecorator>
-          )}
-        ></DraggableFlatList>
-      </View>
+      <DraggableFlatList
+        data={homeItems}
+        style={{ height: '100%' }}
+        keyExtractor={(item: ListItemType) => item.id}
+        onDragEnd={({ data }) => {
+          persistOrder(data);
+        }}
+        renderItem={({ item, drag }) => (Item(item, drag))}
+      ></DraggableFlatList>
     </SafeAreaView>
   );
 };
-
-const container = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg,
-  height: '100%',
-  width: '100%'
-}));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,

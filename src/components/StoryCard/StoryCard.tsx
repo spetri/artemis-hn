@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Dimensions, View, type ViewStyle } from 'react-native';
+import { Animated, Dimensions, Pressable, TouchableNativeFeedback, View, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
 
 import { ListItem, Skeleton } from '@rneui/themed';
@@ -12,6 +12,7 @@ import { CommentStory } from './CommentStory/CommentStory';
 import { MinimalStory } from './MinimalStory/MinimalStory';
 import { ComplexStory } from './ComplexStory/ComplexStory';
 import { usePreferencesStore } from '../../contexts/store';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {

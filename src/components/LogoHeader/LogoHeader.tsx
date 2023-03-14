@@ -67,7 +67,7 @@ const icon = styles.one<ViewStyle>(() => ({
 }))
 
 const headerText = styles.one<TextStyle>((t) => ({
-  // fontSize: t.type.size.lg,
+  fontSize: t.type.size.lg,
   color: t.color.textPrimary,
   fontWeight: '900',
   alignItems: 'center'

@@ -1,7 +1,7 @@
 import 'react-native-url-polyfill/auto';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, LogBox, RefreshControl, type ViewStyle } from 'react-native';
+import { Animated, FlatList, LogBox, Pressable, RefreshControl, TouchableOpacity, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
 import { StoryCard } from '../../components/StoryCard/StoryCard';
 import { styles, useDash } from '../../../dash.config';
@@ -28,7 +28,8 @@ export const Stories: FC<StoriesProps> = (props) => {
   );
 
   const renderFlatListItem = ({ item, index }: { item: number; index: number }) => {
-    return <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />;
+
+    return <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
   };
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export const Stories: FC<StoriesProps> = (props) => {
   );
 
   return (
-    <FlatList
+    <Animated.FlatList
       ListHeaderComponent={listHeaderComponent}
       stickyHeaderIndices={[0]}
       refreshControl={refreshControl}

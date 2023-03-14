@@ -4,12 +4,14 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { type FC } from 'react';
 import {
+  Animated,
   Dimensions,
   Image,
   Linking,
   Pressable,
   Text,
   type TextStyle,
+  TouchableNativeFeedback,
   View,
   type ViewStyle
 } from 'react-native';
@@ -66,19 +68,44 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     const systemBrowser = async () => await Linking.openURL(url.toString());
     if (metadata?.image) {
       return (
-        <Pressable onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
-          <Image style={storyImage(thumbnailSize)} source={{ uri: metadata?.image }} />
+        <Pressable
+          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}>
+          <Animated.View style={{ opacity: animated }}>
+            <Image style={storyImage(thumbnailSize)} source={{ uri: metadata?.image }} />
+          </Animated.View>
         </Pressable>
       );
     } else {
       return (
-        <Pressable onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
-          <View>
+        <Pressable
+          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}>
+          <Animated.View style={{ opacity: animated }}>
             <Image style={storyImage(thumbnailSize)} source={{ uri: metadata.favicon }} />
-          </View>
+          </Animated.View>
         </Pressable>
       );
     }
+  };
+
+  const animated = new Animated.Value(2);
+
+  const fadeIn = () => {
+    Animated.timing(animated, {
+      toValue: 0.1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+  };
+  const fadeOut = () => {
+    Animated.timing(animated, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
   };
 
   return (
@@ -86,11 +113,13 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       <View style={storyContainer(thumbnailPosition)} key={data.id}>
         <View style={imageColumn(index)}>{displayImage()}</View>
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           onPress={() => {
             navigation.push('Thread', { id: data.id });
           }}
         >
-          <View style={bodyColumn(thumbnailPosition)}>
+          <Animated.View style={[bodyColumn(thumbnailPosition), { opacity: animated }]}>
             <View>
               <Text style={storyTitle(index)} numberOfLines={4}>
                 {data.title}
@@ -106,6 +135,8 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
             <View style={footerText()}>
               <View>
                 <Pressable
+                  onPressIn={fadeIn}
+                  onPressOut={fadeOut}
                   onPress={() => {
                     navigation.push('User', { id: data.by });
                   }}
@@ -134,7 +165,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                 </View>
               </View>
             </View>
-          </View>
+          </Animated.View>
         </Pressable>
       </View>
     )
