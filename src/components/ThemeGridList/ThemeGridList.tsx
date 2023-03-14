@@ -2,8 +2,9 @@ import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ListItem } from '@rneui/themed';
 import { FC, useCallback, useLayoutEffect } from 'react';
-import { Pressable, SectionList, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { Animated, Pressable, SectionList, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { styles, useDash } from '../../../dash.config';
+import { useAnimateFade } from '../../hooks/use-animate-fade';
 import { usePreferences } from '../../screens/Settings/usePreferences';
 import {
   defaultPreferences,
@@ -90,31 +91,35 @@ export const ThemeGridList: FC<ThemeGridListType> = ({ sections }) => {
     }
   };
 
+  const Item = (appColor) => {
+    const { fadeIn, fadeOut, animated } = useAnimateFade();
+
+    return <Pressable
+      key={appColor.item.name}
+      onPressIn={fadeIn}
+      onPressOut={fadeOut}
+      onPress={() => {
+        setColorStorage(appColor);
+      }}
+    >
+      <ListItem key={appColor.item.name} bottomDivider containerStyle={containerBg()}>
+        <Animated.View style={[listItems(), { opacity: animated }]}>
+          <>
+            {displayColors(appColor)}
+            <ListItem.Title style={header()}>
+              <Text>{appColor.item.displayName}</Text>
+            </ListItem.Title>
+          </>
+        </Animated.View>
+      </ListItem>
+    </Pressable>
+  }
+
   return (
     <SectionList
       style={{ backgroundColor: color.bodyBg }}
       sections={sections}
-      renderItem={(appColor) => {
-        return (
-          <Pressable
-            key={appColor.item.name}
-            onPress={() => {
-              setColorStorage(appColor);
-            }}
-          >
-            <ListItem key={appColor.item.name} bottomDivider containerStyle={containerBg()}>
-              <View style={listItems()}>
-                <>
-                  {displayColors(appColor)}
-                  <ListItem.Title style={header()}>
-                    <Text>{appColor.item.displayName}</Text>
-                  </ListItem.Title>
-                </>
-              </View>
-            </ListItem>
-          </Pressable>
-        );
-      }}
+      renderItem={(appColor) => Item(appColor)}
     />
   );
 };

@@ -1,7 +1,9 @@
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { type FC } from 'react';
 import {
+  Animated,
   Image,
   type ImageStyle,
   Pressable,
@@ -10,13 +12,14 @@ import {
   View,
   type ViewStyle
 } from 'react-native';
-import { styles } from '../../../../dash.config';
+import { styles, useDash } from '../../../../dash.config';
 import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsStory } from '../../../types/hn-api';
 import { Skeleton } from '../../Skeleton/Skeleton';
 import { pluralize } from '../../../utils/pluralize';
 import { ago } from '../../../utils/ago';
+import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type ComplexStoryProps = {
   data: HackerNewsStory;
@@ -27,6 +30,10 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
   const url = new URL(data.url);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
+  const { fadeIn, fadeOut, animated } = useAnimateFade();
+  const {
+    tokens: { color }
+  } = useDash();
 
   if (metadata == null) {
     return (
@@ -41,6 +48,8 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
       {/* image */}
       {metadata?.image ? (
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           onPress={() => {
             navigation.push('Browser', {
               title: data.title,
@@ -48,12 +57,16 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
             });
           }}
         >
-          <Image style={storyImage(index)} source={{ uri: metadata?.image }} />
+          <Animated.View style={{ opacity: animated }}>
+            <Image style={storyImage(index)} source={{ uri: metadata?.image }} />
+          </Animated.View>
         </Pressable>
       ) : null}
 
       {/* url */}
       <Pressable
+        onPressIn={fadeIn}
+        onPressOut={fadeOut}
         onPress={() => {
           navigation.push('Browser', {
             title: metadata.applicationName || url.hostname,
@@ -61,17 +74,19 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
           });
         }}
       >
-        <View style={hostContainerStyle}>
+        <Animated.View style={[hostContainerStyle, { opacity: animated }]}>
           <Image style={favicon()} source={{ uri: metadata.favicon }} />
 
           <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
             {metadata.applicationName || url.host.replace(/^www\./, '')}
           </Text>
-        </View>
+        </Animated.View>
       </Pressable>
 
       {/* titles */}
       <Pressable
+        onPressIn={fadeIn}
+        onPressOut={fadeOut}
         onPress={() => {
           navigation.push('Browser', {
             title: data.title,
@@ -79,38 +94,51 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
           });
         }}
       >
-        <Text
-          style={storyTitle(index)}
-          adjustsFontSizeToFit
-          numberOfLines={index === 0 && !metadata.image ? 5 : index < 5 && metadata.image ? 4 : 7}
-        >
-          {data.title}
-        </Text>
+        <Animated.View style={{ opacity: animated }}>
+          <Text
+            style={storyTitle(index)}
+            adjustsFontSizeToFit
+            numberOfLines={index === 0 && !metadata.image ? 5 : index < 5 && metadata.image ? 4 : 7}
+          >
+            {data.title}
+          </Text>
+        </Animated.View>
       </Pressable>
 
       {/* secondary info */}
       <View>
         <View style={byLine}>
           <Pressable
+            onPressIn={fadeIn}
+            onPressOut={fadeOut}
             onPress={() => {
               navigation.push('User', { id: data.by });
             }}
           >
-            <Text style={byStyle()}>@{data.by}</Text>
+            <Animated.View style={{ opacity: animated }}>
+              <Text style={byStyle()}>@{data.by}</Text>
+            </Animated.View>
           </Pressable>
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 
-        <Text style={footerText()}>
-          <Text style={score()}>⇧{data.score}</Text> &bull;{' '}
-          <Pressable
-            onPress={() => {
-              navigation.push('Thread', { id: data.id });
-            }}
-          >
-            <Text style={commentsStyle}>{pluralize(data.descendants, 'comment')}</Text>
-          </Pressable>
-        </Text>
+        <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
+          onPress={() => {
+            navigation.push('Thread', { id: data.id });
+          }}
+        >
+          <Animated.View style={[footerText(), { opacity: animated }]}>
+            <Text style={score()}>
+              <AntDesignIcon size={13} name="arrowup" color={color.primary} />
+              <Text>{data.score} &bull;{' '}</Text>
+            </Text>
+            <Animated.View style={{ opacity: animated }}>
+              <Text style={commentsStyle()}>{pluralize(data.descendants, 'comment')}</Text>
+            </Animated.View>
+          </Animated.View>
+        </Pressable>
       </View>
     </View>
   );
@@ -184,7 +212,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
   fontWeight: '300',
   padding: t.space.sm,
   paddingTop: 0,
-  paddingLeft: 0
+  paddingLeft: 0,
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
@@ -196,7 +224,12 @@ const agoStyle = styles.one<TextStyle>((t) => ({
 const footerText = styles.one<TextStyle>((t) => ({
   fontWeight: '600',
   color: t.color.textAccent,
-  fontSize: t.type.size.xs
+  fontSize: t.type.size.xs,
+  display: "flex",
+  flexDirection: "row",
 }));
 
-const commentsStyle: TextStyle = { fontWeight: '300' };
+const commentsStyle = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
+  fontWeight: '300',
+}));

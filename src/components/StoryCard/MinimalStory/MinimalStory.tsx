@@ -11,7 +11,6 @@ import {
   Pressable,
   Text,
   type TextStyle,
-  TouchableNativeFeedback,
   View,
   type ViewStyle
 } from 'react-native';
@@ -22,6 +21,7 @@ import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsStory } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
 import { usePreferencesStore } from '../../../contexts/store';
+import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type MinimalStoryProps = {
   data: HackerNewsStory;
@@ -32,6 +32,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const url = new URL(data.url);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
+  const { fadeIn, fadeOut, animated } = useAnimateFade();
   const displaySource = usePreferencesStore((state) => state.displaySource);
   const thumbnailSize = usePreferencesStore((state) => state.thumbnailSize);
   const thumbnailPosition = usePreferencesStore((state) => state.thumbnailPosition);
@@ -89,23 +90,6 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
         </Pressable>
       );
     }
-  };
-
-  const animated = new Animated.Value(2);
-
-  const fadeIn = () => {
-    Animated.timing(animated, {
-      toValue: 0.1,
-      duration: 100,
-      useNativeDriver: true,
-    }).start();
-  };
-  const fadeOut = () => {
-    Animated.timing(animated, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
   };
 
   return (

@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import {
+  Animated,
   Dimensions,
   Pressable,
   SafeAreaView,
@@ -11,6 +12,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { styles, useDash } from '../../../dash.config'
+import { useAnimateFade } from '../../hooks/use-animate-fade'
 import { type StackParamList } from '../../screens/routers'
 
 export type LogoHeaderProps = {
@@ -23,13 +25,23 @@ export const LogoHeader = ({ title }: LogoHeaderProps) => {
   const {
     tokens: { color }
   } = useDash()
+  const { fadeIn, fadeOut, animated } = useAnimateFade();
+
+
   return (
     <SafeAreaView style={headerContainer()}>
       <View style={header()}>
         <View style={logoContainer()}>
           {navigation.canGoBack() && (
-            <Pressable style={icon()} onPress={() => { navigation.goBack() }}>
-              <Icon name="chevron-back" color={color.textPrimary} size={18} />
+            <Pressable
+              onPressIn={fadeIn}
+              onPressOut={fadeOut}
+              style={icon()}
+              onPress={() => { navigation.goBack() }}
+            >
+              <Animated.View style={{ opacity: animated }}>
+                <Icon name="chevron-back" color={color.textPrimary} size={18} />
+              </Animated.View>
             </Pressable>
           )}
           <Text style={headerText()}>{title}</Text>

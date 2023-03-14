@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as htmlEntities from 'html-entities';
 import stripTags from 'striptags';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Pressable, Text, type TextStyle, View, type ViewStyle } from 'react-native';
+import { Animated, Pressable, Text, type TextStyle, View, type ViewStyle } from 'react-native';
 import { type FC } from 'react';
 import { type HackerNewsComment } from '../../../types/hn-api';
 import { type StackParamList } from '../../../screens/routers';
@@ -11,6 +11,7 @@ import { styles } from '../../../../dash.config';
 import { pluralize } from '../../../utils/pluralize';
 import { useParents } from '../../../hooks/use-parents';
 import { Skeleton } from '../../Skeleton/Skeleton';
+import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type CommentStoryProps = {
   data: HackerNewsComment;
@@ -20,6 +21,7 @@ type CommentStoryProps = {
 export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const parents = useParents(data.parent);
+  const { fadeIn, fadeOut, animated } = useAnimateFade();
 
   if (parents.data == null) {
     return (
@@ -33,35 +35,47 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
   return (
     <View style={storyContainer(index)}>
       <Pressable
+        onPressIn={fadeIn}
+        onPressOut={fadeOut}
         onPress={() => {
           navigation.push('Thread', {
             id: parentData.id
           });
         }}
       >
-        <Text style={commentStoryTitle()}>{parentData.title}</Text>
+        <Animated.View style={{ opacity: animated }}>
+          <Text style={commentStoryTitle()}>{parentData.title}</Text>
+        </Animated.View>
       </Pressable>
       <Pressable
+        onPressIn={fadeIn}
+        onPressOut={fadeOut}
         onPress={() => {
           navigation.push('Thread', {
             id: data.id
           });
         }}
       >
-        <Text ellipsizeMode="tail" style={commentStoryText()} numberOfLines={4}>
-          {stripTags(htmlEntities.decode(data.text), [], ' ')}
-        </Text>
+        <Animated.View style={{ opacity: animated }}>
+          <Text ellipsizeMode="tail" style={commentStoryText()} numberOfLines={4}>
+            {stripTags(htmlEntities.decode(data.text), [], ' ')}
+          </Text>
+        </Animated.View>
       </Pressable>
 
       <View style={byLine}>
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           onPress={() => {
             navigation.push('Thread', {
               id: data.id
             });
           }}
         >
-          <Text style={byStyle()}>{pluralize(data.kids?.length ?? 0, 'reply', 'replies')}</Text>
+          <Animated.View style={{ opacity: animated }}>
+            <Text style={byStyle()}>{pluralize(data.kids?.length ?? 0, 'reply', 'replies')}</Text>
+          </Animated.View>
         </Pressable>
         <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
       </View>

@@ -10,10 +10,12 @@ import { type StackParamList } from '../routers';
 import { styles, useDash } from '../../../dash.config';
 import { usePreferences } from '../Settings/usePreferences';
 import { listItems, ListItemType } from '../../contexts/store';
+import { useAnimateFade } from '../../hooks/use-animate-fade';
 
 export const Home: FC<ListItemType> = () => {
   useDash();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+
   const [homeOrderList, setHomeOrderList] = usePreferences('homeOrderList', listItems);
   const [homeItems, setHomeItems] = useState(homeOrderList != null ? homeOrderList[0] : listItems);
   const {
@@ -32,23 +34,7 @@ export const Home: FC<ListItemType> = () => {
   }, [homeOrderList]);
 
   const Item = (item, drag) => {
-
-    const animated = new Animated.Value(1);
-
-    const fadeIn = () => {
-      Animated.timing(animated, {
-        toValue: 0.1,
-        duration: 100,
-        useNativeDriver: true,
-      }).start();
-    };
-    const fadeOut = () => {
-      Animated.timing(animated, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    };
+    const { fadeIn, fadeOut, animated } = useAnimateFade();
 
     return <ScaleDecorator>
       <Pressable
