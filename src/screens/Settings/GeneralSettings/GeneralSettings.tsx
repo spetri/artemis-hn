@@ -77,7 +77,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   );
 
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
-  const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition ?? 'Right');
+  const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition ?? 'right');
   const [buttonThumbnailSize, setButtonThumbnailSize] = useState<string | number>(thumbnailSize ?? 'Small');
   const [buttonThumbnailPosition, setButtonThumbnailPosition] = useState(
     thumbnailPosition ?? 'Small'
@@ -143,7 +143,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
         <Switch
           value={displayReplies}
           onValueChange={(value) => {
-            setDisplayReplies(value);
+            setDisplayReplies(!value);
           }}
         />
       )
@@ -158,7 +158,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
         <Switch
           value={displayLargeThumbnails}
           onValueChange={(value) => {
-            setDisplayLargeThumbnails(value);
+            setDisplayLargeThumbnails(!value);
           }}
         />
       )
@@ -173,7 +173,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
         <Switch
           value={showJumpButton}
           onValueChange={(value) => {
-            setShowJumpButton(value);
+            setShowJumpButton(!value);
           }}
         />
       )
@@ -185,20 +185,21 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-move',
       type: (
         <Button
+          buttonStyle={{ backgroundColor: color.primary }}
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
-                options: ['Left', 'Right', 'Cancel']
+                options: ['left', 'right', 'Cancel']
               },
               (index) => {
                 switch (index) {
                   case 0:
-                    setJumpButtonPosition('Left');
-                    setButtonJumpText('Left');
+                    setJumpButtonPosition('left');
+                    setButtonJumpText('left');
                     break;
                   case 1:
-                    setButtonJumpText('Right');
-                    setJumpButtonPosition('Right');
+                    setButtonJumpText('right');
+                    setJumpButtonPosition('right');
                     break;
                   case 2:
                     break;
@@ -218,7 +219,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-compass-outline',
       onPress: () => setOpenLinkInBrowser(!openLinkInBrowser),
       type: (
-        <Switch value={openLinkInBrowser} onValueChange={(value) => setOpenLinkInBrowser(value)} />
+        <Switch value={openLinkInBrowser} onValueChange={(value) => setOpenLinkInBrowser(!value)} />
       )
     },
     {
@@ -227,7 +228,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       subheader: 'Show link source',
       iconName: 'ios-link-outline',
       onPress: () => setDisplaySource(!displaySource),
-      type: <Switch value={displaySource} onValueChange={(value) => setDisplaySource(value)} />
+      type: <Switch value={displaySource} onValueChange={(value) => setDisplaySource(!value)} />
     },
     {
       id: '8',
@@ -236,6 +237,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-image',
       type: (
         <Button
+          buttonStyle={{ backgroundColor: color.primary }}
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
@@ -274,6 +276,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-hand-left-outline',
       type: (
         <Button
+          buttonStyle={{ backgroundColor: color.primary }}
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {

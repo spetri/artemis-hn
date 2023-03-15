@@ -14,7 +14,7 @@ export const Skeleton: FC<SkeletonProps> = (props) => {
   const [fadeAnim] = useState(() => new Animated.Value(0))
 
   useLayoutEffect(() => {
-    const animation = Animated.loop(
+    Animated.loop(
       Animated.sequence([
         Animated.timing(fadeAnim, {
           toValue: 0.5,
@@ -27,8 +27,7 @@ export const Skeleton: FC<SkeletonProps> = (props) => {
           useNativeDriver: true
         })
       ])
-    )
-    animation.start()
+    ).start();
   }, [fadeAnim])
 
   return (

@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { defaultPreferences } from '../screens/Settings/useTheme';
 
 type ThumbnailSizeType = 55 | 65 | 75;
-type PositionType = 'Left' | 'Right';
+type PositionType = 'left' | 'right';
 
 export type ListItemType = {
   id: string;

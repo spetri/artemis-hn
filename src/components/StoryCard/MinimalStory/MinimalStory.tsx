@@ -2,7 +2,7 @@ import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
-import { type FC } from 'react';
+import { type FC, useEffect } from 'react';
 import {
   Animated,
   Dimensions,
@@ -22,6 +22,7 @@ import { type HackerNewsStory } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
 import { usePreferencesStore } from '../../../contexts/store';
 import { useAnimateFade } from '../../../hooks/use-animate-fade';
+
 
 type MinimalStoryProps = {
   data: HackerNewsStory;

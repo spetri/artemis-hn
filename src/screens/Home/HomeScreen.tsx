@@ -22,9 +22,9 @@ import { Stories } from './../../../src/screens/Stories/Stories';
 import { User } from './../../../src/screens/User/User';
 import { Browser } from './../../../src/screens/Browser/Browser';
 import { Home } from './../../../src/screens/Home/Home';
+import { Thread } from './../../../src/screens/Thread/Thread';
 import { listItems, usePreferencesStore } from './../../../src/contexts/store';
 import { useAnimateFade } from '../../hooks/use-animate-fade';
-import { Thread } from '../Thread/Thread';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -138,11 +138,18 @@ export const HomeScreen = () => {
         options={{
           headerTitle: () => screenHeader(),
           headerRight: () => (
-            <Pressable onPress={actionSheetOptions}>
-              <View>
-                <IoniconIcon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
-              </View>
-            </Pressable>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <Pressable onPress={actionSheetOptions}>
+                <View>
+                  <IoniconIcon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
+                </View>
+              </Pressable>
+              <Pressable onPress={actionSheetOptions}>
+                <View>
+                  <IoniconIcon name="chevron-forward" style={{ color: color.primary }} size={30} />
+                </View>
+              </Pressable>
+            </View>
           )
         }}
       />
