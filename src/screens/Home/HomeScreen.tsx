@@ -23,8 +23,8 @@ import { User } from './../../../src/screens/User/User';
 import { Browser } from './../../../src/screens/Browser/Browser';
 import { Home } from './../../../src/screens/Home/Home';
 import { listItems, usePreferencesStore } from './../../../src/contexts/store';
-import { Thread } from './../../../src/screens/Thread/Thread';
 import { useAnimateFade } from '../../hooks/use-animate-fade';
+import { Thread } from '../Thread/Thread';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();

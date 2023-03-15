@@ -1,6 +1,6 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import { type FC, useEffect, useState } from 'react';
-import { Animated, Pressable, SafeAreaView, type TextStyle, View, type ViewStyle } from 'react-native';
+import { Animated, Pressable, SafeAreaView, type TextStyle, type ViewStyle } from 'react-native';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { ListItem } from '@rneui/themed';
