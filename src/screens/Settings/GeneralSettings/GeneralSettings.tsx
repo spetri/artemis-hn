@@ -5,6 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type FC, useCallback, useLayoutEffect, useState } from 'react';
 import {
+  Animated,
   Pressable,
   SafeAreaView,
   SectionList,
@@ -23,6 +24,7 @@ import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } f
 import Slider from '@react-native-community/slider';
 import { usePreferencesStore } from '../../../contexts/store';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
@@ -320,18 +322,26 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   }, [baseTypeSize]);
 
   const twoColumn = (item) => {
+    const { fadeIn, fadeOut, animated } = useAnimateFade();
+
     return (
-      <Pressable onPress={item.onPress}>
-        <ListItem bottomDivider containerStyle={containerBg()}>
-          <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
-          <ListItemContent>
-            <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-            <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
-          </ListItemContent>
-          <View>
-            <Text>{item.type}</Text>
-          </View>
-        </ListItem>
+      <Pressable
+        onPressIn={fadeIn}
+        onPressOut={fadeOut}
+        onPress={item.onPress}
+      >
+        <Animated.View style={{ opacity: animated }}>
+          <ListItem bottomDivider containerStyle={containerBg()}>
+            <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
+            <ListItemContent>
+              <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+              <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
+            </ListItemContent>
+            <View>
+              <Text>{item.type}</Text>
+            </View>
+          </ListItem>
+        </Animated.View>
       </Pressable>
     );
   };

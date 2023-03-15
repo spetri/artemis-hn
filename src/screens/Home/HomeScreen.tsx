@@ -3,6 +3,7 @@ import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import {
+  Animated,
   Pressable,
   Text,
   TextStyle,
@@ -23,17 +24,43 @@ import { Browser } from './../../../src/screens/Browser/Browser';
 import { Home } from './../../../src/screens/Home/Home';
 import { listItems, usePreferencesStore } from './../../../src/contexts/store';
 import { Thread } from './../../../src/screens/Thread/Thread';
+import { useAnimateFade } from '../../hooks/use-animate-fade';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
   const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
   const setDisplayLargeThumbnails = usePreferencesStore((state) => state.setDisplayLargeThumbnails);
+  const { fadeIn, fadeOut, animated } = useAnimateFade();
 
   const actionSheet = useActionSheet();
   const {
     tokens: { color }
   } = useDash();
+
+  const Items = (topic) => {
+    const { fadeIn, fadeOut, animated } = useAnimateFade();
+
+    return <Pressable
+      onPressIn={fadeIn}
+      onPressOut={fadeOut}
+      key={topic.id}
+      onPress={() => {
+        setSwitcher(false);
+        navigation.navigate('Stories', topic?.filter ? {
+          filter: topic?.filter
+        } : { filter: "home" });
+      }}
+    >
+      <Animated.View style={{ opacity: animated }}>
+        <ListItem bottomDivider>
+          <ListItem.Content>
+            <ListItem.Title>{topic.header}</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+      </Animated.View>
+    </Pressable>
+  }
 
   const screenHeader = () => {
     return (
@@ -42,15 +69,18 @@ export const HomeScreen = () => {
           onPress={() => {
             setSwitcher(true);
           }}
-          style={switcherView()}
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
         >
-          <Text style={switcherText()}>Stories</Text>
-          <IoniconIcon
-            color={color.textPrimary}
-            size={16}
-            style={switcherIcon()}
-            name="chevron-down-outline"
-          />
+          <Animated.View style={[switcherView(), { opacity: animated }]}>
+            <Text style={switcherText()}>Stories</Text>
+            <IoniconIcon
+              color={color.textPrimary}
+              size={16}
+              style={switcherIcon()}
+              name="chevron-down-outline"
+            />
+          </Animated.View>
         </Pressable>
         <Dialog
           isVisible={switcher}
@@ -59,23 +89,7 @@ export const HomeScreen = () => {
           }}
         >
           <Dialog.Title title="Switch HN" />
-          {listItems.map((topic) => (
-            <Pressable
-              key={topic.id}
-              onPress={() => {
-                setSwitcher(false);
-                navigation.navigate('Stories', topic?.filter ? {
-                  filter: topic?.filter
-                } : { filter: "home" });
-              }}
-            >
-              <ListItem bottomDivider>
-                <ListItem.Content>
-                  <ListItem.Title>{topic.header}</ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
-            </Pressable>
-          ))}
+          {listItems.map((topic) => Items(topic))}
         </Dialog>
       </>
     );

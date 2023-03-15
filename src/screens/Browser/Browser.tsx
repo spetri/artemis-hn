@@ -4,6 +4,7 @@ import { WebView, WebViewNavigation } from 'react-native-webview';
 import { responsiveSize, styles, useDash } from '../../../dash.config';
 import { type StackParamList } from '../routers';
 import {
+  Animated,
   Platform,
   Pressable,
   SafeAreaView,
@@ -17,6 +18,7 @@ import {
 import { createElement, useRef, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Icon } from '../../components/Icon/Icon';
+import { useAnimateFade } from '../../hooks/use-animate-fade';
 
 export type BrowserProps = NativeStackScreenProps<StackParamList, 'Browser'>;
 
@@ -27,17 +29,24 @@ export const Browser = ({ navigation, route }: BrowserProps) => {
   const dimensions = useWindowDimensions();
   const ref = useRef<WebView>(null);
   const [navigationState, setNavigationState] = useState<WebViewNavigation | null>(null);
+  const { fadeIn, fadeOut, animated } = useAnimateFade();
 
   return (
     <View style={container()}>
       <View style={modalHeader()}>
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           style={closeButton()}
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           onPress={() => {
             navigation.goBack();
           }}
         >
-          <Icon name="x" size={14} color="textAccent" />
+          <Animated.View style={{ opacity: animated }}>
+            <Icon name="x" size={14} color="textAccent" />
+          </Animated.View>
         </Pressable>
 
         <Text style={title()} numberOfLines={1} ellipsizeMode="tail">
@@ -60,32 +69,42 @@ export const Browser = ({ navigation, route }: BrowserProps) => {
 
       <SafeAreaView style={footer()}>
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           style={footerButton()}
           onPress={() => {
             ref.current?.goBack();
           }}
         >
-          <Feather
-            name="chevron-left"
-            size={responsiveSize(24)}
-            color={navigationState?.canGoBack ? color.textPrimary : color.textAccent}
-          />
+          <Animated.View style={{ opacity: animated }}>
+            <Feather
+              name="chevron-left"
+              size={responsiveSize(24)}
+              color={navigationState?.canGoBack ? color.textPrimary : color.textAccent}
+            />
+          </Animated.View>
         </Pressable>
 
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           style={footerButton()}
           onPress={() => {
             ref.current?.goForward();
           }}
         >
-          <Feather
-            name="chevron-right"
-            size={responsiveSize(24)}
-            color={navigationState?.canGoBack ? color.textPrimary : color.textAccent}
-          />
+          <Animated.View style={{ opacity: animated }}>
+            <Feather
+              name="chevron-right"
+              size={responsiveSize(24)}
+              color={navigationState?.canGoBack ? color.textPrimary : color.textAccent}
+            />
+          </Animated.View>
         </Pressable>
 
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           style={footerButton()}
           onPress={async () =>
             await Share.share({
@@ -94,22 +113,28 @@ export const Browser = ({ navigation, route }: BrowserProps) => {
             })
           }
         >
-          {createElement((Platform.OS === 'ios' ? Feather : MaterialCommunityIcons) as any, {
-            name: 'share',
-            size: responsiveSize(20),
-            color: color.textPrimary
-          })}
+          <Animated.View style={{ opacity: animated }}>
+            {createElement((Platform.OS === 'ios' ? Feather : MaterialCommunityIcons) as any, {
+              name: 'share',
+              size: responsiveSize(20),
+              color: color.textPrimary
+            })}
+          </Animated.View>
         </Pressable>
 
         <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
           style={footerButton()}
           onPress={async () => await Linking.openURL(navigationState?.url ?? route.params.url)}
         >
-          <FontAwesome5
-            name={Platform.OS === 'ios' ? 'safari' : 'chrome'}
-            size={responsiveSize(20)}
-            color={color.textPrimary}
-          />
+          <Animated.View style={{ opacity: animated }}>
+            <FontAwesome5
+              name={Platform.OS === 'ios' ? 'safari' : 'chrome'}
+              size={responsiveSize(20)}
+              color={color.textPrimary}
+            />
+          </Animated.View>
         </Pressable>
       </SafeAreaView>
     </View>

@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {
+  Animated,
   Pressable,
   SafeAreaView,
   Text,
@@ -13,6 +14,7 @@ import {
 import { type FC } from 'react'
 import { styles, useDash } from '../../../dash.config'
 import { type StackParamList } from '../../screens/routers'
+import { useAnimateFade } from '../../hooks/use-animate-fade'
 
 export type NavigableHeaderProps = {
   title: string
@@ -29,6 +31,7 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
   useDash()
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>()
   const actionSheet = useActionSheet()
+  const { fadeIn, fadeOut, animated } = useAnimateFade();
 
   return (
     <SafeAreaView style={headerContainer()}>
@@ -37,8 +40,12 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
           <Pressable
             style={navButton('visible')}
             onPress={() => { navigation.goBack() }}
+            onPressIn={fadeIn}
+            onPressOut={fadeOut}
           >
-            <Icon name="ios-chevron-back-sharp" style={icon()} size={18} />
+            <Animated.View style={{ opacity: animated }}>
+              <Icon name="ios-chevron-back-sharp" style={icon()} size={18} />
+            </Animated.View>
           </Pressable>
         )}
         <Text style={titleStyle()} ellipsizeMode="tail">
@@ -49,6 +56,8 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
           ? (
             <Pressable
               style={navButton('visible')}
+              onPressIn={fadeIn}
+              onPressOut={fadeOut}
               onPress={() => {
                 actionSheet.showActionSheetWithOptions(
                   actions.options,
@@ -56,7 +65,9 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
                 )
               }}
             >
-              <Icon name="ellipsis-horizontal" style={icon()} size={18} />
+              <Animated.View style={{ opacity: animated }}>
+                <Icon name="ellipsis-horizontal" style={icon()} size={18} />
+              </Animated.View>
             </Pressable>
           )
           : (

@@ -1,6 +1,7 @@
 import RenderHTML, { MixedStyleRecord, RenderersProps } from 'react-native-render-html';
 import { type FC, memo, useMemo } from 'react';
 import {
+  Animated,
   Pressable,
   Text,
   type TextProps,
@@ -14,6 +15,7 @@ import { type StackParamList } from '../../../routers';
 import { linkify } from '../../../../utils/util';
 import { styles } from '../../../../../dash.config';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAnimateFade } from '../../../../hooks/use-animate-fade';
 
 type ParentCommentType = {
   comment: HackerNewsComment;
@@ -25,6 +27,8 @@ type ParentCommentType = {
 
 export const ParentComment: FC<ParentCommentType> = memo(
   ({ comment, contentWidth, htmlRenderersProps, htmlTagStyles, navigation }) => {
+    const { fadeIn, fadeOut, animated } = useAnimateFade();
+
     const htmlSource = useMemo(
       () => ({
         html: linkify(comment.text)
@@ -37,20 +41,28 @@ export const ParentComment: FC<ParentCommentType> = memo(
         <View style={parentCommentMarker()} />
         <View style={byLine}>
           <Pressable
+            onPressIn={fadeIn}
+            onPressOut={fadeOut}
             onPress={() => {
               navigation.navigate('User', { id: comment.by });
             }}
           >
-            <Text style={byStyle()}>@{comment.by}</Text>
+            <Animated.View style={{ opacity: animated }}>
+              <Text style={byStyle()}>@{comment.by}</Text>
+            </Animated.View>
           </Pressable>
           <Pressable
+            onPressIn={fadeIn}
+            onPressOut={fadeOut}
             onPress={() => {
               navigation.push('Thread', {
                 id: comment.id
               });
             }}
           >
-            <Text style={agoStyle()}>{ago.format(new Date(comment.time * 1000), 'mini')}</Text>
+            <Animated.View style={{ opacity: animated }}>
+              <Text style={agoStyle()}>{ago.format(new Date(comment.time * 1000), 'mini')}</Text>
+            </Animated.View>
           </Pressable>
         </View>
 

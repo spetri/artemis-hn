@@ -8,6 +8,7 @@ import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useMemo, useState } from 'react';
 import {
+  Animated,
   Pressable,
   Text,
   type TextProps,
@@ -29,6 +30,7 @@ import { linkify } from '../../../utils/util';
 import { usePreferences } from '../../Settings/usePreferences';
 import { defaultPreferences } from '../../Settings/useTheme';
 import { usePreferencesStore } from '../../../contexts/store';
+import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type CommentProps = {
   id: number;
@@ -41,6 +43,7 @@ export const Comment: FC<CommentProps> = memo(
     const [collapsed, setCollapsed] = useState(false);
     const actionSheet = useActionSheet();
     const [commentColors] = usePreferences('commentColors', defaultPreferences.commentColors);
+    const { fadeIn, fadeOut, animated } = useAnimateFade();
 
     const {
       theme,
@@ -101,21 +104,31 @@ export const Comment: FC<CommentProps> = memo(
     };
 
     const rightSwipeActions = (reset) => {
+      const { fadeIn, fadeOut, animated } = useAnimateFade();
+
       return collapsed ? (
-        <Pressable onPress={() => onCollapse(reset)}>
-          <View style={collapsedView()}>
+        <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
+          onPress={() => onCollapse(reset)}
+        >
+          <Animated.View style={[collapsedView(), { opacity: animated }]}>
             <Text style={collapsedText()}>
               <MaterialIcon name="arrow-collapse-down" color={color.textPrimary} size={20} />
             </Text>
-          </View>
+          </Animated.View>
         </Pressable>
       ) : (
-        <Pressable onPress={() => onCollapse(reset)}>
-          <View style={openView()}>
+        <Pressable
+          onPressIn={fadeIn}
+          onPressOut={fadeOut}
+          onPress={() => onCollapse(reset)}
+        >
+          <Animated.View style={[openView(), { opacity: animated }]}>
             <Text style={openText()}>
               <MaterialIcon name="arrow-collapse-up" color={color.textPrimary} size={30} />
             </Text>
-          </View>
+          </Animated.View>
         </Pressable>
       );
     };
@@ -171,36 +184,52 @@ export const Comment: FC<CommentProps> = memo(
           rightStyle={{ backgroundColor: color.bodyBg }}
           style={noMarginPadding()}
         >
-          <Pressable onPress={() => onCollapse(() => collapsed)} style={width100()}>
-            <View
-              style={commentContainer({
+          <Pressable
+            onPressIn={fadeIn}
+            onPressOut={fadeOut}
+            onPress={() => onCollapse(() => collapsed)} style={width100()}>
+            <Animated.View
+              style={[commentContainer({
                 depth,
                 commentColors:
                   commentColors != null ? color[commentColors?.[Math.floor(depth)]] : commentColors
-              })}
+              }), { opacity: animated }]}
             >
               <View style={byLine(depth)}>
                 <Pressable
+                  onPressIn={fadeIn}
+                  onPressOut={fadeOut}
                   onPress={() => {
                     navigation.navigate('User', { id: comment.by });
                   }}
                 >
-                  <Text style={byStyle()}>{comment.by}</Text>
+                  <Animated.View style={{ opacity: animated }}>
+                    <Text style={byStyle()}>{comment.by}</Text>
+                  </Animated.View>
                 </Pressable>
                 <View style={pressableThread()}>
                   <Pressable
+                    onPressIn={fadeIn}
+                    onPressOut={fadeOut}
                     onPress={() => {
                       navigation.push('Thread', {
                         id: comment.id
                       });
                     }}
                   >
-                    <Text style={agoStyle()}>
-                      {ago.format(new Date(comment.time * 1000), 'mini')}
-                    </Text>
+                    <Animated.View style={{ opacity: animated }}>
+                      <Text style={agoStyle()}>
+                        {ago.format(new Date(comment.time * 1000), 'mini')}
+                      </Text>
+                    </Animated.View>
                   </Pressable>
-                  <Pressable onPress={actionSheetOptions}>
-                    <Ionicon name="ellipsis-horizontal" color={color.textPrimary} size={18} />
+                  <Pressable
+                    onPressIn={fadeIn}
+                    onPressOut={fadeOut}
+                    onPress={actionSheetOptions}>
+                    <Animated.View style={{ opacity: animated }}>
+                      <Ionicon name="ellipsis-horizontal" color={color.textPrimary} size={18} />
+                    </Animated.View>
                   </Pressable>
                 </View>
               </View>
@@ -220,7 +249,7 @@ export const Comment: FC<CommentProps> = memo(
                   />
                 </Collapsible>
               )}
-            </View>
+            </Animated.View>
           </Pressable>
         </ListItem.Swipeable>
 
@@ -241,13 +270,17 @@ export const Comment: FC<CommentProps> = memo(
             })}
           >
             <Pressable
+              onPressIn={fadeIn}
+              onPressOut={fadeOut}
               onPress={() => {
                 setShowingReplies((current) => !current);
               }}
             >
-              <Text style={replies(depth)}>
-                {pluralize(comment.kids?.length ?? 0, 'reply', 'replies')}
-              </Text>
+              <Animated.View style={{ opacity: animated }}>
+                <Text style={replies(depth)}>
+                  {pluralize(comment.kids?.length ?? 0, 'reply', 'replies')}
+                </Text>
+              </Animated.View>
             </Pressable>
           </View>
         )}

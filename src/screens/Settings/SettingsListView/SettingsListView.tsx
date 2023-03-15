@@ -2,6 +2,7 @@ import { type FC } from 'react';
 import * as Application from 'expo-application';
 import * as Updates from 'expo-updates';
 import {
+  Animated,
   Pressable,
   SafeAreaView,
   SectionList,
@@ -15,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { type StackParamList } from '../../routers';
 import { styles, useDash } from '../../../../dash.config';
+import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type ListItemType = Array<{
   id: string;
@@ -56,24 +58,32 @@ export const SettingsListView: FC = () => {
     }
   ];
 
+  const items = (item) => {
+    const { fadeIn, fadeOut, animated } = useAnimateFade();
+
+    return <Pressable
+      onPressIn={fadeIn}
+      onPressOut={fadeOut}
+      onPress={item.navigate}
+    >
+      <Animated.View style={[{ display: 'flex', flexDirection: 'row' }, { opacity: animated }]}>
+        <Text style={imageContainer}>
+          <Icon name={item.iconName} color={color.textPrimary} size={18} />
+        </Text>
+        <View style={row()}>
+          <Text style={header()}>{item.header}</Text>
+        </View>
+      </Animated.View>
+    </Pressable>
+  }
+
   return (
     <SafeAreaView style={containerBg()}>
       <View style={container()}>
         <SectionList
           ItemSeparatorComponent={() => <View style={listItemSeparatorStyle()} />}
           sections={[{ title: 'Topics', data: listItems }]}
-          renderItem={({ item }) => (
-            <Pressable onPress={item.navigate}>
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
-                <Text style={imageContainer}>
-                  <Icon name={item.iconName} color={color.textPrimary} size={18} />
-                </Text>
-                <View style={row()}>
-                  <Text style={header()}>{item.header}</Text>
-                </View>
-              </View>
-            </Pressable>
-          )}
+          renderItem={({ item }) => items(item)}
         />
         <Text
           style={version()}
