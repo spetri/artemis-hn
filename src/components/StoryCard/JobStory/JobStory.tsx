@@ -4,22 +4,20 @@ import stripTags from 'striptags';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { type FC } from 'react';
 import {
-  Animated,
   Image,
   type ImageStyle,
-  Pressable,
   Text,
   type TextStyle,
+  TouchableHighlight,
   View,
   type ViewStyle
 } from 'react-native';
-import { styles } from '../../../../dash.config';
+import { styles, useDash } from '../../../../dash.config';
 import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsJob } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
 import { Skeleton } from '../../Skeleton/Skeleton';
-import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type JobsStory = {
   data: HackerNewsJob;
@@ -30,7 +28,9 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
   const url = data.url ? new URL(data.url) : undefined;
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
+  const {
+    tokens: { color }
+  } = useDash();
 
   if (metadata == null) {
     return (
@@ -43,9 +43,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
   return (
     <View style={storyContainer(index)}>
       {url != null && metadata?.image ? (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Browser', {
               title: data.title,
@@ -53,16 +51,14 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
             });
           }}
         >
-          <Animated.View style={{ opacity: animated }}>
+          <View>
             <Image style={storyImage(index)} source={{ uri: metadata?.image }} />
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       ) : null}
 
       {url != null && (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Browser', {
               title: metadata.applicationName || url.hostname,
@@ -70,19 +66,17 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
             });
           }}
         >
-          <Animated.View style={[hostContainerStyle, { opacity: animated }]}>
+          <View style={hostContainerStyle}>
             <Image style={favicon()} source={{ uri: metadata.favicon }} />
 
             <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
               {metadata.applicationName || url.host.replace(/^www\./, '')}
             </Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       )}
 
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           if (url != null) {
             navigation.push('Browser', {
@@ -96,7 +90,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
           }
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <Text
             style={storyTitle(index)}
             adjustsFontSizeToFit
@@ -104,13 +98,11 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
           >
             {data.title}
           </Text>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       {data.text && (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             if (url != null) {
               navigation.push('Browser', {
@@ -124,27 +116,25 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
             }
           }}
         >
-          <Animated.View style={{ opacity: animated }}>
+          <View>
             <Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
               {stripTags(htmlEntities.decode(data.text), [], ' ')}
             </Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       )}
 
       <View>
         <View style={byLine}>
-          <Pressable
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
+          <TouchableHighlight underlayColor={color.accentLight}
             onPress={() => {
               navigation.push('User', { id: data.by });
             }}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Text style={byStyle()}>@{data.by}</Text>
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
       </View>

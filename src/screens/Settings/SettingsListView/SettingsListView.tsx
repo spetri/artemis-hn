@@ -3,11 +3,11 @@ import * as Application from 'expo-application';
 import * as Updates from 'expo-updates';
 import {
   Animated,
-  Pressable,
   SafeAreaView,
   SectionList,
   Text,
   type TextStyle,
+  TouchableHighlight,
   View,
   type ViewStyle
 } from 'react-native';
@@ -59,22 +59,18 @@ export const SettingsListView: FC = () => {
   ];
 
   const items = (item) => {
-    const { fadeIn, fadeOut, animated } = useAnimateFade();
-
-    return <Pressable
-      onPressIn={fadeIn}
-      onPressOut={fadeOut}
+    return <TouchableHighlight underlayColor={color.accentLight}
       onPress={item.navigate}
     >
-      <Animated.View style={[{ display: 'flex', flexDirection: 'row' }, { opacity: animated }]}>
+      <View style={{ display: 'flex', flexDirection: 'row' }}>
         <Text style={imageContainer}>
           <Icon name={item.iconName} color={color.textPrimary} size={18} />
         </Text>
         <View style={row()}>
           <Text style={header()}>{item.header}</Text>
         </View>
-      </Animated.View>
-    </Pressable>
+      </View>
+    </TouchableHighlight>
   }
 
   return (

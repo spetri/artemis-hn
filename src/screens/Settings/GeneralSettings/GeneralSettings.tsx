@@ -5,12 +5,11 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type FC, useCallback, useLayoutEffect, useState } from 'react';
 import {
-  Animated,
-  Pressable,
   SafeAreaView,
   SectionList,
   Text,
   type TextStyle,
+  TouchableHighlight,
   View,
   type ViewStyle
 } from 'react-native';
@@ -24,7 +23,6 @@ import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } f
 import Slider from '@react-native-community/slider';
 import { usePreferencesStore } from '../../../contexts/store';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
@@ -325,15 +323,12 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   }, [baseTypeSize]);
 
   const twoColumn = (item) => {
-    const { fadeIn, fadeOut, animated } = useAnimateFade();
 
     return (
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={item.onPress}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <ListItem bottomDivider containerStyle={containerBg()}>
             <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
             <ListItemContent>
@@ -344,8 +339,8 @@ export const GeneralSettings: FC<SettingsProps> = () => {
               <Text>{item.type}</Text>
             </View>
           </ListItem>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
     );
   };
 
@@ -394,13 +389,13 @@ const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
   backgroundColor: t.color.accent
 }));
 
-const sliderContainer = styles.one<TextStyle>((t) => ({
+const sliderContainer = styles.one<TextStyle>(() => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center'
 }));
 
-const slider = styles.one<TextStyle>((t) => ({
+const slider = styles.one<TextStyle>(() => ({
   display: 'flex',
   marginRight: 1,
   width: 100

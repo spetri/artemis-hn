@@ -3,10 +3,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { type FC } from 'react';
 import {
-  Animated,
   Image,
   type ImageStyle,
-  Pressable,
   Text,
   type TextStyle,
   View,
@@ -19,7 +17,7 @@ import { type HackerNewsStory } from '../../../types/hn-api';
 import { Skeleton } from '../../Skeleton/Skeleton';
 import { pluralize } from '../../../utils/pluralize';
 import { ago } from '../../../utils/ago';
-import { useAnimateFade } from '../../../hooks/use-animate-fade';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 type ComplexStoryProps = {
   data: HackerNewsStory;
@@ -30,7 +28,6 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
   const url = new URL(data.url);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
   const {
     tokens: { color }
   } = useDash();
@@ -47,9 +44,7 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
     <View style={storyContainer(index)}>
       {/* image */}
       {metadata?.image ? (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Browser', {
               title: data.title,
@@ -57,16 +52,14 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
             });
           }}
         >
-          <Animated.View style={{ opacity: animated }}>
+          <View>
             <Image style={storyImage(index)} source={{ uri: metadata?.image }} />
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       ) : null}
 
       {/* url */}
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Browser', {
             title: metadata.applicationName || url.hostname,
@@ -74,19 +67,17 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
           });
         }}
       >
-        <Animated.View style={[hostContainerStyle, { opacity: animated }]}>
+        <View style={hostContainerStyle}>
           <Image style={favicon()} source={{ uri: metadata.favicon }} />
 
           <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
             {metadata.applicationName || url.host.replace(/^www\./, '')}
           </Text>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       {/* titles */}
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Browser', {
             title: data.title,
@@ -94,7 +85,7 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
           });
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <Text
             style={storyTitle(index)}
             adjustsFontSizeToFit
@@ -102,43 +93,39 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
           >
             {data.title}
           </Text>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       {/* secondary info */}
       <View>
         <View style={byLine}>
-          <Pressable
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
+          <TouchableHighlight underlayColor={color.accentLight}
             onPress={() => {
               navigation.push('User', { id: data.by });
             }}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Text style={byStyle()}>@{data.by}</Text>
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Thread', { id: data.id });
           }}
         >
-          <Animated.View style={[footerText(), { opacity: animated }]}>
+          <View style={footerText()}>
             <Text style={score()}>
               <AntDesignIcon size={13} name="arrowup" color={color.primary} />
               <Text>{data.score} &bull;{' '}</Text>
             </Text>
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Text style={commentsStyle()}>{pluralize(data.descendants, 'comment')}</Text>
-            </Animated.View>
-          </Animated.View>
-        </Pressable>
+            </View>
+          </View>
+        </TouchableHighlight>
       </View>
     </View>
   );

@@ -3,10 +3,9 @@ import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import {
-  Animated,
-  Pressable,
   Text,
   TextStyle,
+  TouchableHighlight,
   View,
   ViewStyle,
 } from 'react-native';
@@ -24,14 +23,12 @@ import { Browser } from './../../../src/screens/Browser/Browser';
 import { Home } from './../../../src/screens/Home/Home';
 import { Thread } from './../../../src/screens/Thread/Thread';
 import { listItems, usePreferencesStore } from './../../../src/contexts/store';
-import { useAnimateFade } from '../../hooks/use-animate-fade';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
   const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
   const setDisplayLargeThumbnails = usePreferencesStore((state) => state.setDisplayLargeThumbnails);
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
 
   const actionSheet = useActionSheet();
   const {
@@ -39,11 +36,7 @@ export const HomeScreen = () => {
   } = useDash();
 
   const Items = (topic) => {
-    const { fadeIn, fadeOut, animated } = useAnimateFade();
-
-    return <Pressable
-      onPressIn={fadeIn}
-      onPressOut={fadeOut}
+    return <TouchableHighlight underlayColor={color.accentLight}
       key={topic.id}
       onPress={() => {
         setSwitcher(false);
@@ -52,27 +45,25 @@ export const HomeScreen = () => {
         } : { filter: "home" });
       }}
     >
-      <Animated.View style={{ opacity: animated }}>
+      <View>
         <ListItem bottomDivider>
           <ListItem.Content>
             <ListItem.Title>{topic.header}</ListItem.Title>
           </ListItem.Content>
         </ListItem>
-      </Animated.View>
-    </Pressable>
+      </View>
+    </TouchableHighlight>
   }
 
   const screenHeader = () => {
     return (
       <>
-        <Pressable
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             setSwitcher(true);
           }}
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
         >
-          <Animated.View style={[switcherView(), { opacity: animated }]}>
+          <View style={switcherView()}>
             <Text style={switcherText()}>Stories</Text>
             <IoniconIcon
               color={color.textPrimary}
@@ -80,8 +71,8 @@ export const HomeScreen = () => {
               style={switcherIcon()}
               name="chevron-down-outline"
             />
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
         <Dialog
           isVisible={switcher}
           onBackdropPress={() => {
@@ -139,16 +130,16 @@ export const HomeScreen = () => {
           headerTitle: () => screenHeader(),
           headerRight: () => (
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <Pressable onPress={actionSheetOptions}>
+              <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
                 <View>
                   <IoniconIcon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
                 </View>
-              </Pressable>
-              <Pressable onPress={actionSheetOptions}>
+              </TouchableHighlight>
+              <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
                 <View>
                   <IoniconIcon name="chevron-forward" style={{ color: color.primary }} size={30} />
                 </View>
-              </Pressable>
+              </TouchableHighlight>
             </View>
           )
         }}

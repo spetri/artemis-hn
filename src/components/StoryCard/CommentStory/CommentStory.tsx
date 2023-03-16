@@ -2,16 +2,15 @@ import { useNavigation } from '@react-navigation/native';
 import * as htmlEntities from 'html-entities';
 import stripTags from 'striptags';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Animated, Pressable, Text, type TextStyle, View, type ViewStyle } from 'react-native';
+import { Text, type TextStyle, TouchableHighlight, View, type ViewStyle } from 'react-native';
 import { type FC } from 'react';
 import { type HackerNewsComment } from '../../../types/hn-api';
 import { type StackParamList } from '../../../screens/routers';
 import { ago } from '../../../utils/ago';
-import { styles } from '../../../../dash.config';
+import { styles, useDash } from '../../../../dash.config';
 import { pluralize } from '../../../utils/pluralize';
 import { useParents } from '../../../hooks/use-parents';
 import { Skeleton } from '../../Skeleton/Skeleton';
-import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type CommentStoryProps = {
   data: HackerNewsComment;
@@ -21,7 +20,9 @@ type CommentStoryProps = {
 export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const parents = useParents(data.parent);
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
+  const {
+    tokens: { color }
+  } = useDash();
 
   if (parents.data == null) {
     return (
@@ -34,49 +35,43 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
 
   return (
     <View style={storyContainer(index)}>
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Thread', {
             id: parentData.id
           });
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <Text style={commentStoryTitle()}>{parentData.title}</Text>
-        </Animated.View>
-      </Pressable>
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+        </View>
+      </TouchableHighlight>
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Thread', {
             id: data.id
           });
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <Text ellipsizeMode="tail" style={commentStoryText()} numberOfLines={4}>
             {stripTags(htmlEntities.decode(data.text), [], ' ')}
           </Text>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       <View style={byLine}>
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Thread', {
               id: data.id
             });
           }}
         >
-          <Animated.View style={{ opacity: animated }}>
+          <View>
             <Text style={byStyle()}>{pluralize(data.kids?.length ?? 0, 'reply', 'replies')}</Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
         <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
       </View>
     </View>

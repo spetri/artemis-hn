@@ -8,11 +8,10 @@ import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useMemo, useState } from 'react';
 import {
-  Animated,
-  Pressable,
   Text,
   type TextProps,
   type TextStyle,
+  TouchableHighlight,
   useWindowDimensions,
   View,
   type ViewStyle
@@ -43,7 +42,6 @@ export const Comment: FC<CommentProps> = memo(
     const [collapsed, setCollapsed] = useState(false);
     const actionSheet = useActionSheet();
     const [commentColors] = usePreferences('commentColors', defaultPreferences.commentColors);
-    const { fadeIn, fadeOut, animated } = useAnimateFade();
 
     const {
       theme,
@@ -107,29 +105,25 @@ export const Comment: FC<CommentProps> = memo(
       const { fadeIn, fadeOut, animated } = useAnimateFade();
 
       return collapsed ? (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => onCollapse(reset)}
         >
-          <Animated.View style={[collapsedView(), { opacity: animated }]}>
+          <View style={collapsedView()}>
             <Text style={collapsedText()}>
               <MaterialIcon name="arrow-collapse-down" color={color.textPrimary} size={20} />
             </Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       ) : (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => onCollapse(reset)}
         >
-          <Animated.View style={[openView(), { opacity: animated }]}>
+          <View style={openView()}>
             <Text style={openText()}>
               <MaterialIcon name="arrow-collapse-up" color={color.textPrimary} size={30} />
             </Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       );
     };
 
@@ -184,53 +178,45 @@ export const Comment: FC<CommentProps> = memo(
           rightStyle={{ backgroundColor: color.bodyBg }}
           style={noMarginPadding()}
         >
-          <Pressable
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
+          <TouchableHighlight underlayColor={color.accentLight}
             onPress={() => onCollapse(() => collapsed)} style={width100()}>
-            <Animated.View
-              style={[commentContainer({
+            <View
+              style={commentContainer({
                 depth,
                 commentColors:
                   commentColors != null ? color[commentColors?.[Math.floor(depth)]] : commentColors
-              }), { opacity: animated }]}
+              })}
             >
               <View style={byLine(depth)}>
-                <Pressable
-                  onPressIn={fadeIn}
-                  onPressOut={fadeOut}
+                <TouchableHighlight underlayColor={color.accentLight}
                   onPress={() => {
                     navigation.navigate('User', { id: comment.by });
                   }}
                 >
-                  <Animated.View style={{ opacity: animated }}>
+                  <View>
                     <Text style={byStyle()}>{comment.by}</Text>
-                  </Animated.View>
-                </Pressable>
-                <View style={pressableThread()}>
-                  <Pressable
-                    onPressIn={fadeIn}
-                    onPressOut={fadeOut}
+                  </View>
+                </TouchableHighlight>
+                <View style={TouchableHighlightThread()}>
+                  <TouchableHighlight underlayColor={color.accentLight}
                     onPress={() => {
                       navigation.push('Thread', {
                         id: comment.id
                       });
                     }}
                   >
-                    <Animated.View style={{ opacity: animated }}>
+                    <View>
                       <Text style={agoStyle()}>
                         {ago.format(new Date(comment.time * 1000), 'mini')}
                       </Text>
-                    </Animated.View>
-                  </Pressable>
-                  <Pressable
-                    onPressIn={fadeIn}
-                    onPressOut={fadeOut}
+                    </View>
+                  </TouchableHighlight>
+                  <TouchableHighlight underlayColor={color.accentLight}
                     onPress={actionSheetOptions}>
-                    <Animated.View style={{ opacity: animated }}>
+                    <View>
                       <Ionicon name="ellipsis-horizontal" color={color.textPrimary} size={18} />
-                    </Animated.View>
-                  </Pressable>
+                    </View>
+                  </TouchableHighlight>
                 </View>
               </View>
 
@@ -249,8 +235,8 @@ export const Comment: FC<CommentProps> = memo(
                   />
                 </Collapsible>
               )}
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
         </ListItem.Swipeable>
 
         {(showingReplies || displayReplies) &&
@@ -269,19 +255,17 @@ export const Comment: FC<CommentProps> = memo(
                 commentColors != null ? commentColors?.[Math.floor(depth)] : commentColors
             })}
           >
-            <Pressable
-              onPressIn={fadeIn}
-              onPressOut={fadeOut}
+            <TouchableHighlight underlayColor={color.accentLight}
               onPress={() => {
                 setShowingReplies((current) => !current);
               }}
             >
-              <Animated.View style={{ opacity: animated }}>
+              <View>
                 <Text style={replies(depth)}>
                   {pluralize(comment.kids?.length ?? 0, 'reply', 'replies')}
                 </Text>
-              </Animated.View>
-            </Pressable>
+              </View>
+            </TouchableHighlight>
           </View>
         )}
       </>
@@ -294,7 +278,7 @@ const width100 = styles.one<TextStyle>(() => ({
   width: '100%'
 }));
 
-const pressableThread = styles.one<TextStyle>(() => ({
+const TouchableHighlightThread = styles.one<TextStyle>(() => ({
   display: 'flex',
   flexDirection: 'row',
   marginRight: 10

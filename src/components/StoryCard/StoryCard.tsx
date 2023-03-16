@@ -58,7 +58,7 @@ export const StoryCard = memo(
       <CommentStory data={story.data} index={index} />
     ) : story.data.type === 'poll' ? (
       <PollStory data={story.data} index={index} />
-    ) : displayLargeThumbnails ? (
+    ) : !displayLargeThumbnails ? (
       <ComplexStory data={story.data} index={index} />
     ) : (
       <MinimalStory data={story.data} index={index} />

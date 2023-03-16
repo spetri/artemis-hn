@@ -3,14 +3,13 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import * as htmlEntities from 'html-entities';
 import stripTags from 'striptags';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Animated, Pressable, Text, type TextStyle, View, type ViewStyle } from 'react-native';
+import { Text, type TextStyle, TouchableHighlight, View, type ViewStyle } from 'react-native';
 import { type FC } from 'react';
 import { type StackParamList } from '../../../screens/routers';
 import { ago } from '../../../utils/ago';
 import { styles, useDash } from '../../../../dash.config';
 import { pluralize } from '../../../utils/pluralize';
 import { type HackerNewsAsk } from '../../../types/hn-api';
-import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type AskStoryProps = {
   data: HackerNewsAsk;
@@ -19,77 +18,68 @@ type AskStoryProps = {
 
 export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
   const {
     tokens: { color }
   } = useDash();
 
   return (
     <View style={storyContainer(index)}>
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Thread', {
             id: data.id
           });
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <Text style={storyTitle(index)} adjustsFontSizeToFit numberOfLines={index === 0 ? 5 : 7}>
             {data.title}
           </Text>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       {data.text && (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Thread', {
               id: data.id
             });
           }}
         >
-          <Animated.View style={{ opacity: animated }}>
+          <View>
             <Text ellipsizeMode="tail" style={storyText()} numberOfLines={4}>
               {stripTags(htmlEntities.decode(data.text), [], ' ')}
             </Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       )
       }
 
       <View>
         <View style={byLine}>
-          <Pressable
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
+          <TouchableHighlight underlayColor={color.accentLight}
             onPress={() => {
               navigation.push('User', { id: data.by });
             }}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Text style={byStyle()}>{data.by}</Text>
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Thread', { id: data.id });
           }}
         >
-          <Animated.View style={[{ opacity: animated }, footerText()]}>
+          <View style={footerText()}>
             <AntDesignIcon size={13} name="arrowup" color={color.primary} />
             <Text style={score()}>{data.score}&bull;{' '}</Text>
             <Text style={commentsStyle()}>{pluralize(data.descendants, 'comment')}</Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       </View >
     </View >
   );

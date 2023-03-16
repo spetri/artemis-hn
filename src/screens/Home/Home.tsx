@@ -1,6 +1,6 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import { type FC, useEffect, useState } from 'react';
-import { Animated, Pressable, SafeAreaView, type TextStyle, type ViewStyle } from 'react-native';
+import { SafeAreaView, type TextStyle, TouchableHighlight, type ViewStyle } from 'react-native';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { ListItem } from '@rneui/themed';
@@ -10,7 +10,6 @@ import { type StackParamList } from '../routers';
 import { styles, useDash } from '../../../dash.config';
 import { usePreferences } from '../Settings/usePreferences';
 import { listItems, ListItemType } from '../../contexts/store';
-import { useAnimateFade } from '../../hooks/use-animate-fade';
 
 export const Home: FC<ListItemType> = () => {
   useDash();
@@ -34,12 +33,9 @@ export const Home: FC<ListItemType> = () => {
   }, [homeOrderList]);
 
   const Item = (item, drag) => {
-    const { fadeIn, fadeOut, animated } = useAnimateFade();
 
     return <ScaleDecorator>
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onLongPress={drag}
         onPress={() => {
           navigation.navigate('Stories', item?.filter ? {
@@ -47,16 +43,14 @@ export const Home: FC<ListItemType> = () => {
           } : { filter: "home" });
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
-          <ListItem bottomDivider containerStyle={content()}>
-            <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
-            <ListItemContent>
-              <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-              <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
-            </ListItemContent>
-          </ListItem>
-        </Animated.View>
-      </Pressable>
+        <ListItem bottomDivider containerStyle={content()}>
+          <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
+          <ListItemContent>
+            <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+            <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
+          </ListItemContent>
+        </ListItem>
+      </TouchableHighlight>
     </ScaleDecorator>
   }
 

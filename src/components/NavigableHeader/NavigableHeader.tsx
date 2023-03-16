@@ -3,18 +3,16 @@ import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {
-  Animated,
-  Pressable,
   SafeAreaView,
   Text,
   type TextStyle,
+  TouchableHighlight,
   View,
   type ViewStyle
 } from 'react-native'
 import { type FC } from 'react'
 import { styles, useDash } from '../../../dash.config'
 import { type StackParamList } from '../../screens/routers'
-import { useAnimateFade } from '../../hooks/use-animate-fade'
 
 export type NavigableHeaderProps = {
   title: string
@@ -29,24 +27,24 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
   actions
 }) => {
   useDash()
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>()
-  const actionSheet = useActionSheet()
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const actionSheet = useActionSheet();
+  const {
+    tokens: { color }
+  } = useDash();
 
   return (
     <SafeAreaView style={headerContainer()}>
       <View style={header()}>
         {navigation.canGoBack() && (
-          <Pressable
+          <TouchableHighlight underlayColor={color.accentLight}
             style={navButton('visible')}
             onPress={() => { navigation.goBack() }}
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Icon name="ios-chevron-back-sharp" style={icon()} size={18} />
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
         )}
         <Text style={titleStyle()} ellipsizeMode="tail">
           {title}
@@ -54,10 +52,8 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
 
         {(actions != null)
           ? (
-            <Pressable
+            <TouchableHighlight underlayColor={color.accentLight}
               style={navButton('visible')}
-              onPressIn={fadeIn}
-              onPressOut={fadeOut}
               onPress={() => {
                 actionSheet.showActionSheetWithOptions(
                   actions.options,
@@ -65,10 +61,10 @@ export const NavigableHeader: FC<NavigableHeaderProps> = ({
                 )
               }}
             >
-              <Animated.View style={{ opacity: animated }}>
+              <View>
                 <Icon name="ellipsis-horizontal" style={icon()} size={18} />
-              </Animated.View>
-            </Pressable>
+              </View>
+            </TouchableHighlight>
           )
           : (
             <View style={navButton('hidden')} />
