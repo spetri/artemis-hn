@@ -43,7 +43,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   if (metadata == null) {
     return (
       <View>
-        <ListItem bottomDivider containerStyle={skeletonContainer(index)}>
+        <ListItem containerStyle={skeletonContainer(index)}>
           <Skeleton animation="pulse" style={storySkeletonImage(index)} />
           <ListItem.Content>
             <Skeleton style={storySkeletonTitle(index)} />
@@ -74,7 +74,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
           </View>
         </TouchableHighlight>
       );
-    } else {
+    } else if (metadata?.favicon) {
       return (
         <TouchableHighlight underlayColor={color.accentLight}
           onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
@@ -82,6 +82,15 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
             <Image style={storyImage(thumbnailSize)} source={{ uri: metadata.favicon }} />
           </View>
         </TouchableHighlight>
+      );
+    } else {
+      return (
+        <TouchableHighlight underlayColor={color.accentLight}
+          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
+          <View>
+            <IoniconIcon name="md-newspaper-outline" style={icon(thumbnailSize)} size={40} />
+          </View>
+        </TouchableHighlight >
       );
     }
   };
@@ -207,7 +216,9 @@ const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({
 }));
 
 const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
-  backgroundColor: t.color.bodyBg
+  backgroundColor: t.color.bodyBg,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
 }));
 
 const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
@@ -244,7 +255,7 @@ const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
 const storyImage = styles.lazy<number, ViewStyle>((size) => () => ({
   width: size,
   height: size,
-  borderRadius: 4
+  borderRadius: 4,
 }));
 
 const byStyle = styles.one<TextStyle>((t) => ({
@@ -272,3 +283,11 @@ const restText = styles.one<TextStyle>((t) => ({
   alignItems: 'center',
   flexDirection: 'row'
 }));
+
+const icon = styles.lazy<number, ViewStyle>((size) => (t) => ({
+  borderRadius: 4,
+  width: size,
+  height: size,
+  color: t.color.accentLight,
+  padding: 6
+}))

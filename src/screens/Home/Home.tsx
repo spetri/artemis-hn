@@ -43,8 +43,8 @@ export const Home: FC<ListItemType> = () => {
           } : { filter: "home" });
         }}
       >
-        <ListItem bottomDivider containerStyle={content()}>
-          <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
+        <ListItem containerStyle={content()}>
+          <Icon name={item.iconName} color={color.textPrimary} size={35} style={image} />
           <ListItemContent>
             <ListItem.Title style={header()}>{item.header}</ListItem.Title>
             <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
@@ -71,17 +71,18 @@ export const Home: FC<ListItemType> = () => {
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: '100%'
+  height: '100%',
 }));
 
 const content = styles.one<ViewStyle>((t) => ({
+  padding: t.space.lg,
   backgroundColor: t.color.bodyBg,
-  height: 65
+  height: 100,
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size.xs,
+  fontSize: t.type.size.md,
 }));
 
 const image = styles.one<ViewStyle>(() => ({
@@ -90,7 +91,7 @@ const image = styles.one<ViewStyle>(() => ({
 }));
 
 const header = styles.one<TextStyle>((t) => ({
-  fontSize: t.type.size.sm,
+  fontSize: t.type.size.lg,
   fontWeight: '500',
   color: t.color.textPrimary
 }));

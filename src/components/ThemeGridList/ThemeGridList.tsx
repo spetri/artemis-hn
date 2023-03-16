@@ -98,7 +98,7 @@ export const ThemeGridList: FC<ThemeGridListType> = ({ sections }) => {
         setColorStorage(appColor);
       }}
     >
-      <ListItem key={appColor.item.name} bottomDivider containerStyle={containerBg()}>
+      <ListItem key={appColor.item.name} containerStyle={containerBg()}>
         <View style={listItems()}>
           <>
             {displayColors(appColor)}
@@ -142,7 +142,9 @@ const listItems = styles.one<ViewStyle>((t) => ({
 }));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg
+  backgroundColor: t.color.bodyBg,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
 }));
 
 const header = styles.one<TextStyle>((t) => ({

@@ -46,7 +46,7 @@ export const HomeScreen = () => {
       }}
     >
       <View>
-        <ListItem bottomDivider>
+        <ListItem style={borderBottom()}>
           <ListItem.Content>
             <ListItem.Title>{topic.header}</ListItem.Title>
           </ListItem.Content>
@@ -114,10 +114,11 @@ export const HomeScreen = () => {
         headerShown: true,
         headerTintColor: color.primary as string,
         headerStyle: {
-          backgroundColor: color.headerBg as string
+          backgroundColor: color.headerBg as string,
         },
         headerTitleStyle: {
-          color: color.textPrimary as string
+          color: color.textPrimary as string,
+          borderBottomColor: color.amber100,
         }
       }}
     >
@@ -167,4 +168,9 @@ const switcherText = styles.one<TextStyle>((t) => ({
 
 const switcherIcon = styles.one<ViewStyle>(() => ({
   marginLeft: 3
+}));
+
+const borderBottom = styles.one<ViewStyle>((t) => ({
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
 }));

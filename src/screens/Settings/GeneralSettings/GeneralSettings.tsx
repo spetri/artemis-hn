@@ -329,7 +329,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
         onPress={item.onPress}
       >
         <View>
-          <ListItem bottomDivider containerStyle={containerBg()}>
+          <ListItem containerStyle={containerBg()}>
             <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
             <ListItemContent>
               <ListItem.Title style={header()}>{item.header}</ListItem.Title>
@@ -364,7 +364,9 @@ const container = styles.one<ViewStyle>((t) => ({
 }));
 
 const containerBg = styles.one<ViewStyle>((t) => ({
-  backgroundColor: t.color.bodyBg
+  backgroundColor: t.color.bodyBg,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({

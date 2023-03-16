@@ -30,7 +30,7 @@ export const StoryCard = memo(
     if (story.data == null) {
       return (
         <View>
-          <ListItem bottomDivider containerStyle={skeletonContainer(index)}>
+          <ListItem containerStyle={skeletonContainer(index)}>
             <Skeleton animation="pulse" style={storySkeletonImage(index)} />
             <ListItem.Content>
               <Skeleton style={storySkeletonTitle(index)} />
@@ -72,7 +72,9 @@ function PollStory({ data, index }: { data: HackerNewsPoll; index: number }) {
 }
 
 const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
-  backgroundColor: t.color.bodyBg
+  backgroundColor: t.color.bodyBg,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
 }));
 
 const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
