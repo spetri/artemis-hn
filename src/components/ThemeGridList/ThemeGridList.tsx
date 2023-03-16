@@ -2,9 +2,8 @@ import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ListItem } from '@rneui/themed';
 import { FC, useCallback, useLayoutEffect } from 'react';
-import { Animated, Pressable, SectionList, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { SectionList, Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
 import { styles, useDash } from '../../../dash.config';
-import { useAnimateFade } from '../../hooks/use-animate-fade';
 import { usePreferences } from '../../screens/Settings/usePreferences';
 import {
   defaultPreferences,
@@ -92,27 +91,24 @@ export const ThemeGridList: FC<ThemeGridListType> = ({ sections }) => {
   };
 
   const Item = (appColor) => {
-    const { fadeIn, fadeOut, animated } = useAnimateFade();
 
-    return <Pressable
+    return <TouchableHighlight underlayColor={color.accentLight}
       key={appColor.item.name}
-      onPressIn={fadeIn}
-      onPressOut={fadeOut}
       onPress={() => {
         setColorStorage(appColor);
       }}
     >
       <ListItem key={appColor.item.name} bottomDivider containerStyle={containerBg()}>
-        <Animated.View style={[listItems(), { opacity: animated }]}>
+        <View style={listItems()}>
           <>
             {displayColors(appColor)}
             <ListItem.Title style={header()}>
               <Text>{appColor.item.displayName}</Text>
             </ListItem.Title>
           </>
-        </Animated.View>
+        </View>
       </ListItem>
-    </Pressable>
+    </TouchableHighlight>
   }
 
   return (

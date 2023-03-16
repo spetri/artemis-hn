@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Animated, Dimensions, Pressable, TouchableNativeFeedback, View, type ViewStyle } from 'react-native';
+import { Dimensions, View, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
 
 import { ListItem, Skeleton } from '@rneui/themed';
@@ -9,10 +9,9 @@ import { HACKER_NEWS_API } from '../../constants/api';
 import { JobStory } from './JobStory/JobStory';
 import { AskStory } from './AskStory/AskStory';
 import { CommentStory } from './CommentStory/CommentStory';
-import { MinimalStory } from './MinimalStory/MinimalStory';
 import { ComplexStory } from './ComplexStory/ComplexStory';
 import { usePreferencesStore } from '../../contexts/store';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { MinimalStory } from './MinimalStory/MinimalStory';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
@@ -58,7 +57,7 @@ export const StoryCard = memo(
       <CommentStory data={story.data} index={index} />
     ) : story.data.type === 'poll' ? (
       <PollStory data={story.data} index={index} />
-    ) : !displayLargeThumbnails ? (
+    ) : displayLargeThumbnails ? (
       <ComplexStory data={story.data} index={index} />
     ) : (
       <MinimalStory data={story.data} index={index} />

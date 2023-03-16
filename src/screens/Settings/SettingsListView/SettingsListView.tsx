@@ -2,7 +2,6 @@ import { type FC } from 'react';
 import * as Application from 'expo-application';
 import * as Updates from 'expo-updates';
 import {
-  Animated,
   SafeAreaView,
   SectionList,
   Text,
@@ -16,7 +15,6 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { type StackParamList } from '../../routers';
 import { styles, useDash } from '../../../../dash.config';
-import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type ListItemType = Array<{
   id: string;

@@ -2,12 +2,11 @@ import RenderHTML, { type MixedStyleRecord, type RenderersProps } from 'react-na
 
 import React, { type FC, useMemo } from 'react';
 import {
-  Animated,
-  Pressable,
   SafeAreaView,
   Text,
   type TextProps,
   type TextStyle,
+  TouchableHighlight,
   useWindowDimensions,
   View,
   type ViewStyle
@@ -24,7 +23,6 @@ import { linkify } from '../../../../utils/util';
 import { type HackerNewsComment } from '../../../../types/hn-api';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ParentComment } from '../ParentComment/ParentComment';
-import { useAnimateFade } from '../../../../hooks/use-animate-fade';
 
 type CommentThreadHeaderProps = {
   data: HackerNewsComment;
@@ -41,9 +39,8 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
 }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const parentStory = parentComments[0];
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
   const dimensions = useWindowDimensions();
-  const { theme } = useDash();
+  const { theme, tokens: { color } } = useDash();
   const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
     () => ({
       a: {
@@ -81,36 +78,32 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
     >
       <SafeAreaView>
         <View style={header()}>
-          <Pressable
+          <TouchableHighlight underlayColor={color.accentLight}
             style={backButton()}
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
             onPress={() => {
               navigation.goBack();
             }}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Icon name="chevron-left" size={18} color="textAccent" />
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
         </View>
       </SafeAreaView>
 
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Thread', {
             id: parentStory.id
           });
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <Text numberOfLines={4} adjustsFontSizeToFit style={title()}>
             {parentStory.title}
           </Text>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       {parentStoryHtml && (
         <RenderHTML
@@ -146,17 +139,15 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
       >
         <View style={parentCommentMarker()} />
         <View style={byLine}>
-          <Pressable
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
+          <TouchableHighlight underlayColor={color.accentLight}
             onPress={() => {
               navigation.navigate('User', { id: data.by });
             }}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Text style={byStyle()}>@{data.by}</Text>
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 

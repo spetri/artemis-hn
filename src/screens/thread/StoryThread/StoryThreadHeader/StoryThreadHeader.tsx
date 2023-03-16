@@ -1,13 +1,12 @@
 import RenderHTML, { type MixedStyleRecord, type RenderersProps } from 'react-native-render-html';
 import { type FC, useMemo } from 'react';
 import {
-  Animated,
   Image,
   type ImageStyle,
-  Pressable,
   Text,
   type TextProps,
   type TextStyle,
+  TouchableHighlight,
   useWindowDimensions,
   View,
   type ViewStyle
@@ -28,7 +27,6 @@ import {
   type HackerNewsPoll,
   type HackerNewsStory
 } from '../../../../types/hn-api';
-import { useAnimateFade } from '../../../../hooks/use-animate-fade';
 
 type StoryThreadHeaderProps = {
   data:
@@ -45,8 +43,7 @@ type StoryThreadHeaderProps = {
 export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, url }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const dimensions = useWindowDimensions();
-  const { theme } = useDash();
-  const { fadeIn, fadeOut, animated } = useAnimateFade();
+  const { theme, tokens: { color } } = useDash();
   const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
     () => ({
       a: {
@@ -70,9 +67,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
 
   return !data ? null : (
     <View>
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           data &&
             url &&
@@ -82,15 +77,13 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
             });
         }}
       >
-        <Animated.View style={{ opacity: animated }}>
+        <View>
           <Image style={storyImage()} source={{ uri: metadata?.image }} />
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       {metadata && url && (
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.navigate('Browser', {
               title: metadata.applicationName || url.hostname,
@@ -99,19 +92,17 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
           }}
         >
 
-          <Animated.View style={[hostContainerStyle(), { opacity: animated }]}>
+          <View style={hostContainerStyle()}>
             <Image style={favicon()} source={{ uri: metadata.favicon }} />
 
             <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
               {metadata.applicationName || url.host.replace(/^www\./, '')}
             </Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
       )}
 
-      <Pressable
-        onPressIn={fadeIn}
-        onPressOut={fadeOut}
+      <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           data &&
             url &&
@@ -121,12 +112,12 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
             });
         }}
       >
-        <Animated.View style={[hostContainerStyle(), { opacity: animated }]}>
+        <View style={hostContainerStyle()}>
           <Text numberOfLines={4} adjustsFontSizeToFit style={title()}>
             {data.title}
           </Text>
-        </Animated.View>
-      </Pressable>
+        </View>
+      </TouchableHighlight>
 
       {htmlSource && (
         <RenderHTML
@@ -143,17 +134,15 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
       )}
 
       <View style={storyByLine()}>
-        <Pressable
-          onPressIn={fadeIn}
-          onPressOut={fadeOut}
+        <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.navigate('User', { id: data.by });
           }}
         >
-          <Animated.View style={[hostContainerStyle(), { opacity: animated }]}>
+          <View style={hostContainerStyle()}>
             <Text style={byStyle()}>{data.by}</Text>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </TouchableHighlight>
         <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
       </View>
 

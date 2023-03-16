@@ -29,7 +29,6 @@ import { linkify } from '../../../utils/util';
 import { usePreferences } from '../../Settings/usePreferences';
 import { defaultPreferences } from '../../Settings/useTheme';
 import { usePreferencesStore } from '../../../contexts/store';
-import { useAnimateFade } from '../../../hooks/use-animate-fade';
 
 type CommentProps = {
   id: number;
@@ -102,7 +101,6 @@ export const Comment: FC<CommentProps> = memo(
     };
 
     const rightSwipeActions = (reset) => {
-      const { fadeIn, fadeOut, animated } = useAnimateFade();
 
       return collapsed ? (
         <TouchableHighlight underlayColor={color.accentLight}

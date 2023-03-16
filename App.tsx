@@ -11,10 +11,10 @@ import { SWRConfig } from 'swr';
 import { useLayoutEffect } from 'react';
 import {
   AppState,
-  Pressable,
   SafeAreaView,
   Text,
   type TextStyle,
+  TouchableHighlight,
   View,
   type ViewStyle
 } from 'react-native';
@@ -168,7 +168,9 @@ const Tabs = () => {
 }
 
 const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
-  useDash();
+  const {
+    tokens: { color }
+  } = useDash();
 
   return (
     <SafeAreaView style={tabBar()}>
@@ -184,7 +186,7 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
         const isFocused = state.index === index;
 
         return (
-          <Pressable
+          <TouchableHighlight underlayColor={color.bodyBg}
             key={route.name}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
@@ -223,7 +225,7 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
               </Text>
               <Text style={navigationText()}>{label}</Text>
             </View>
-          </Pressable>
+          </TouchableHighlight>
         )
       })}
     </SafeAreaView>

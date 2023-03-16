@@ -1,11 +1,10 @@
 import RenderHTML, { MixedStyleRecord, RenderersProps } from 'react-native-render-html';
 import { type FC, memo, useMemo } from 'react';
 import {
-  Animated,
-  Pressable,
   Text,
   type TextProps,
   type TextStyle,
+  TouchableHighlight,
   View,
   type ViewStyle
 } from 'react-native';
@@ -13,9 +12,8 @@ import { type HackerNewsComment } from '../../../../types/hn-api';
 import { ago } from '../../../../utils/ago';
 import { type StackParamList } from '../../../routers';
 import { linkify } from '../../../../utils/util';
-import { styles } from '../../../../../dash.config';
+import { styles, useDash } from '../../../../../dash.config';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useAnimateFade } from '../../../../hooks/use-animate-fade';
 
 type ParentCommentType = {
   comment: HackerNewsComment;
@@ -27,7 +25,9 @@ type ParentCommentType = {
 
 export const ParentComment: FC<ParentCommentType> = memo(
   ({ comment, contentWidth, htmlRenderersProps, htmlTagStyles, navigation }) => {
-    const { fadeIn, fadeOut, animated } = useAnimateFade();
+    const {
+      tokens: { color }
+    } = useDash();
 
     const htmlSource = useMemo(
       () => ({
@@ -40,30 +40,26 @@ export const ParentComment: FC<ParentCommentType> = memo(
       <View style={parentCommentContainer()}>
         <View style={parentCommentMarker()} />
         <View style={byLine}>
-          <Pressable
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
+          <TouchableHighlight underlayColor={color.accentLight}
             onPress={() => {
               navigation.navigate('User', { id: comment.by });
             }}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Text style={byStyle()}>@{comment.by}</Text>
-            </Animated.View>
-          </Pressable>
-          <Pressable
-            onPressIn={fadeIn}
-            onPressOut={fadeOut}
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight underlayColor={color.accentLight}
             onPress={() => {
               navigation.push('Thread', {
                 id: comment.id
               });
             }}
           >
-            <Animated.View style={{ opacity: animated }}>
+            <View>
               <Text style={agoStyle()}>{ago.format(new Date(comment.time * 1000), 'mini')}</Text>
-            </Animated.View>
-          </Pressable>
+            </View>
+          </TouchableHighlight>
         </View>
 
         <RenderHTML
