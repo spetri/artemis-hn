@@ -87,6 +87,10 @@ type PreferencesState = {
 
   jumpButtonPosition: PositionType;
   setJumpButtonPosition: (jumpButtonPosition: PositionType) => void;
+
+  // NUMBER
+  cachedThreadId: number | null;
+  setCachedThreadId: (cachedThreadId: number) => void;
 };
 
 const preferencesStore = (set) => ({
@@ -116,7 +120,11 @@ const preferencesStore = (set) => ({
 
   openLinkInBrowser: defaultPreferences.openLinkInBrowser,
   setOpenLinkInBrowser: (openLinkInBrowser) =>
-    set(() => ({ openLinkInBrowser: !openLinkInBrowser }))
+    set(() => ({ openLinkInBrowser: !openLinkInBrowser })),
+
+  cachedThreadId: defaultPreferences.cachedThreadId,
+  setCachedThreadId: (cachedThreadId) =>
+    set(() => ({ cachedThreadId: cachedThreadId }))
 });
 
 export const usePreferencesStore = create(

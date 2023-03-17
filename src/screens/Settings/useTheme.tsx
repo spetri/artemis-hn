@@ -17,6 +17,7 @@ enum Position {
 
 export const preferencesVersion = '1.1';
 export const defaultPreferences: SetThemeType = {
+  cachedThreadId: null,
   displayLargeThumbnails: false,
   thumbnailSize: 55,
   displaySource: true,
@@ -45,6 +46,7 @@ export const defaultPreferences: SetThemeType = {
 };
 
 export type SetThemeType = {
+  cachedThreadId: number | null;
   displayReplies: boolean;
   displayLargeThumbnails: boolean;
   displaySource: boolean;

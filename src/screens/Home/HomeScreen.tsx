@@ -28,6 +28,7 @@ export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
   const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
+  const cachedThreadId = usePreferencesStore((state) => state.cachedThreadId);
   const setDisplayLargeThumbnails = usePreferencesStore((state) => state.setDisplayLargeThumbnails);
 
   const actionSheet = useActionSheet();
@@ -108,6 +109,11 @@ export const HomeScreen = () => {
     );
   };
 
+  const navigateBackToThread = () => {
+    console.log(cachedThreadId);
+    return navigation.navigate('Thread', { id: cachedThreadId });
+  }
+
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -118,8 +124,8 @@ export const HomeScreen = () => {
         },
         headerTitleStyle: {
           color: color.textPrimary as string,
-          borderBottomColor: color.amber100,
-        }
+        },
+        gestureResponseDistance: 100
       }}
     >
       <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
@@ -136,11 +142,11 @@ export const HomeScreen = () => {
                   <IoniconIcon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
+              {!!cachedThreadId && <TouchableHighlight underlayColor={color.accentLight} onPress={navigateBackToThread}>
                 <View>
                   <IoniconIcon name="chevron-forward" style={{ color: color.primary }} size={30} />
                 </View>
-              </TouchableHighlight>
+              </TouchableHighlight>}
             </View>
           )
         }}

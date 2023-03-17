@@ -1,4 +1,5 @@
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { shallow } from 'zustand/shallow';
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
@@ -35,6 +36,9 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const thumbnailSize = usePreferencesStore((state) => state.thumbnailSize);
   const thumbnailPosition = usePreferencesStore((state) => state.thumbnailPosition);
   const openLinkInBrowser = usePreferencesStore((state) => state.openLinkInBrowser);
+  const { setCachedThreadId } = usePreferencesStore((state) => ({
+    setCachedThreadId: state.setCachedThreadId,
+  }), shallow);
 
   const {
     tokens: { color }
@@ -95,14 +99,18 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     }
   };
 
+  const navigateToThread = (threadId) => {
+    setCachedThreadId(threadId);
+    console.log(navigation);
+    return navigation.push('Thread', { id: threadId });
+  }
+
   return (
     metadata && (
       <View style={storyContainer(thumbnailPosition)} key={data.id}>
         <View style={imageColumn(index)}>{displayImage()}</View>
         <TouchableHighlight underlayColor={color.accentLight}
-          onPress={() => {
-            navigation.push('Thread', { id: data.id });
-          }}
+          onPress={() => navigateToThread(data.id)}
         >
           <View style={bodyColumn(thumbnailPosition)}>
             <View>
