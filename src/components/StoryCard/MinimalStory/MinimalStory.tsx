@@ -106,24 +106,23 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
 
   return (
     metadata && (
-      <View style={storyContainer(thumbnailPosition)} key={data.id}>
-        <View style={imageColumn(index)}>{displayImage()}</View>
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={() => navigateToThread(data.id)}
-        >
+      <TouchableHighlight underlayColor={color.accentLight}
+        style={container()}
+        onPress={() => navigateToThread(data.id)}
+      >
+        <View style={storyContainer(thumbnailPosition)} key={data.id}>
+          <View style={imageColumn(index)}>{displayImage()}</View>
           <View style={bodyColumn(thumbnailPosition)}>
             <View>
               <Text style={storyTitle(index)} numberOfLines={4}>
-                {data.title}
+                <Text>{data.title}&nbsp;&nbsp;</Text>
+                <Text>{displaySource ? (
+                  <Text style={appName()}>
+                    ({metadata.applicationName || url.host.replace(/^www\./, '')})
+                  </Text>
+                ) : null}</Text>
               </Text>
             </View>
-            {displaySource ? (
-              <View>
-                <Text style={appName()}>
-                  ({metadata.applicationName || url.host.replace(/^www\./, '')})
-                </Text>
-              </View>
-            ) : null}
             <View style={footerText()}>
               <View>
                 <TouchableHighlight underlayColor={color.accentLight}
@@ -156,22 +155,17 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
               </View>
             </View>
           </View>
-        </TouchableHighlight>
-      </View>
+        </View>
+      </TouchableHighlight>
     )
   );
 };
 
-const rest = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  fontSize: t.type.size.xs,
-  marginHorizontal: 4,
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexWrap: 'nowrap'
-}));
+const container = styles.one<TextStyle>((t) => ({
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight,
+  marginTop: 0
+}))
 
 const chatText = styles.lazy<number, ViewStyle>(() => (t) => ({
   color: t.color.textAccent,
@@ -189,7 +183,8 @@ const storyContainer = styles.lazy<number, ViewStyle>((thumbnailPosition) => (t)
   height: 85,
   width: Dimensions.get('window').width,
   borderBottomColor: t.color.accent,
-  borderBottomWidth: t.borderWidth.hairline
+  borderBottomWidth: t.borderWidth.hairline,
+  paddingBottom: 14
 }));
 
 const imageColumn = styles.lazy<number, ViewStyle>(() => () => ({
@@ -208,7 +203,7 @@ const bodyColumn = styles.lazy<number, ViewStyle>((thumbnailPosition) => () => (
     thumbnailPosition === 'Right'
       ? -Dimensions.get('window').width
       : Dimensions.get('window').width,
-  justifyContent: 'space-around',
+  justifyContent: 'space-between',
   marginVertical: 8,
   flex: 1
 }));
@@ -219,7 +214,7 @@ const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({
   fontWeight: '500',
   display: 'flex',
   flexWrap: 'wrap',
-  width: Dimensions.get('window').width - 100
+  width: Dimensions.get('window').width - 100,
 }));
 
 const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
@@ -275,7 +270,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
 const appName = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
-  fontWeight: '300'
+  fontWeight: '300',
 }));
 
 const footerText = styles.one<TextStyle>(() => ({
@@ -285,16 +280,27 @@ const footerText = styles.one<TextStyle>(() => ({
   alignItems: 'center'
 }));
 
-const restText = styles.one<TextStyle>((t) => ({
+const restText = styles.one<TextStyle>(() => ({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row'
 }));
 
 const icon = styles.lazy<number, ViewStyle>((size) => (t) => ({
-  borderRadius: 4,
   width: size,
   height: size,
+  borderRadius: 4,
   color: t.color.accentLight,
   padding: 6
 }))
+
+const rest = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
+  fontSize: t.type.size.xs,
+  marginHorizontal: 4,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexWrap: 'nowrap',
+}));
