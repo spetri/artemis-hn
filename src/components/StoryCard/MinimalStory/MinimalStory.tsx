@@ -106,21 +106,20 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
 
   return (
     metadata && (
-      <TouchableHighlight underlayColor={color.accentLight}
-        style={container()}
-        onPress={() => navigateToThread(data.id)}
-      >
-        <View style={storyContainer(thumbnailPosition)} key={data.id}>
-          <View style={imageColumn(index)}>{displayImage()}</View>
+      <View style={storyContainer(thumbnailPosition)} key={data.id}>
+        <View style={imageColumn(index)}>{displayImage()}</View>
+        <TouchableHighlight underlayColor={color.accentLight}
+          onPress={() => navigateToThread(data.id)}
+        >
           <View style={bodyColumn(thumbnailPosition)}>
             <View>
               <Text style={storyTitle(index)} numberOfLines={4}>
-                <Text>{data.title}&nbsp;&nbsp;</Text>
-                <Text>{displaySource ? (
+                {data.title}&nbsp;
+                {displaySource ? (
                   <Text style={appName()}>
                     ({metadata.applicationName || url.host.replace(/^www\./, '')})
                   </Text>
-                ) : null}</Text>
+                ) : null}
               </Text>
             </View>
             <View style={footerText()}>
@@ -155,17 +154,22 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
               </View>
             </View>
           </View>
-        </View>
-      </TouchableHighlight>
+        </TouchableHighlight>
+      </View>
     )
   );
 };
 
-const container = styles.one<TextStyle>((t) => ({
-  borderBottomWidth: t.borderWidth.hairline,
-  borderBottomColor: t.color.accentLight,
-  marginTop: 0
-}))
+const rest = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
+  fontSize: t.type.size.xs,
+  marginHorizontal: 4,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexWrap: 'nowrap'
+}));
 
 const chatText = styles.lazy<number, ViewStyle>(() => (t) => ({
   color: t.color.textAccent,
@@ -183,8 +187,7 @@ const storyContainer = styles.lazy<number, ViewStyle>((thumbnailPosition) => (t)
   height: 85,
   width: Dimensions.get('window').width,
   borderBottomColor: t.color.accent,
-  borderBottomWidth: t.borderWidth.hairline,
-  paddingBottom: 14
+  borderBottomWidth: t.borderWidth.hairline
 }));
 
 const imageColumn = styles.lazy<number, ViewStyle>(() => () => ({
@@ -203,7 +206,7 @@ const bodyColumn = styles.lazy<number, ViewStyle>((thumbnailPosition) => () => (
     thumbnailPosition === 'Right'
       ? -Dimensions.get('window').width
       : Dimensions.get('window').width,
-  justifyContent: 'space-between',
+  justifyContent: 'space-around',
   marginVertical: 8,
   flex: 1
 }));
@@ -214,7 +217,7 @@ const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({
   fontWeight: '500',
   display: 'flex',
   flexWrap: 'wrap',
-  width: Dimensions.get('window').width - 100,
+  width: Dimensions.get('window').width - 100
 }));
 
 const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
@@ -270,7 +273,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
 const appName = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size["2xs"],
-  fontWeight: '300',
+  fontWeight: '300'
 }));
 
 const footerText = styles.one<TextStyle>(() => ({
@@ -280,27 +283,16 @@ const footerText = styles.one<TextStyle>(() => ({
   alignItems: 'center'
 }));
 
-const restText = styles.one<TextStyle>(() => ({
+const restText = styles.one<TextStyle>((t) => ({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row'
 }));
 
 const icon = styles.lazy<number, ViewStyle>((size) => (t) => ({
+  borderRadius: 4,
   width: size,
   height: size,
-  borderRadius: 4,
   color: t.color.accentLight,
   padding: 6
 }))
-
-const rest = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  fontSize: t.type.size.xs,
-  marginHorizontal: 4,
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexWrap: 'nowrap',
-}));
