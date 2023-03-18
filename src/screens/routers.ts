@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { type StoryFilters } from '../types/hn-api';
 
 export const HomeStack = createStackNavigator<StackParamList>();
-export const AllStack = createStackNavigator<StackParamList>();
 export const ShowStack = createStackNavigator<StackParamList>();
 export const AskStack = createStackNavigator<StackParamList>();
 export const JobsStack = createStackNavigator<StackParamList>();
@@ -35,5 +34,4 @@ export type TabParamList = {
   User: undefined;
   Search: undefined;
   Settings: undefined;
-}
-
+};

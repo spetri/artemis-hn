@@ -1,4 +1,7 @@
-import RenderHTML, { type MixedStyleRecord, type RenderersProps } from 'react-native-render-html';
+import RenderHTML, { type MixedStyleRecord, type RenderersProps } from
+  'react-native-render-html';
+import IoniconIcon from 'react-native-vector-icons/Ionicons';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { type FC, useMemo } from 'react';
 import {
   Image,
@@ -65,43 +68,31 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
     [data]
   );
 
-  return !data ? null : (
-    <View>
-      <TouchableHighlight underlayColor={color.accentLight}
+  const urlBar = () => {
+    const image = metadata?.image || metadata?.favicon;
+    if (metadata && url) {
+      return <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
-          data &&
-            url &&
-            navigation.navigate('Browser', {
-              title: data.title,
-              url: url.toString()
-            });
+          navigation.navigate('Browser', {
+            title: metadata.applicationName || url.hostname,
+            url: url.origin
+          });
         }}
       >
-        <View>
-          <Image style={storyImage()} source={{ uri: metadata?.image }} />
+
+        <View style={imageLink()}>
+          <Image style={storyImage()} source={{ uri: image ?? <IoniconIcon name="md-newspaper-outline" size={40} /> }} />
+
+          <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
+            {metadata.applicationName || url.host.replace(/^www\./, '')}
+          </Text>
         </View>
       </TouchableHighlight>
+    }
+  }
 
-      {metadata && url && (
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={() => {
-            navigation.navigate('Browser', {
-              title: metadata.applicationName || url.hostname,
-              url: url.origin
-            });
-          }}
-        >
-
-          <View style={hostContainerStyle()}>
-            <Image style={favicon()} source={{ uri: metadata.favicon }} />
-
-            <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
-              {metadata.applicationName || url.host.replace(/^www\./, '')}
-            </Text>
-          </View>
-        </TouchableHighlight>
-      )}
-
+  return !data ? null : (
+    <View>
       <TouchableHighlight underlayColor={color.accentLight}
         onPress={() => {
           data &&
@@ -119,6 +110,8 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
         </View>
       </TouchableHighlight>
 
+      <View>{urlBar()}</View>
+
       {htmlSource && (
         <RenderHTML
           contentWidth={dimensions.width}
@@ -133,54 +126,49 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
         />
       )}
 
-      <View style={storyByLine()}>
+      <View>
         <TouchableHighlight underlayColor={color.accentLight}
           onPress={() => {
             navigation.navigate('User', { id: data.by });
           }}
         >
           <View style={hostContainerStyle()}>
-            <Text style={byStyle()}>{data.by}</Text>
+            <Text style={byStyle()}>by {data.by}</Text>
           </View>
         </TouchableHighlight>
-        <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
       </View>
 
       {data.type !== 'job' && (data.score || ('descendants' in data && data.descendants > 0)) && (
-        <Text style={subtitle()}>
-          {data.score && <Text style={score()}>⇧{data.score}</Text>}
-          {'descendants' in data && <> &bull; {pluralize(data.descendants, 'comment')}</>}
-        </Text>
+        <View style={rest()}>
+          <Text style={subtitle()}>
+            {
+              data.score && <Text style={{ color: color.primary }}>
+                <AntDesignIcon size={13} name="arrowup" color={color.primary} />
+                {data.score}
+              </Text>
+            }
+            {'descendants' in data && <Text> &bull; {pluralize(data.descendants, 'comment')}</Text>}
+          </Text>
+          <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
+        </View>
       )}
     </View>
   );
 };
 
 const title = styles.one<TextStyle>((t) => ({
+  marginTop: t.space.md,
   color: t.color.textPrimary,
-  fontSize: t.type.size.lg,
-  fontWeight: '900',
-  padding: t.space.lg,
-  paddingTop: t.space.md,
-  paddingBottom: t.space.md
+  fontSize: t.type.size.base,
+  fontWeight: '500',
 }));
 
 const subtitle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.xs,
   fontWeight: '600',
-  padding: t.space.lg,
-  paddingTop: t.space.md
-}));
-
-const score = styles.one<TextStyle>((t) => ({
-  color: t.color.primary
-}));
-
-const storyImage = styles.one<ImageStyle>((t) => ({
-  width: '100%',
-  height: 240,
-  marginBottom: t.space.md
+  paddingLeft: t.space.lg,
+  paddingBottom: t.space.lg,
 }));
 
 const hostContainerStyle = styles.one<ViewStyle>((t) => ({
@@ -190,22 +178,31 @@ const hostContainerStyle = styles.one<ViewStyle>((t) => ({
   paddingRight: t.space.lg,
   paddingLeft: t.space.lg,
   paddingTop: t.space.md,
-  paddingBottom: t.space.md
+  paddingBottom: t.space.md,
 }));
 
-const favicon = styles.one<ImageStyle>((t) => ({
-  width: 20,
-  height: 20,
-  borderRadius: t.radius.md,
-  marginRight: t.space.sm
+const imageLink = styles.one<ViewStyle>((t) => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginHorizontal: t.space.lg,
+  marginVertical: t.space.md,
+  backgroundColor: t.color.accentLight,
+  borderRadius: 8,
+}));
+
+const storyImage = styles.one<ImageStyle>(() => ({
+  width: 45,
+  height: 45,
+  borderTopLeftRadius: 8,
+  borderBottomLeftRadius: 8,
 }));
 
 const hostname = styles.one<TextStyle>((t) => ({
-  flex: 1,
   width: '100%',
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
-  fontWeight: '300'
+  fontWeight: '400',
+  marginLeft: t.space.md
 }));
 
 const content = styles.one((t) => ({
@@ -217,28 +214,18 @@ const content = styles.one((t) => ({
   paddingBottom: 0
 }));
 
-const storyByLine = styles.one<ViewStyle>((t) => ({
-  width: '100%',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  paddingLeft: t.space.lg,
-  paddingRight: t.space.lg,
-  paddingBottom: t.space.md
-}));
-
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.xs,
-  fontWeight: '700',
-  padding: t.space.sm,
-  paddingTop: 0,
-  paddingLeft: 0
+  fontWeight: '500',
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
-  fontWeight: '300'
+  fontWeight: '500',
+  marginBottom: t.space.lg,
+  marginRight: t.space.lg
 }));
 
 const link = styles.one((t) => ({
@@ -251,5 +238,14 @@ const link = styles.one((t) => ({
 const htmlDefaultTextProps: TextProps = {
   selectable: true
 };
+
+const rest = styles.one<TextStyle>((t) => ({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
+}));
 
 export type StoryThreadHeader = NativeStackScreenProps<StackParamList, 'Thread'>;

@@ -18,6 +18,8 @@ import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsJob } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
 import { Skeleton } from '../../Skeleton/Skeleton';
+import { usePreferencesStore } from '../../../contexts/store';
+import { shallow } from 'zustand/shallow';
 
 type JobsStory = {
   data: HackerNewsJob;
@@ -28,6 +30,10 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
   const url = data.url ? new URL(data.url) : undefined;
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
+  const { setCachedThreadId } = usePreferencesStore((state) => ({
+    setCachedThreadId: state.setCachedThreadId,
+  }), shallow);
+
   const {
     tokens: { color }
   } = useDash();
@@ -38,6 +44,11 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
         <Skeleton style={storySkeleton(index)} />
       </View>
     );
+  }
+
+  const navigateToThread = (threadId) => {
+    setCachedThreadId(threadId);
+    return navigation.push('Thread', { id: threadId });
   }
 
   return (
@@ -84,9 +95,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
               url: url.toString()
             });
           } else {
-            navigation.push('Thread', {
-              id: data.id
-            });
+            return navigateToThread(data.id);
           }
         }}
       >
@@ -110,9 +119,7 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
                 url: url.toString()
               });
             } else {
-              navigation.push('Thread', {
-                id: data.id
-              });
+              return navigateToThread(data.id);
             }
           }}
         >

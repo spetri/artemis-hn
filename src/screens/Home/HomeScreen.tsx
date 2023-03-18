@@ -13,7 +13,6 @@ import { Dialog, ListItem } from '@rneui/themed';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { styles, useDash } from './../../../dash.config';
 import {
-  AllStack,
   HomeStack,
   type StackParamList,
 } from './../../../src/screens/routers';
@@ -120,6 +119,7 @@ export const HomeScreen = () => {
         headerShown: true,
         headerTintColor: color.primary as string,
         headerStyle: {
+          shadowColor: color.accentLight, // this covers iOS
           backgroundColor: color.headerBg as string,
         },
         headerTitleStyle: {
@@ -129,7 +129,7 @@ export const HomeScreen = () => {
       }}
     >
       <HomeStack.Screen name="Select" component={Home} initialParams={{ filter: 'home' }} />
-      <AllStack.Screen
+      <HomeStack.Screen
         name="Stories"
         component={Stories}
         initialParams={{ filter: 'top' }}

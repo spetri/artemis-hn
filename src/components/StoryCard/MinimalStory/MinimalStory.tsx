@@ -101,7 +101,6 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
 
   const navigateToThread = (threadId) => {
     setCachedThreadId(threadId);
-    console.log(navigation);
     return navigation.push('Thread', { id: threadId });
   }
 

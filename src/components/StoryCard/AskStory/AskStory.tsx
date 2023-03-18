@@ -10,6 +10,8 @@ import { ago } from '../../../utils/ago';
 import { styles, useDash } from '../../../../dash.config';
 import { pluralize } from '../../../utils/pluralize';
 import { type HackerNewsAsk } from '../../../types/hn-api';
+import { usePreferencesStore } from '../../../contexts/store';
+import { shallow } from 'zustand/shallow';
 
 type AskStoryProps = {
   data: HackerNewsAsk;
@@ -18,18 +20,22 @@ type AskStoryProps = {
 
 export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const { setCachedThreadId } = usePreferencesStore((state) => ({
+    setCachedThreadId: state.setCachedThreadId,
+  }), shallow);
   const {
     tokens: { color }
   } = useDash();
 
+  const navigateToThread = (threadId) => {
+    setCachedThreadId(threadId);
+    return navigation.push('Thread', { id: threadId });
+  }
+
   return (
     <View style={storyContainer(index)}>
       <TouchableHighlight underlayColor={color.accentLight}
-        onPress={() => {
-          navigation.push('Thread', {
-            id: data.id
-          });
-        }}
+        onPress={() => navigateToThread(data.id)}
       >
         <View>
           <Text style={storyTitle(index)} adjustsFontSizeToFit numberOfLines={index === 0 ? 5 : 7}>

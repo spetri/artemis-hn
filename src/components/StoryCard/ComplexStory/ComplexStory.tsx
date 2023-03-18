@@ -1,4 +1,5 @@
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { shallow } from 'zustand/shallow';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { type FC } from 'react';
@@ -18,6 +19,7 @@ import { Skeleton } from '../../Skeleton/Skeleton';
 import { pluralize } from '../../../utils/pluralize';
 import { ago } from '../../../utils/ago';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { usePreferencesStore } from '../../../contexts/store';
 
 type ComplexStoryProps = {
   data: HackerNewsStory;
@@ -28,6 +30,9 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
   const url = new URL(data.url);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
+  const { setCachedThreadId } = usePreferencesStore((state) => ({
+    setCachedThreadId: state.setCachedThreadId,
+  }), shallow);
   const {
     tokens: { color }
   } = useDash();
@@ -38,6 +43,11 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
         <Skeleton style={storySkeleton(index)} />
       </View>
     );
+  }
+
+  const navigateToThread = (threadId) => {
+    setCachedThreadId(threadId);
+    return navigation.push('Thread', { id: threadId });
   }
 
   return (
@@ -111,11 +121,7 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={() => {
-            navigation.push('Thread', { id: data.id });
-          }}
-        >
+        <TouchableHighlight underlayColor={color.accentLight} onPress={() => navigateToThread(data.id)}>
           <View style={footerText()}>
             <Text style={score()}>
               <AntDesignIcon size={13} name="arrowup" color={color.primary} />
