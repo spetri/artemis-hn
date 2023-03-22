@@ -160,34 +160,13 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   );
 };
 
-const rest = styles.one<TextStyle>((t) => ({
-  color: t.color.textAccent,
-  fontSize: t.type.size.xs,
-  marginHorizontal: 4,
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexWrap: 'nowrap'
-}));
-
-const chatText = styles.lazy<number, ViewStyle>(() => (t) => ({
-  color: t.color.textAccent,
-  fontSize: t.type.size.xs,
-  marginLeft: 3
-}));
-
-const rotate90 = {
-  transform: [{ rotateY: '180deg' }]
-};
-
 const storyContainer = styles.lazy<number, ViewStyle>((thumbnailPosition) => (t) => ({
   display: 'flex',
   flexDirection: thumbnailPosition === 'Right' ? 'row-reverse' : 'row',
   height: 85,
   width: Dimensions.get('window').width,
   borderBottomColor: t.color.accent,
-  borderBottomWidth: t.borderWidth.hairline
+  borderBottomWidth: t.borderWidth.hairline,
 }));
 
 const imageColumn = styles.lazy<number, ViewStyle>(() => () => ({
@@ -207,7 +186,6 @@ const bodyColumn = styles.lazy<number, ViewStyle>((thumbnailPosition) => () => (
       ? -Dimensions.get('window').width
       : Dimensions.get('window').width,
   justifyContent: 'space-around',
-  marginVertical: 8,
   flex: 1
 }));
 
@@ -280,10 +258,10 @@ const footerText = styles.one<TextStyle>(() => ({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'nowrap',
-  alignItems: 'center'
+  alignItems: 'center',
 }));
 
-const restText = styles.one<TextStyle>((t) => ({
+const restText = styles.one<TextStyle>(() => ({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row'
@@ -296,3 +274,24 @@ const icon = styles.lazy<number, ViewStyle>((size) => (t) => ({
   color: t.color.accentLight,
   padding: 6
 }))
+
+const rest = styles.one<TextStyle>((t) => ({
+  color: t.color.textAccent,
+  fontSize: t.type.size.xs,
+  marginHorizontal: 4,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexWrap: 'nowrap'
+}));
+
+const chatText = styles.lazy<number, ViewStyle>(() => (t) => ({
+  color: t.color.textAccent,
+  fontSize: t.type.size.xs,
+  marginLeft: 3
+}));
+
+const rotate90 = {
+  transform: [{ rotateY: '180deg' }]
+};

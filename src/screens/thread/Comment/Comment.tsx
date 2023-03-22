@@ -161,7 +161,7 @@ export const Comment: FC<CommentProps> = memo(
                 Share.share({
                   message: stripTags(htmlEntities.decode(comment.text), [], ' ')
                 });
-              } catch (error: any) {
+              } catch (error) {
                 Alert.alert(error.message);
               }
               return;
@@ -328,7 +328,7 @@ const openText = styles.one<TextStyle>(() => ({
   paddingHorizontal: 50
 }));
 
-const commentContainer = styles.lazy<any>(
+const commentContainer = styles.lazy(
   (obj: { depth: number; commentColors: number }) => (t) => ({
     width: '100%',
     padding: t.space.md,
@@ -345,7 +345,7 @@ const commentContainer = styles.lazy<any>(
   })
 );
 
-const commentContainerReply = styles.lazy<any>(
+const commentContainerReply = styles.lazy(
   (obj: { depth: number; commentColors: number }) => (t) => ({
     padding: t.space.sm,
     paddingHorizontal: t.space.md,
