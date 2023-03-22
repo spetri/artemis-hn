@@ -106,11 +106,11 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
 
   return (
     metadata && (
-      <View style={storyContainer(thumbnailPosition)} key={data.id}>
-        <View style={imageColumn(index)}>{displayImage()}</View>
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={() => navigateToThread(data.id)}
-        >
+      <TouchableHighlight underlayColor={color.accentLight}
+        onPress={() => navigateToThread(data.id)}
+      >
+        <View style={storyContainer(thumbnailPosition)} key={data.id}>
+          <View style={imageColumn(index)}>{displayImage()}</View>
           <View style={bodyColumn(thumbnailPosition)}>
             <View>
               <Text style={storyTitle(index)} numberOfLines={4}>
@@ -154,8 +154,8 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
               </View>
             </View>
           </View>
-        </TouchableHighlight>
-      </View>
+        </View>
+      </TouchableHighlight>
     )
   );
 };

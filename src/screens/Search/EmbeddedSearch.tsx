@@ -1,11 +1,11 @@
 import useSWR from 'swr';
 import { type FC, useMemo, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
-import { SearchBar } from '@rneui/base';
+import { TextStyle, View, type ViewStyle } from 'react-native';
 import { type HackerNewsStory } from '../../types/hn-api';
 import { SEARCH_API } from '../../constants/api';
-import { MinimalStory } from '../../components/StoryCard/MinimalStory/MinimalStory';
 import { styles, useDash } from '../../../dash.config';
+import { MinimalStory } from '../../components/StoryCard/MinimalStory/MinimalStory';
+import { SearchBar } from '@rneui/themed';
 
 export const EmbeddedSearch: FC = () => {
   useDash();
@@ -35,6 +35,7 @@ export const EmbeddedSearch: FC = () => {
           value={search}
           containerStyle={{ backgroundColor: color.bodyBg }}
           inputContainerStyle={inputContainerStyle()}
+          inputStyle={inputStyle()}
         />
       </View>
       {!!search && (
@@ -64,5 +65,10 @@ export const EmbeddedSearch: FC = () => {
 
 const inputContainerStyle = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.accent,
-  height: 40
+  height: 40,
+  color: t.color.accentLight
+}));
+
+const inputStyle = styles.one<TextStyle>((t) => ({
+  color: t.color.primary
 }));

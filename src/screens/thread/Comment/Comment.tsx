@@ -1,4 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
+import * as htmlEntities from 'html-entities';
+import stripTags from 'striptags';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,6 +10,8 @@ import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useMemo, useState } from 'react';
 import {
+  Alert,
+  Share,
   Text,
   type TextProps,
   type TextStyle,
@@ -129,7 +133,7 @@ export const Comment: FC<CommentProps> = memo(
       const collapseText = collapsed ? 'Open Thread' : 'Collapse Thread';
       actionSheet.showActionSheetWithOptions(
         {
-          options: [collapseText, 'View Thread', 'Copy Text', 'View Profile', 'Cancel'],
+          options: [collapseText, 'View Thread', 'Share', 'View Profile', 'Cancel'],
           userInterfaceStyle: 'dark',
           tintIcons: true,
           icons: [
@@ -153,6 +157,13 @@ export const Comment: FC<CommentProps> = memo(
               return;
             }
             case 2:
+              try {
+                Share.share({
+                  message: stripTags(htmlEntities.decode(comment.text), [], ' ')
+                });
+              } catch (error: any) {
+                Alert.alert(error.message);
+              }
               return;
             case 3: {
               navigation.navigate('User', {

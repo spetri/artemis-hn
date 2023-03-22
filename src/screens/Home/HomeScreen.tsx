@@ -108,10 +108,7 @@ export const HomeScreen = () => {
     );
   };
 
-  const navigateBackToThread = () => {
-    console.log(cachedThreadId);
-    return navigation.navigate('Thread', { id: cachedThreadId });
-  }
+  const navigateBackToThread = () => navigation.navigate('Thread', { id: cachedThreadId });
 
   return (
     <HomeStack.Navigator
@@ -138,7 +135,7 @@ export const HomeScreen = () => {
           headerRight: () => (
             <View style={{ display: "flex", flexDirection: "row" }}>
               <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
-                <View>
+                <View style={rightIcons()}>
                   <IoniconIcon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
                 </View>
               </TouchableHighlight>
@@ -174,6 +171,10 @@ const switcherText = styles.one<TextStyle>((t) => ({
 
 const switcherIcon = styles.one<ViewStyle>(() => ({
   marginLeft: 3
+}));
+
+const rightIcons = styles.one<ViewStyle>((t) => ({
+  marginRight: t.space.md
 }));
 
 const borderBottom = styles.one<ViewStyle>((t) => ({
