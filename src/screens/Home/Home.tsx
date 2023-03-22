@@ -44,7 +44,7 @@ export const Home: FC<ListItemType> = () => {
         }}
       >
         <ListItem containerStyle={content()}>
-          <Icon name={item.iconName} color={color.textPrimary} size={35} />
+          <Icon name={item.iconName} color={color.textPrimary} size={30} />
           <ListItemContent>
             <ListItem.Title style={header()}>{item.header}</ListItem.Title>
             <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
@@ -77,16 +77,18 @@ const containerBg = styles.one<ViewStyle>((t) => ({
 const content = styles.one<ViewStyle>((t) => ({
   padding: t.space.lg,
   backgroundColor: t.color.bodyBg,
-  height: 100,
+  height: 80,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size.md,
+  fontSize: t.type.size.xs,
 }));
 
 const header = styles.one<TextStyle>((t) => ({
-  fontSize: t.type.size.lg,
+  fontSize: t.type.size.base,
   fontWeight: '500',
   color: t.color.textPrimary
 }));

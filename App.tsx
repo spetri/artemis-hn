@@ -23,7 +23,6 @@ import { useTheme } from './src/screens/Settings/useTheme';
 import {
   Tab
 } from './src/screens/routers';
-import { User } from './src/screens/User/User';
 import { HomeScreen } from './src/screens/Home/HomeScreen';
 import { SearchScreen } from './src/screens/Search/SearchScreen';
 import { SettingScreen } from './src/screens/Settings/SettingScreen';
@@ -120,12 +119,12 @@ const Tabs = () => {
         screenOptions={{
           headerShown: false,
           headerStyle: {
-            backgroundColor: color.headerBg as string
+            backgroundColor: color.headerBg as string,
           },
           headerTintColor: color.primary as string,
           headerTitleStyle: {
             color: color.textPrimary as string
-          }
+          },
         }}
         tabBar={({ state, descriptors, navigation, insets }: BottomTabBarProps) => <TabBarBase state={state} descriptors={descriptors} navigation={navigation} insets={insets} />}
       >
@@ -220,10 +219,10 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                   options.tabBarIcon({
                     focused: true,
                     color: 'blue',
-                    size: 13
+                    size: 0
                   })}
               </Text>
-              <Text style={navigationText()}>{label}</Text>
+              <Text style={navigationText(isFocused)}>{label}</Text>
             </View>
           </TouchableHighlight>
         )
@@ -232,10 +231,9 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   );
 }
 
-const navigationText = styles.one<TextStyle>((t) => ({
-  color: t.color.textPrimary,
-  fontSize: t.type.size.xs,
-  marginTop: 3
+const navigationText = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
+  color: isFocused ? t.color.primary : t.color.textPrimary,
+  fontSize: t.type.size["3xs"],
 }));
 
 const tabBar = styles.one<ViewStyle>((t) => ({
@@ -243,7 +241,7 @@ const tabBar = styles.one<ViewStyle>((t) => ({
   width: '100%',
   backgroundColor: t.color.headerBg,
   borderTopWidth: t.borderWidth.hairline,
-  borderTopColor: t.color.accent
+  borderTopColor: t.color.accent,
 }));
 
 const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
@@ -251,25 +249,26 @@ const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
   fontSize: t.type.size.sm,
   fontWeight: '700',
   margin: 0,
-  textAlign: 'center'
+  textAlign: 'center',
 }));
 
 const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
   borderTopColor: isFocused ? t.color.primary : t.color.headerBg,
-  borderTopWidth: 4,
+  borderTopWidth: 1,
   flex: 1,
   padding: t.space.md,
   justifyContent: 'center',
-  alignItems: 'center'
+  alignItems: 'center',
+  height: 40,
 }));
 
 const sceneContainer = styles.one<ViewStyle>((t) => ({
   height: '100%',
   width: '100%',
-  backgroundColor: t.color.bodyBg
+  backgroundColor: t.color.bodyBg,
 }));
 
 const flexColumn = styles.one<ViewStyle>(() => ({
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'column',
 }))
