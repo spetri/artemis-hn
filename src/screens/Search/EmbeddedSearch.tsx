@@ -65,7 +65,7 @@ export const EmbeddedSearch: FC = () => {
 
 const inputContainerStyle = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.accent,
-  height: 40,
+  height: 30,
   color: t.color.accentLight
 }));
 

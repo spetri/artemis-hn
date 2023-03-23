@@ -217,21 +217,18 @@ const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
 const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
   width: Dimensions.get('window').width - 200,
   height: 15,
-  borderRadius: 10,
   backgroundColor: t.color.accent
 }));
 
 const storySkeletonBy = styles.lazy<number, ViewStyle>(() => (t) => ({
   height: 15,
   width: 30,
-  borderRadius: 10,
   backgroundColor: t.color.accent
 }));
 
 const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
   height: 15,
   width: 90,
-  borderRadius: 10,
   backgroundColor: t.color.accent
 }));
 

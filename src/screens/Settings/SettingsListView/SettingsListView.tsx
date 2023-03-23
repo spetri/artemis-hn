@@ -35,23 +35,15 @@ export const SettingsListView: FC = () => {
       header: 'General',
       iconName: 'ios-settings-outline',
       navigate: () => {
-        navigation.navigate('General');
+        navigation.push('General', {});
       }
     },
     {
       id: '2',
-      header: 'Theme',
-      iconName: 'ios-moon-outline',
-      navigate: () => {
-        navigation.navigate('Theme');
-      }
-    },
-    {
-      id: '3',
       header: 'App Icon',
       iconName: 'ios-logo-hackernews',
       navigate: () => {
-        navigation.navigate('General');
+        navigation.push('General', {});
       }
     }
   ];
@@ -133,4 +125,9 @@ const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
   height: 0.3,
   width: '100%',
   backgroundColor: t.color.textAccent
+}));
+
+const colorListItem = styles.one<TextStyle>((t) => ({
+  fontSize: t.type.size.sm,
+  color: t.color.textPrimary
 }));

@@ -23,7 +23,6 @@ export type StackParamList = {
   SettingsListView: Record<string, never>;
   General: Record<string, never>;
   Select: Record<string, never>;
-  Theme: Record<string, never>;
   ThemeColorSection: Record<string, never>;
   AccentColorSection: Record<string, never>;
   CommentColorSection: Record<string, never>;
@@ -34,4 +33,5 @@ export type TabParamList = {
   User: undefined;
   Search: undefined;
   Settings: undefined;
+  General: undefined;
 };

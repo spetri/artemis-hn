@@ -1,7 +1,7 @@
 import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, ListItem, Switch } from '@rneui/themed';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type FC, useCallback, useLayoutEffect, useState } from 'react';
 import {
@@ -21,13 +21,17 @@ import { styles, useDash } from '../../../../dash.config';
 import { type StackParamList } from '../../routers';
 import { defaultPreferences, preferencesVersion, type SetThemeType, useTheme } from '../useTheme';
 import Slider from '@react-native-community/slider';
-import { usePreferencesStore } from '../../../contexts/store';
+import { ListItemType, usePreferencesStore } from '../../../contexts/store';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useNavigation } from '@react-navigation/native';
+import { AppColors } from '../SettingsListView/ThemeConfig';
+import { ThemeGridList } from '../../../components/ThemeGridList/ThemeGridList';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
 export const GeneralSettings: FC<SettingsProps> = () => {
   const actionSheet = useActionSheet();
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const {
     displayLargeThumbnails,
     setDisplayLargeThumbnails,
@@ -101,6 +105,33 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     },
     [setStorage_, preferences?.data]
   );
+
+  const themeItems: ListItemType = [
+    {
+      id: '1',
+      header: 'Themes',
+      subHeader: "Set App Theme",
+      iconName: 'ios-settings-outline',
+      onPress: () => navigation.navigate('ThemeColorSection', {}),
+      type: <Icon name="chevron-forward" color={color.textPrimary} size={18} />
+    },
+    {
+      id: '2',
+      header: 'Accents',
+      subHeader: "Set Color Accents",
+      iconName: 'ios-moon-outline',
+      onPress: () => navigation.navigate('AccentColorSection', {}),
+      type: <Icon name="chevron-forward" color={color.textPrimary} size={18} />
+    },
+    {
+      id: '3',
+      header: 'Comment Color',
+      subHeader: "Set Comment Colors",
+      iconName: 'ios-logo-hackernews',
+      onPress: () => navigation.navigate('CommentColorSection', {}),
+      type: <Icon name="chevron-forward" color={color.textPrimary} size={18} />
+    }
+  ];
 
   const listItems = [
     {
@@ -322,38 +353,42 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     }
   }, [baseTypeSize]);
 
-  const twoColumn = (item) => {
+  const renderItems = (item, columnCount) => {
+    const style = columnCount === 2 ? containerTwoColumnBg() : containerBg();
+    const iconSize = columnCount === 2 ? 18 : 25;
 
     return (
       <TouchableHighlight underlayColor={color.accentLight}
         onPress={item.onPress}
       >
-        <View>
-          <ListItem containerStyle={containerBg()}>
-            <Icon name={item.iconName} color={color.textPrimary} size={25} style={image} />
-            <ListItemContent>
-              <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-              <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
-            </ListItemContent>
-            <View>
-              <Text>{item.type}</Text>
-            </View>
-          </ListItem>
-        </View>
+        <ListItem containerStyle={style}>
+          <Icon name={item.iconName} color={color.textPrimary} size={iconSize} />
+          <ListItemContent>
+            <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+            {columnCount === 3 && <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>}
+          </ListItemContent>
+          <View>
+            <Text>{item.type}</Text>
+          </View>
+        </ListItem>
       </TouchableHighlight>
     );
   };
-
   return (
     <SafeAreaView style={container()}>
       <View style={containerBg()}>
         <SectionList
           ItemSeparatorComponent={() => <View style={listItemSeparatorStyle()} />}
+          sections={[{ title: 'Topics', data: themeItems }]}
+          renderItem={({ item }) => renderItems(item, 2)}
+        />
+        <SectionList
+          ItemSeparatorComponent={() => <View style={listItemSeparatorStyle()} />}
           sections={[{ title: 'Topics', data: listItems }]}
-          renderItem={({ item }) => twoColumn(item)}
+          renderItem={({ item }) => renderItems(item, 3)}
         />
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 
@@ -363,20 +398,22 @@ const container = styles.one<ViewStyle>((t) => ({
   width: '100%'
 }));
 
+const containerTwoColumnBg = styles.one<ViewStyle>((t) => ({
+  backgroundColor: t.color.bodyBg,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight,
+  height: 50
+}));
+
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   borderBottomWidth: t.borderWidth.hairline,
-  borderBottomColor: t.color.accentLight
+  borderBottomColor: t.color.accentLight,
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
-}));
-
-const image = styles.one<ViewStyle>(() => ({
-  height: '100%',
-  width: '100%'
 }));
 
 const header = styles.one<TextStyle>((t) => ({

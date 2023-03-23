@@ -259,7 +259,7 @@ const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
   padding: t.space.md,
   justifyContent: 'center',
   alignItems: 'center',
-  height: 40,
+  height: 50,
 }));
 
 const sceneContainer = styles.one<ViewStyle>((t) => ({
