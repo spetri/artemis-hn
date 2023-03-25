@@ -95,8 +95,7 @@ type PreferencesState = {
 
 const preferencesStore = (set) => ({
   displayLargeThumbnails: defaultPreferences.displayLargeThumbnails,
-  setDisplayLargeThumbnails: (displayLargeThumbnails) =>
-    set(() => ({ displayLargeThumbnails: !displayLargeThumbnails })),
+  setDisplayLargeThumbnails: (displayLargeThumbnails) => set(() => ({ displayLargeThumbnails: !displayLargeThumbnails })),
 
   displayReplies: defaultPreferences.displayReplies,
   setDisplayReplies: (displayReplies) => set(() => ({ displayReplies: !displayReplies })),

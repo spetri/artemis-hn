@@ -6,11 +6,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,7 +18,17 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sabbapetri.artemis",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "splash": {
+        "image": "./src/assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff"
+      },
+      "dark?": {
+        "image": "./src/assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#000000"
+      },
     },
     "android": {
       "package": "com.sabbapetri.artemis",

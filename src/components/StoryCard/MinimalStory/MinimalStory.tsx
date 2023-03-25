@@ -39,6 +39,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const { setCachedThreadId } = usePreferencesStore((state) => ({
     setCachedThreadId: state.setCachedThreadId,
   }), shallow);
+  const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
 
   const {
     tokens: { color }
@@ -60,6 +61,8 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       </View>
     );
   }
+
+  console.log("displayLargeThumbnails", displayLargeThumbnails);
 
   const displayImage = () => {
     const inAppBrowser = () => {

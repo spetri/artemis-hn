@@ -26,11 +26,7 @@ import { listItems, usePreferencesStore } from './../../../src/contexts/store';
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [switcher, setSwitcher] = useState(false);
-  const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
   const cachedThreadId = usePreferencesStore((state) => state.cachedThreadId);
-  const setDisplayLargeThumbnails = usePreferencesStore((state) => state.setDisplayLargeThumbnails);
-
-  const actionSheet = useActionSheet();
   const {
     tokens: { color }
   } = useDash();
@@ -86,28 +82,6 @@ export const HomeScreen = () => {
     );
   };
 
-  const actionSheetOptions = () => {
-    const largeThumbnailText = displayLargeThumbnails ? 'Compact Posts' : 'Large Thumbnails';
-    actionSheet.showActionSheetWithOptions(
-      {
-        options: [largeThumbnailText, 'Cancel'],
-        userInterfaceStyle: 'dark',
-        tintIcons: true
-      },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0: {
-            setDisplayLargeThumbnails(!displayLargeThumbnails);
-            return;
-          }
-          case 1: {
-            return;
-          }
-        }
-      }
-    );
-  };
-
   const navigateBackToThread = () => navigation.navigate('Thread', { id: cachedThreadId });
 
   return (
@@ -134,11 +108,6 @@ export const HomeScreen = () => {
           headerTitle: () => screenHeader(),
           headerRight: () => (
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
-                <View style={rightIcons()}>
-                  <IoniconIcon name="ellipsis-horizontal" style={{ color: color.primary }} size={30} />
-                </View>
-              </TouchableHighlight>
               {!!cachedThreadId && <TouchableHighlight underlayColor={color.accentLight} onPress={navigateBackToThread}>
                 <View>
                   <IoniconIcon name="chevron-forward" style={{ color: color.primary }} size={30} />
