@@ -1,7 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import useSWR from 'swr';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, RefreshControl, SafeAreaView, Share, type ViewStyle } from 'react-native';
+import { RefreshControl, SafeAreaView, Share, type ViewStyle } from 'react-native';
 import { NavigableHeader } from '../../components/NavigableHeader/NavigableHeader';
 import { StoryCard } from '../../components/StoryCard/StoryCard';
 import { styles, useDash } from '../../../dash.config';
@@ -9,6 +9,7 @@ import { type HackerNewsUser } from '../../types/hn-api';
 import { type StackParamList } from '../routers';
 import { HACKER_NEWS_API } from '../../constants/api';
 import { keyExtractor } from '../../utils/util';
+import { FlashList } from '@shopify/flash-list';
 
 export function User(props: UserProps) {
   useDash();
@@ -70,7 +71,7 @@ export function User(props: UserProps) {
 
   return (
     <SafeAreaView style={container()}>
-      <FlatList
+      <FlashList
         ListHeaderComponent={listHeaderComponent}
         stickyHeaderIndices={[0]}
         refreshControl={refreshControl}

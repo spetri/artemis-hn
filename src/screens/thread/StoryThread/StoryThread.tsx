@@ -1,6 +1,5 @@
 import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  FlatList,
   RefreshControl,
   View,
   type ViewabilityConfigCallbackPair,
@@ -19,11 +18,12 @@ import { Comment } from '../Comment/Comment';
 import { fauxFlatComments, keyExtractor } from '../../../utils/util';
 import { StoryThreadHeader } from './StoryThreadHeader/StoryThreadHeader';
 import { usePreferencesStore } from '../../../contexts/store';
+import { FlashList } from '@shopify/flash-list';
 
 type StoryThreadProps = {
   data: HackerNewsStory | HackerNewsJob | HackerNewsPoll | HackerNewsAsk;
   onRefresh: () => unknown;
-}
+};
 
 export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   const [didMount, setDidMount] = useState(false);
@@ -106,7 +106,7 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
 
   return (
     <View style={container()}>
-      <FlatList
+      <FlashList
         ListHeaderComponent={<StoryThreadHeader data={data} metadata={metadata} url={url} />}
         scrollToOverflowEnabled={true}
         refreshControl={refreshControl}

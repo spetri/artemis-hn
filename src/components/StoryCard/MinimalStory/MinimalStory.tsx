@@ -3,8 +3,9 @@ import { shallow } from 'zustand/shallow';
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
-import { type FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import {
+  Animated,
   Dimensions,
   Image,
   Linking,
@@ -14,14 +15,14 @@ import {
   View,
   type ViewStyle
 } from 'react-native';
-import { ListItem, Skeleton } from '@rneui/themed';
+import { ListItem } from '@rneui/themed';
 import { styles, useDash } from '../../../../dash.config';
 import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
 import { type HackerNewsStory } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
 import { usePreferencesStore } from '../../../contexts/store';
-
+import { Skeleton } from '../../Skeleton/Skeleton';
 
 type MinimalStoryProps = {
   data: HackerNewsStory;
@@ -36,20 +37,33 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const thumbnailSize = usePreferencesStore((state) => state.thumbnailSize);
   const thumbnailPosition = usePreferencesStore((state) => state.thumbnailPosition);
   const openLinkInBrowser = usePreferencesStore((state) => state.openLinkInBrowser);
-  const { setCachedThreadId } = usePreferencesStore((state) => ({
-    setCachedThreadId: state.setCachedThreadId,
-  }), shallow);
-  const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
+  const { setCachedThreadId } = usePreferencesStore(
+    (state) => ({
+      setCachedThreadId: state.setCachedThreadId
+    }),
+    shallow
+  );
+  const [opacity] = useState(new Animated.Value(0));
 
   const {
     tokens: { color }
   } = useDash();
 
+  useEffect(() => {
+    if (data != null && metadata != null) {
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true
+      }).start();
+    }
+  }, [opacity, data, metadata]);
+
   if (metadata == null) {
     return (
-      <View>
+      <Animated.View style={{ opacity }}>
         <ListItem containerStyle={skeletonContainer(index)}>
-          <Skeleton animation="pulse" style={storySkeletonImage(index)} />
+          <Skeleton style={storySkeletonImage(index)} />
           <ListItem.Content>
             <Skeleton style={storySkeletonTitle(index)} />
             <ListItem containerStyle={skeletonContainer(index)}>
@@ -58,11 +72,9 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
             </ListItem>
           </ListItem.Content>
         </ListItem>
-      </View>
+      </Animated.View>
     );
   }
-
-  console.log("displayLargeThumbnails", displayLargeThumbnails);
 
   const displayImage = () => {
     const inAppBrowser = () => {
@@ -74,8 +86,10 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     const systemBrowser = async () => await Linking.openURL(url.toString());
     if (metadata?.image) {
       return (
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
+        <TouchableHighlight
+          underlayColor={color.accentLight}
+          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}
+        >
           <View>
             <Image style={storyImage(thumbnailSize)} source={{ uri: metadata?.image }} />
           </View>
@@ -83,8 +97,10 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       );
     } else if (metadata?.favicon) {
       return (
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
+        <TouchableHighlight
+          underlayColor={color.accentLight}
+          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}
+        >
           <View>
             <Image style={storyImage(thumbnailSize)} source={{ uri: metadata.favicon }} />
           </View>
@@ -92,12 +108,14 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       );
     } else {
       return (
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}>
+        <TouchableHighlight
+          underlayColor={color.accentLight}
+          onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}
+        >
           <View>
             <IoniconIcon name="md-newspaper-outline" style={icon(thumbnailSize)} size={40} />
           </View>
-        </TouchableHighlight >
+        </TouchableHighlight>
       );
     }
   };
@@ -105,59 +123,63 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const navigateToThread = (threadId) => {
     setCachedThreadId(threadId);
     return navigation.push('Thread', { id: threadId });
-  }
+  };
 
   return (
     metadata && (
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => navigateToThread(data.id)}
       >
-        <View style={storyContainer(thumbnailPosition)} key={data.id}>
-          <View style={imageColumn(index)}>{displayImage()}</View>
-          <View style={bodyColumn(thumbnailPosition)}>
-            <View>
-              <Text style={storyTitle(index)} numberOfLines={4}>
-                {data.title}&nbsp;
-                {displaySource ? (
-                  <Text style={appName()}>
-                    ({metadata.applicationName || url.host.replace(/^www\./, '')})
-                  </Text>
-                ) : null}
-              </Text>
-            </View>
-            <View style={footerText()}>
+        <Animated.View style={{ opacity }}>
+          <View style={storyContainer(thumbnailPosition)} key={data.id}>
+            <View style={imageColumn(index)}>{displayImage()}</View>
+            <View style={bodyColumn(thumbnailPosition)}>
               <View>
-                <TouchableHighlight underlayColor={color.accentLight}
-                  onPress={() => {
-                    navigation.push('User', { id: data.by });
-                  }}
-                >
-                  <Text style={byStyle()}>{data.by}</Text>
-                </TouchableHighlight>
-              </View>
-              <View style={restText()}>
-                <Text style={rest()}>
-                  <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
-                  <Text>{data.score}</Text>
-                </Text>
-                <View>
-                  <View style={rest()}>
-                    <Text style={rotate90}>
-                      <IoniconIcon size={13} name="chatbubble-outline" color={color.textAccent} />
+                <Text style={storyTitle(index)} numberOfLines={4}>
+                  {data.title}&nbsp;
+                  {displaySource ? (
+                    <Text style={appName()}>
+                      ({metadata.applicationName || url.host.replace(/^www\./, '')})
                     </Text>
-                    <Text style={chatText(index)}>{data.descendants}</Text>
-                  </View>
-                </View>
+                  ) : null}
+                </Text>
+              </View>
+              <View style={footerText()}>
                 <View>
+                  <TouchableHighlight
+                    underlayColor={color.accentLight}
+                    onPress={() => {
+                      navigation.push('User', { id: data.by });
+                    }}
+                  >
+                    <Text style={byStyle()}>{data.by}</Text>
+                  </TouchableHighlight>
+                </View>
+                <View style={restText()}>
                   <Text style={rest()}>
-                    <IoniconIcon size={13} name="time-outline" color={color.textAccent} />
-                    <Text>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
+                    <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
+                    <Text>{data.score}</Text>
                   </Text>
+                  <View>
+                    <View style={rest()}>
+                      <Text style={rotate90}>
+                        <IoniconIcon size={13} name="chatbubble-outline" color={color.textAccent} />
+                      </Text>
+                      <Text style={chatText(index)}>{data.descendants}</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Text style={rest()}>
+                      <IoniconIcon size={13} name="time-outline" color={color.textAccent} />
+                      <Text>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
+        </Animated.View>
       </TouchableHighlight>
     )
   );
@@ -169,7 +191,7 @@ const storyContainer = styles.lazy<number, ViewStyle>((thumbnailPosition) => (t)
   height: 85,
   width: Dimensions.get('window').width,
   borderBottomColor: t.color.accent,
-  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomWidth: t.borderWidth.hairline
 }));
 
 const imageColumn = styles.lazy<number, ViewStyle>(() => () => ({
@@ -238,7 +260,7 @@ const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
 const storyImage = styles.lazy<number, ViewStyle>((size) => () => ({
   width: size,
   height: size,
-  borderRadius: 4,
+  borderRadius: 4
 }));
 
 const byStyle = styles.one<TextStyle>((t) => ({
@@ -250,7 +272,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const appName = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size["2xs"],
+  fontSize: t.type.size['2xs'],
   fontWeight: '300'
 }));
 
@@ -258,7 +280,7 @@ const footerText = styles.one<TextStyle>(() => ({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'nowrap',
-  alignItems: 'center',
+  alignItems: 'center'
 }));
 
 const restText = styles.one<TextStyle>(() => ({
@@ -273,7 +295,7 @@ const icon = styles.lazy<number, ViewStyle>((size) => (t) => ({
   height: size,
   color: t.color.accentLight,
   padding: 6
-}))
+}));
 
 const rest = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,

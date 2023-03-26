@@ -1,8 +1,8 @@
-import { memo } from 'react';
-import { Dimensions, View, type ViewStyle } from 'react-native';
+import { memo, useEffect, useState } from 'react';
+import { Animated, Dimensions, View, type ViewStyle } from 'react-native';
 import useSWR from 'swr';
 
-import { ListItem, Skeleton } from '@rneui/themed';
+import { ListItem } from '@rneui/themed';
 import { styles, useDash } from '../../../dash.config';
 import { type HackerNewsAsk, type HackerNewsItem, type HackerNewsPoll } from '../../types/hn-api';
 import { HACKER_NEWS_API } from '../../constants/api';
@@ -12,26 +12,41 @@ import { CommentStory } from './CommentStory/CommentStory';
 import { ComplexStory } from './ComplexStory/ComplexStory';
 import { usePreferencesStore } from '../../contexts/store';
 import { MinimalStory } from './MinimalStory/MinimalStory';
+import { Skeleton } from '../Skeleton/Skeleton';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
+    const [opacity] = useState(new Animated.Value(0));
     const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
 
     const story = useSWR<HackerNewsItem>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
-      async (key) =>
-        await fetch(key, {
+      async (key) => {
+        return await fetch(key, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
-        }).then(async (res) => await res.json())
+        }).then(async (res) => {
+          return await res.json();
+        });
+      }
     );
+
+    useEffect(() => {
+      if (story.data !== null) {
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true
+        }).start();
+      }
+    }, [story.data, opacity]);
 
     if (story.data == null) {
       return (
         <View>
           <ListItem containerStyle={skeletonContainer(index)}>
-            <Skeleton animation="pulse" style={storySkeletonImage(index)} />
+            <Skeleton style={storySkeletonImage(index)} />
             <ListItem.Content>
               <Skeleton style={storySkeletonTitle(index)} />
               <ListItem containerStyle={skeletonContainer(index)}>
@@ -60,7 +75,9 @@ export const StoryCard = memo(
     ) : displayLargeThumbnails ? (
       <ComplexStory data={story.data} index={index} />
     ) : (
-      <MinimalStory data={story.data} index={index} />
+      <Animated.View style={{ opacity }}>
+        <MinimalStory data={story.data} index={index} />
+      </Animated.View>
     );
   },
   (prev, next) => prev.id === next.id && prev.index === next.index

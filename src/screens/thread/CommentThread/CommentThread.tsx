@@ -1,16 +1,17 @@
 import { type FC, useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, RefreshControl, View, type ViewStyle } from 'react-native';
+import { RefreshControl, View, type ViewStyle } from 'react-native';
 import { type HackerNewsComment } from '../../../types/hn-api';
 import { useParents } from '../../../hooks/use-parents';
 import { Comment } from '../Comment/Comment';
 import { styles } from '../../../../dash.config';
 import { fauxFlatComments, keyExtractor } from '../../../utils/util';
 import { CommentThreadHeader } from './CommentThreadHeader/CommentThreadHeader';
+import { FlashList } from '@shopify/flash-list';
 
 type CommentThreadProps = {
   data: HackerNewsComment;
   onRefresh: () => void;
-}
+};
 
 export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
   const parents = useParents(data.parent);
@@ -18,7 +19,7 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
   const [didMount, setDidMount] = useState(false);
   const [containerHeight, setContainerHeight] = useState<number>(0);
   const [mainHeight, setMainHeight] = useState<number>(0);
-  const listRef = useRef<FlatList>(null);
+  const listRef = useRef<any>(null);
 
   useEffect(() => {
     if (data && containerHeight && mainHeight && listRef.current != null && !didMount) {
@@ -38,7 +39,7 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
 
   return (
     <View style={container()}>
-      <FlatList
+      <FlashList
         ListHeaderComponent={
           <CommentThreadHeader
             data={data}
