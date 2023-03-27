@@ -8,7 +8,7 @@ import { colorSystem, createTypeSystem, useDash } from '../../../dash.config';
 import { type StackParamList } from '../routers';
 
 type ThumbnailSizeType = 55 | 65 | 75;
-type PositionType = 'Left' | 'Right';
+type PositionType = 'Left' | 'Right' | 'Middle';
 
 enum Position {
   LEFT = 'Left',
@@ -55,15 +55,15 @@ export type SetThemeType = {
   thumbnailPosition: PositionType;
   thumbnailSize: ThumbnailSizeType;
   colorScheme:
-  | 'dark'
-  | 'light'
-  | 'black'
-  | 'solarized'
-  | 'dracula'
-  | 'nord'
-  | 'aurora'
-  | null
-  | undefined;
+    | 'dark'
+    | 'light'
+    | 'black'
+    | 'solarized'
+    | 'dracula'
+    | 'nord'
+    | 'aurora'
+    | null
+    | undefined;
   primaryColor: keyof typeof colorSystem;
   commentColors: string[];
   baseTypeSize: number;

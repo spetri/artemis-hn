@@ -5,7 +5,6 @@ import {
   type ViewabilityConfigCallbackPair,
   type ViewStyle
 } from 'react-native';
-import { FAB } from '@rneui/themed';
 import { styles, useDash } from '../../../../dash.config';
 import { useMetadata } from '../../../hooks/use-metadata';
 import {
@@ -14,6 +13,7 @@ import {
   type HackerNewsPoll,
   type HackerNewsStory
 } from '../../../types/hn-api';
+import { Fab } from '../../../components/Fab/Fab';
 import { Comment } from '../Comment/Comment';
 import { fauxFlatComments, keyExtractor } from '../../../utils/util';
 import { StoryThreadHeader } from './StoryThreadHeader/StoryThreadHeader';
@@ -48,15 +48,6 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
     const totalCommentCount = data?.kids.length - 1;
     if (
       viewportOffsetTopComment != null &&
-      viewportOffsetTopComment[0].index === 0 &&
-      viewportOffsetTopComment.length === 1
-    ) {
-      scrollViewRef?.current.scrollToIndex({
-        index: 0,
-        animated: true
-      });
-    } else if (
-      viewportOffsetTopComment != null &&
       viewportOffsetTopComment[0].index === totalCommentCount
     ) {
       return;
@@ -66,17 +57,21 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
           if (viewportOffsetTopComment[0].index < 1) {
             return;
           } else {
-            scrollViewRef?.current.scrollToIndex({
-              index: viewportOffsetTopComment[0].index - 1,
-              animated: true
-            });
+            setTimeout(() => {
+              scrollViewRef?.current?.scrollToIndex({
+                index: viewportOffsetTopComment[0].index - 1,
+                animated: true
+              });
+            }, 100);
           }
         } else {
-          scrollViewRef?.current.scrollToIndex({
-            index: viewportOffsetTopComment[0].index + 1,
-            animated: true,
-            viewOffset: -10
-          });
+          setTimeout(() => {
+            scrollViewRef?.current.scrollToIndex({
+              index: viewportOffsetTopComment[0].index + 1,
+              animated: true,
+              viewOffset: -10
+            });
+          }, 100);
         }
       }
     }
@@ -122,7 +117,7 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
         ref={scrollViewRef}
       />
       {showJumpButton && (
-        <FAB
+        <Fab
           placement={jumpButtonPosition}
           icon={{ name: 'keyboard-arrow-down', color: color.textPrimary }}
           color={color.primary as string}

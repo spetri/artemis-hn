@@ -1,7 +1,10 @@
 import { useAsync } from '@react-hook/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, ListItem, Switch } from '@rneui/themed';
-import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import type {
+  NativeStackNavigationProp,
+  NativeStackScreenProps
+} from '@react-navigation/native-stack';
 
 import { type FC, useCallback, useLayoutEffect, useState } from 'react';
 import {
@@ -24,8 +27,6 @@ import Slider from '@react-native-community/slider';
 import { ListItemType, usePreferencesStore } from '../../../contexts/store';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
-import { AppColors } from '../SettingsListView/ThemeConfig';
-import { ThemeGridList } from '../../../components/ThemeGridList/ThemeGridList';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
@@ -80,7 +81,9 @@ export const GeneralSettings: FC<SettingsProps> = () => {
 
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
   const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition ?? 'right');
-  const [buttonThumbnailSize, setButtonThumbnailSize] = useState<string | number>(thumbnailSize ?? 'Small');
+  const [buttonThumbnailSize, setButtonThumbnailSize] = useState<string | number>(
+    thumbnailSize ?? 'Small'
+  );
   const [buttonThumbnailPosition, setButtonThumbnailPosition] = useState(
     thumbnailPosition ?? 'Small'
   );
@@ -110,7 +113,8 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     {
       id: '1',
       header: 'Themes',
-      subHeader: "Set App Theme",
+      columnCount: 2,
+      subHeader: 'Set App Theme',
       iconName: 'ios-settings-outline',
       onPress: () => navigation.navigate('ThemeColorSection', {}),
       type: <Icon name="chevron-forward" color={color.textPrimary} size={18} />
@@ -118,7 +122,8 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     {
       id: '2',
       header: 'Accents',
-      subHeader: "Set Color Accents",
+      columnCount: 2,
+      subHeader: 'Set Color Accents',
       iconName: 'ios-moon-outline',
       onPress: () => navigation.navigate('AccentColorSection', {}),
       type: <Icon name="chevron-forward" color={color.textPrimary} size={18} />
@@ -126,7 +131,8 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     {
       id: '3',
       header: 'Comment Color',
-      subHeader: "Set Comment Colors",
+      subHeader: 'Set Comment Colors',
+      columnCount: 2,
       iconName: 'ios-logo-hackernews',
       onPress: () => navigation.navigate('CommentColorSection', {}),
       type: <Icon name="chevron-forward" color={color.textPrimary} size={18} />
@@ -146,6 +152,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             minimumValue={12}
             maximumValue={20}
             step={2}
+            minimumTrackTintColor={color.primary}
             value={baseTypeSize ?? preferences.data?.baseTypeSize ?? 16}
             onValueChange={setBaseTypeSize}
           />
@@ -171,6 +178,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       type: (
         <Switch
           value={displayReplies}
+          color={color.primary}
           onValueChange={(value) => {
             setDisplayReplies(!value);
           }}
@@ -186,6 +194,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       type: (
         <Switch
           value={displayLargeThumbnails}
+          color={color.primary}
           onValueChange={(value) => {
             setDisplayLargeThumbnails(!value);
           }}
@@ -201,6 +210,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       type: (
         <Switch
           value={showJumpButton}
+          color={color.primary}
           onValueChange={(value) => {
             setShowJumpButton(!value);
           }}
@@ -214,11 +224,14 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-move',
       type: (
         <Button
-          buttonStyle={{ backgroundColor: color.primary }}
+          type="outline"
+          buttonStyle={buttonStyle()}
+          icon={buttonIcon()}
+          iconRight
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
-                options: ['left', 'right', 'Cancel']
+                options: ['left', 'right', 'middle', 'Cancel']
               },
               (index) => {
                 switch (index) {
@@ -231,13 +244,17 @@ export const GeneralSettings: FC<SettingsProps> = () => {
                     setJumpButtonPosition('right');
                     break;
                   case 2:
+                    setButtonJumpText('middle');
+                    setJumpButtonPosition('middle');
+                    break;
+                  case 3:
                     break;
                 }
               }
             );
           }}
         >
-          <Text>{buttonJumpText}</Text>
+          <Text style={buttonText()}>{buttonJumpText}</Text>
         </Button>
       )
     },
@@ -248,7 +265,11 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-compass-outline',
       onPress: () => setOpenLinkInBrowser(!openLinkInBrowser),
       type: (
-        <Switch value={openLinkInBrowser} onValueChange={(value) => setOpenLinkInBrowser(!value)} />
+        <Switch
+          value={openLinkInBrowser}
+          color={color.primary}
+          onValueChange={(value) => setOpenLinkInBrowser(!value)}
+        />
       )
     },
     {
@@ -257,7 +278,13 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       subheader: 'Show link source',
       iconName: 'ios-link-outline',
       onPress: () => setDisplaySource(!displaySource),
-      type: <Switch value={displaySource} onValueChange={(value) => setDisplaySource(!value)} />
+      type: (
+        <Switch
+          value={displaySource}
+          color={color.primary}
+          onValueChange={(value) => setDisplaySource(!value)}
+        />
+      )
     },
     {
       id: '8',
@@ -266,7 +293,10 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-image',
       type: (
         <Button
-          buttonStyle={{ backgroundColor: color.primary }}
+          type="outline"
+          buttonStyle={buttonStyle()}
+          icon={buttonIcon()}
+          iconRight
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
@@ -294,7 +324,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             );
           }}
         >
-          <Text>{buttonThumbnailSize ?? 'Small'}</Text>
+          <Text style={buttonText()}>{buttonThumbnailSize ?? 'Small'}</Text>
         </Button>
       )
     },
@@ -305,7 +335,10 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       iconName: 'ios-hand-left-outline',
       type: (
         <Button
-          buttonStyle={{ backgroundColor: color.primary }}
+          type="outline"
+          buttonStyle={buttonStyle()}
+          icon={buttonIcon()}
+          iconRight
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
@@ -329,7 +362,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
             );
           }}
         >
-          <Text>{buttonThumbnailPosition ?? 'Small'}</Text>
+          <Text style={buttonText()}>{buttonThumbnailPosition ?? 'Small'}</Text>
         </Button>
       )
     }
@@ -353,19 +386,19 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     }
   }, [baseTypeSize]);
 
-  const renderItems = (item, columnCount) => {
-    const style = columnCount === 2 ? containerTwoColumnBg() : containerBg();
-    const iconSize = columnCount === 2 ? 18 : 25;
+  const renderItems = (item) => {
+    const style = item.columnCount === 2 ? containerTwoColumnBg() : containerBg();
+    const iconSize = item.columnCount === 2 ? 18 : 25;
 
     return (
-      <TouchableHighlight underlayColor={color.accentLight}
-        onPress={item.onPress}
-      >
+      <TouchableHighlight underlayColor={color.accentLight} onPress={item.onPress}>
         <ListItem containerStyle={style}>
           <Icon name={item.iconName} color={color.textPrimary} size={iconSize} />
           <ListItemContent>
             <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-            {columnCount === 3 && <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>}
+            {item.columnCount !== 2 && (
+              <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
+            )}
           </ListItemContent>
           <View>
             <Text>{item.type}</Text>
@@ -379,16 +412,11 @@ export const GeneralSettings: FC<SettingsProps> = () => {
       <View style={containerBg()}>
         <SectionList
           ItemSeparatorComponent={() => <View style={listItemSeparatorStyle()} />}
-          sections={[{ title: 'Topics', data: themeItems }]}
-          renderItem={({ item }) => renderItems(item, 2)}
-        />
-        <SectionList
-          ItemSeparatorComponent={() => <View style={listItemSeparatorStyle()} />}
-          sections={[{ title: 'Topics', data: listItems }]}
-          renderItem={({ item }) => renderItems(item, 3)}
+          sections={[{ data: themeItems }, { data: listItems }]}
+          renderItem={({ item }) => renderItems(item)}
         />
       </View>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 };
 
@@ -408,12 +436,12 @@ const containerTwoColumnBg = styles.one<ViewStyle>((t) => ({
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   borderBottomWidth: t.borderWidth.hairline,
-  borderBottomColor: t.color.accentLight,
+  borderBottomColor: t.color.accentLight
 }));
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size.xs,
+  fontSize: t.type.size.xs
 }));
 
 const header = styles.one<TextStyle>((t) => ({
@@ -438,4 +466,23 @@ const slider = styles.one<TextStyle>(() => ({
   display: 'flex',
   marginRight: 1,
   width: 100
+}));
+
+const buttonText = styles.one<TextStyle>((t) => ({
+  color: t.color.primary,
+  textTransform: 'capitalize',
+  fontWeight: '600'
+}));
+
+const buttonStyle = styles.one<TextStyle>((t) => ({
+  borderColor: t.color.primary,
+  borderWidth: 2,
+  borderRadius: 4
+}));
+
+const buttonIcon = styles.one<TextStyle>((t) => ({
+  name: 'chevron-right',
+  type: 'ionicons',
+  size: 20,
+  color: t.color.primary
 }));

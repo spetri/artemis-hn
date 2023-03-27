@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { defaultPreferences } from '../screens/Settings/useTheme';
 
 type ThumbnailSizeType = 55 | 65 | 75;
-type PositionType = 'left' | 'right';
+export type PositionType = 'left' | 'right' | 'middle';
 
 export type ListItemType = {
   id: string;
@@ -95,7 +95,8 @@ type PreferencesState = {
 
 const preferencesStore = (set) => ({
   displayLargeThumbnails: defaultPreferences.displayLargeThumbnails,
-  setDisplayLargeThumbnails: (displayLargeThumbnails) => set(() => ({ displayLargeThumbnails: !displayLargeThumbnails })),
+  setDisplayLargeThumbnails: (displayLargeThumbnails) =>
+    set(() => ({ displayLargeThumbnails: !displayLargeThumbnails })),
 
   displayReplies: defaultPreferences.displayReplies,
   setDisplayReplies: (displayReplies) => set(() => ({ displayReplies: !displayReplies })),
@@ -122,8 +123,7 @@ const preferencesStore = (set) => ({
     set(() => ({ openLinkInBrowser: !openLinkInBrowser })),
 
   cachedThreadId: defaultPreferences.cachedThreadId,
-  setCachedThreadId: (cachedThreadId) =>
-    set(() => ({ cachedThreadId: cachedThreadId }))
+  setCachedThreadId: (cachedThreadId) => set(() => ({ cachedThreadId: cachedThreadId }))
 });
 
 export const usePreferencesStore = create(
