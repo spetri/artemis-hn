@@ -53,7 +53,7 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
         keyExtractor={keyExtractor}
         estimatedItemSize={370}
         renderItem={renderThreadedItem}
-        style={container()}
+        contentContainerStyle={container()}
         ref={listRef}
       />
     </View>

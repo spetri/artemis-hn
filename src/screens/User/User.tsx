@@ -77,12 +77,8 @@ export function User(props: UserProps) {
         refreshControl={refreshControl}
         data={user.data?.submitted ?? fauxStories}
         keyExtractor={keyExtractor}
-        initialNumToRender={4}
-        maxToRenderPerBatch={5}
-        updateCellsBatchingPeriod={100}
-        windowSize={3}
         renderItem={renderFlatListItem}
-        style={container()}
+        contentContainerStyle={container()}
       />
     </SafeAreaView>
   );

@@ -29,7 +29,7 @@ type CommentThreadHeaderProps = {
   parentComments: any;
   setContainerHeight: (number: number) => void;
   setMainHeight: (number: number) => void;
-}
+};
 
 export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
   data,
@@ -40,7 +40,10 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const parentStory = parentComments[0];
   const dimensions = useWindowDimensions();
-  const { theme, tokens: { color } } = useDash();
+  const {
+    theme,
+    tokens: { color }
+  } = useDash();
   const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
     () => ({
       a: {
@@ -78,7 +81,8 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
     >
       <SafeAreaView>
         <View style={header()}>
-          <TouchableHighlight underlayColor={color.accentLight}
+          <TouchableHighlight
+            underlayColor={color.accentLight}
             style={backButton()}
             onPress={() => {
               navigation.goBack();
@@ -91,7 +95,8 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
         </View>
       </SafeAreaView>
 
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Thread', {
             id: parentStory.id
@@ -139,7 +144,8 @@ export const CommentThreadHeader: FC<CommentThreadHeaderProps> = ({
       >
         <View style={parentCommentMarker()} />
         <View style={byLine}>
-          <TouchableHighlight underlayColor={color.accentLight}
+          <TouchableHighlight
+            underlayColor={color.accentLight}
             onPress={() => {
               navigation.navigate('User', { id: data.by });
             }}

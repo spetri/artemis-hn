@@ -1,5 +1,4 @@
-import RenderHTML, { type MixedStyleRecord, type RenderersProps } from
-  'react-native-render-html';
+import RenderHTML, { type MixedStyleRecord, type RenderersProps } from 'react-native-render-html';
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { type FC, useMemo } from 'react';
@@ -33,20 +32,23 @@ import {
 
 type StoryThreadHeaderProps = {
   data:
-  | HackerNewsStory
-  | HackerNewsJob
-  | HackerNewsStory
-  | HackerNewsJob
-  | HackerNewsPoll
-  | HackerNewsAsk;
+    | HackerNewsStory
+    | HackerNewsJob
+    | HackerNewsStory
+    | HackerNewsJob
+    | HackerNewsPoll
+    | HackerNewsAsk;
   metadata: any;
   url: any;
-}
+};
 
 export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, url }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const dimensions = useWindowDimensions();
-  const { theme, tokens: { color } } = useDash();
+  const {
+    theme,
+    tokens: { color }
+  } = useDash();
   const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
     () => ({
       a: {
@@ -70,30 +72,37 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
 
   const urlBar = () => {
     const image = metadata?.image || metadata?.favicon;
+
     if (metadata && url) {
-      return <TouchableHighlight underlayColor={color.accentLight}
-        onPress={() => {
-          navigation.navigate('Browser', {
-            title: metadata.applicationName || url.hostname,
-            url: url.origin
-          });
-        }}
-      >
+      return (
+        <TouchableHighlight
+          underlayColor={color.accentLight}
+          onPress={() => {
+            navigation.navigate('Browser', {
+              title: metadata.applicationName || url.hostname,
+              url: url.origin
+            });
+          }}
+        >
+          <View style={imageLink()}>
+            <Image
+              style={storyImage()}
+              source={{ uri: image ?? <IoniconIcon name="md-newspaper-outline" size={40} /> }}
+            />
 
-        <View style={imageLink()}>
-          <Image style={storyImage()} source={{ uri: image ?? <IoniconIcon name="md-newspaper-outline" size={40} /> }} />
-
-          <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
-            {metadata.applicationName || url.host.replace(/^www\./, '')}
-          </Text>
-        </View>
-      </TouchableHighlight>
+            <Text style={hostname()} numberOfLines={1} ellipsizeMode="tail">
+              {metadata.applicationName || url.host.replace(/^www\./, '')}
+            </Text>
+          </View>
+        </TouchableHighlight>
+      );
     }
-  }
+  };
 
   return !data ? null : (
     <View>
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => {
           data &&
             url &&
@@ -126,31 +135,29 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
         />
       )}
 
-      <View>
-        <TouchableHighlight underlayColor={color.accentLight}
+      {data.type !== 'job' && (data.score || ('descendants' in data && data.descendants > 0)) && (
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             navigation.navigate('User', { id: data.by });
           }}
         >
-          <View style={hostContainerStyle()}>
-            <Text style={byStyle()}>by {data.by}</Text>
+          <View style={rest()}>
+            <Text style={subtitle()}>
+              <Text style={byStyle()}>{data.by} &bull; </Text>
+              {data.score && (
+                <Text style={{ color: color.primary }}>
+                  <AntDesignIcon size={13} name="arrowup" color={color.primary} />
+                  {data.score}
+                </Text>
+              )}
+              {'descendants' in data && (
+                <Text> &bull; {pluralize(data.descendants, 'comment')}</Text>
+              )}
+            </Text>
+            <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
           </View>
         </TouchableHighlight>
-      </View>
-
-      {data.type !== 'job' && (data.score || ('descendants' in data && data.descendants > 0)) && (
-        <View style={rest()}>
-          <Text style={subtitle()}>
-            {
-              data.score && <Text style={{ color: color.primary }}>
-                <AntDesignIcon size={13} name="arrowup" color={color.primary} />
-                {data.score}
-              </Text>
-            }
-            {'descendants' in data && <Text> &bull; {pluralize(data.descendants, 'comment')}</Text>}
-          </Text>
-          <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
-        </View>
       )}
     </View>
   );
@@ -160,7 +167,7 @@ const title = styles.one<TextStyle>((t) => ({
   marginTop: t.space.md,
   color: t.color.textPrimary,
   fontSize: t.type.size.base,
-  fontWeight: '500',
+  fontWeight: '500'
 }));
 
 const subtitle = styles.one<TextStyle>((t) => ({
@@ -168,7 +175,7 @@ const subtitle = styles.one<TextStyle>((t) => ({
   fontSize: t.type.size.xs,
   fontWeight: '600',
   paddingLeft: t.space.lg,
-  paddingBottom: t.space.lg,
+  paddingBottom: t.space.lg
 }));
 
 const hostContainerStyle = styles.one<ViewStyle>((t) => ({
@@ -178,7 +185,7 @@ const hostContainerStyle = styles.one<ViewStyle>((t) => ({
   paddingRight: t.space.lg,
   paddingLeft: t.space.lg,
   paddingTop: t.space.md,
-  paddingBottom: t.space.md,
+  paddingBottom: t.space.md
 }));
 
 const imageLink = styles.one<ViewStyle>((t) => ({
@@ -186,15 +193,15 @@ const imageLink = styles.one<ViewStyle>((t) => ({
   alignItems: 'center',
   marginHorizontal: t.space.lg,
   marginVertical: t.space.md,
-  backgroundColor: t.color.accentLight,
-  borderRadius: 8,
+  backgroundColor: t.color.accent,
+  borderRadius: 8
 }));
 
 const storyImage = styles.one<ImageStyle>(() => ({
   width: 45,
   height: 45,
   borderTopLeftRadius: 8,
-  borderBottomLeftRadius: 8,
+  borderBottomLeftRadius: 8
 }));
 
 const hostname = styles.one<TextStyle>((t) => ({
@@ -217,7 +224,7 @@ const content = styles.one((t) => ({
 const byStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textPrimary,
   fontSize: t.type.size.xs,
-  fontWeight: '500',
+  fontWeight: '500'
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
@@ -240,10 +247,10 @@ const htmlDefaultTextProps: TextProps = {
 };
 
 const rest = styles.one<TextStyle>((t) => ({
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
   borderBottomWidth: t.borderWidth.hairline,
   borderBottomColor: t.color.accentLight
 }));
