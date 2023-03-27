@@ -17,7 +17,7 @@ import { Skeleton } from '../Skeleton/Skeleton';
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
     useDash();
-    const [opacity] = useState(new Animated.Value(0));
+    const [opacity] = useState(new Animated.Value(0.5));
     const displayLargeThumbnails = usePreferencesStore((state) => state.displayLargeThumbnails);
 
     const story = useSWR<HackerNewsItem>(
@@ -36,7 +36,7 @@ export const StoryCard = memo(
       if (story.data !== null) {
         Animated.timing(opacity, {
           toValue: 1,
-          duration: 500,
+          duration: 150,
           useNativeDriver: true
         }).start();
       }
@@ -49,7 +49,7 @@ export const StoryCard = memo(
             <Skeleton style={storySkeletonImage(index)} />
             <ListItem.Content>
               <Skeleton style={storySkeletonTitle(index)} />
-              <ListItem containerStyle={skeletonContainer(index)}>
+              <ListItem containerStyle={skeletonHeaderContainer(index)}>
                 <Skeleton style={storySkeletonBy(index)} />
                 <Skeleton style={storySkeletonMetadata(index)} />
               </ListItem>
@@ -87,6 +87,10 @@ function PollStory({ data, index }: { data: HackerNewsPoll; index: number }) {
   console.log(data, index);
   return null;
 }
+
+const skeletonHeaderContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+  backgroundColor: t.color.bodyBg
+}));
 
 const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
   backgroundColor: t.color.bodyBg,

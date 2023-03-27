@@ -112,10 +112,7 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
         refreshControl={refreshControl}
         data={!data ? fauxFlatComments : 'kids' in data ? data.kids : []}
         keyExtractor={keyExtractor}
-        initialNumToRender={4}
-        maxToRenderPerBatch={5}
-        updateCellsBatchingPeriod={100}
-        windowSize={3}
+        estimatedItemSize={266}
         renderItem={renderItem}
         style={container()}
         viewabilityConfigCallbackPairs={

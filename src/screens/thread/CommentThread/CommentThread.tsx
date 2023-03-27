@@ -51,10 +51,7 @@ export const CommentThread: FC<CommentThreadProps> = ({ data, onRefresh }) => {
         refreshControl={refreshControl}
         data={!data ? fauxFlatComments : 'kids' in data ? data.kids : []}
         keyExtractor={keyExtractor}
-        initialNumToRender={4}
-        maxToRenderPerBatch={5}
-        updateCellsBatchingPeriod={100}
-        windowSize={3}
+        estimatedItemSize={370}
         renderItem={renderThreadedItem}
         style={container()}
         ref={listRef}

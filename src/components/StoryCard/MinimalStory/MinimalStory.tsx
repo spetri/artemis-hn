@@ -43,7 +43,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     }),
     shallow
   );
-  const [opacity] = useState(new Animated.Value(0));
+  const [opacity] = useState(new Animated.Value(0.5));
 
   const {
     tokens: { color }
@@ -59,14 +59,14 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     }
   }, [opacity, data, metadata]);
 
-  if (metadata == null) {
+  if (metadata == null || data == null) {
     return (
       <Animated.View style={{ opacity }}>
         <ListItem containerStyle={skeletonContainer(index)}>
           <Skeleton style={storySkeletonImage(index)} />
           <ListItem.Content>
             <Skeleton style={storySkeletonTitle(index)} />
-            <ListItem containerStyle={skeletonContainer(index)}>
+            <ListItem containerStyle={skeletonTitleContainer(index)}>
               <Skeleton style={storySkeletonBy(index)} />
               <Skeleton style={storySkeletonMetadata(index)} />
             </ListItem>
@@ -223,10 +223,14 @@ const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({
   width: Dimensions.get('window').width - 100
 }));
 
-const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+const skeletonTitleContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
   backgroundColor: t.color.bodyBg,
   borderBottomWidth: t.borderWidth.hairline,
   borderBottomColor: t.color.accentLight
+}));
+
+const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+  backgroundColor: t.color.bodyBg
 }));
 
 const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
