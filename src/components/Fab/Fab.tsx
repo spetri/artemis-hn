@@ -12,10 +12,10 @@ export type FabProps = {
 
 export const Fab = memo(function Fab(props: FabProps) {
   const widthDirection = () => {
-    if (props.placement === 'middle') {
-      return { width: '90%', height: '12%' };
+    if (props.placement === 'Middle') {
+      return { width: '90%', height: '12%', placement: props.placement.toLowerCase() };
     } else {
-      return { width: '30%', height: '12%' };
+      return { width: '30%', height: '12%', placement: props.placement.toLowerCase() };
     }
   };
 

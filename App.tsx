@@ -20,9 +20,7 @@ import {
 } from 'react-native';
 import { DashProvider, styles, useDash } from './dash.config';
 import { useTheme } from './src/screens/Settings/useTheme';
-import {
-  Tab
-} from './src/screens/routers';
+import { Tab } from './src/screens/routers';
 import { HomeScreen } from './src/screens/Home/HomeScreen';
 import { SearchScreen } from './src/screens/Search/SearchScreen';
 import { SettingScreen } from './src/screens/Settings/SettingScreen';
@@ -102,7 +100,7 @@ const AppStatusBar = () => {
     appTheme = 'auto';
   }
   return <StatusBar style={appTheme} />;
-}
+};
 
 const Tabs = () => {
   useDash();
@@ -119,14 +117,21 @@ const Tabs = () => {
         screenOptions={{
           headerShown: false,
           headerStyle: {
-            backgroundColor: color.headerBg as string,
+            backgroundColor: color.headerBg as string
           },
           headerTintColor: color.primary as string,
           headerTitleStyle: {
             color: color.textPrimary as string
-          },
+          }
         }}
-        tabBar={({ state, descriptors, navigation, insets }: BottomTabBarProps) => <TabBarBase state={state} descriptors={descriptors} navigation={navigation} insets={insets} />}
+        tabBar={({ state, descriptors, navigation, insets }: BottomTabBarProps) => (
+          <TabBarBase
+            state={state}
+            descriptors={descriptors}
+            navigation={navigation}
+            insets={insets}
+          />
+        )}
       >
         <Tab.Screen
           name="Home"
@@ -164,7 +169,7 @@ const Tabs = () => {
       </Tab.Navigator>
     </View>
   );
-}
+};
 
 const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const {
@@ -179,13 +184,14 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-              ? options.title
-              : route.name;
+            ? options.title
+            : route.name;
 
         const isFocused = state.index === index;
 
         return (
-          <TouchableHighlight underlayColor={color.bodyBg}
+          <TouchableHighlight
+            underlayColor={color.bodyBg}
             key={route.name}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
@@ -225,15 +231,15 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
               <Text style={navigationText(isFocused)}>{label}</Text>
             </View>
           </TouchableHighlight>
-        )
+        );
       })}
     </SafeAreaView>
   );
-}
+};
 
 const navigationText = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
   color: isFocused ? t.color.primary : t.color.textPrimary,
-  fontSize: t.type.size["3xs"],
+  fontSize: t.type.size['3xs']
 }));
 
 const tabBar = styles.one<ViewStyle>((t) => ({
@@ -241,7 +247,7 @@ const tabBar = styles.one<ViewStyle>((t) => ({
   width: '100%',
   backgroundColor: t.color.headerBg,
   borderTopWidth: t.borderWidth.hairline,
-  borderTopColor: t.color.accent,
+  borderTopColor: t.color.accent
 }));
 
 const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
@@ -249,7 +255,7 @@ const tabBarLabel = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
   fontSize: t.type.size.sm,
   fontWeight: '700',
   margin: 0,
-  textAlign: 'center',
+  textAlign: 'center'
 }));
 
 const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
@@ -259,16 +265,16 @@ const tabBarTab = styles.lazy<boolean, ViewStyle>((isFocused) => (t) => ({
   padding: t.space.md,
   justifyContent: 'center',
   alignItems: 'center',
-  height: 50,
+  height: 50
 }));
 
 const sceneContainer = styles.one<ViewStyle>((t) => ({
   height: '100%',
   width: '100%',
-  backgroundColor: t.color.bodyBg,
+  backgroundColor: t.color.bodyBg
 }));
 
 const flexColumn = styles.one<ViewStyle>(() => ({
   display: 'flex',
-  flexDirection: 'column',
-}))
+  flexDirection: 'column'
+}));

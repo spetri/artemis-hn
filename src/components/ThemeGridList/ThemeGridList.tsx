@@ -13,7 +13,7 @@ import {
 } from '../../screens/Settings/useTheme';
 
 type ThemeGridListType = {
-  sections: [];
+  sections: [{ data: any }];
 };
 
 export const ThemeGridList: FC<ThemeGridListType> = ({ sections }) => {
@@ -91,25 +91,27 @@ export const ThemeGridList: FC<ThemeGridListType> = ({ sections }) => {
   };
 
   const Item = (appColor) => {
-
-    return <TouchableHighlight underlayColor={color.accentLight}
-      key={appColor.item.name}
-      onPress={() => {
-        setColorStorage(appColor);
-      }}
-    >
-      <ListItem key={appColor.item.name} containerStyle={containerBg()}>
-        <View style={listItems()}>
-          <>
-            {displayColors(appColor)}
-            <ListItem.Title style={header()}>
-              <Text>{appColor.item.displayName}</Text>
-            </ListItem.Title>
-          </>
-        </View>
-      </ListItem>
-    </TouchableHighlight>
-  }
+    return (
+      <TouchableHighlight
+        underlayColor={color.accentLight}
+        key={appColor.item.name}
+        onPress={() => {
+          setColorStorage(appColor);
+        }}
+      >
+        <ListItem key={appColor.item.name} containerStyle={containerBg()}>
+          <View style={listItems()}>
+            <>
+              {displayColors(appColor)}
+              <ListItem.Title style={header()}>
+                <Text>{appColor.item.displayName}</Text>
+              </ListItem.Title>
+            </>
+          </View>
+        </ListItem>
+      </TouchableHighlight>
+    );
+  };
 
   return (
     <SectionList

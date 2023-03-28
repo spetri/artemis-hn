@@ -37,31 +37,31 @@ export const SettingsListView: FC = () => {
       navigate: () => {
         navigation.push('General', {});
       }
-    },
-    {
-      id: '2',
-      header: 'App Icon',
-      iconName: 'ios-logo-hackernews',
-      navigate: () => {
-        navigation.push('General', {});
-      }
     }
+    // {
+    //   id: '2',
+    //   header: 'About',
+    //   iconName: 'person-circle-outline',
+    //   navigate: () => {
+    //     navigation.push('General', {});
+    //   }
+    // }
   ];
 
   const items = (item) => {
-    return <TouchableHighlight underlayColor={color.accentLight}
-      onPress={item.navigate}
-    >
-      <View style={{ display: 'flex', flexDirection: 'row' }}>
-        <Text style={imageContainer}>
-          <Icon name={item.iconName} color={color.textPrimary} size={18} />
-        </Text>
-        <View style={row()}>
-          <Text style={header()}>{item.header}</Text>
+    return (
+      <TouchableHighlight underlayColor={color.accentLight} onPress={item.navigate}>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text style={imageContainer}>
+            <Icon name={item.iconName} color={color.textPrimary} size={18} />
+          </Text>
+          <View style={row()}>
+            <Text style={header()}>{item.header}</Text>
+          </View>
         </View>
-      </View>
-    </TouchableHighlight>
-  }
+      </TouchableHighlight>
+    );
+  };
 
   return (
     <SafeAreaView style={containerBg()}>
@@ -71,9 +71,7 @@ export const SettingsListView: FC = () => {
           sections={[{ title: 'Topics', data: listItems }]}
           renderItem={({ item }) => items(item)}
         />
-        <Text
-          style={version()}
-        >
+        <Text style={version()}>
           v{Application.nativeBuildVersion} {Updates.updateId && <>&bull; {Updates.updateId}</>}
         </Text>
       </View>
@@ -81,12 +79,11 @@ export const SettingsListView: FC = () => {
   );
 };
 
-
 const version = styles.one<ViewStyle>((t) => ({
   display: 'flex',
   alignSelf: 'center',
   color: t.color.textAccent,
-  fontSize: t.type.size['3xs'],
+  fontSize: t.type.size['3xs']
 }));
 
 const containerBg = styles.one<ViewStyle>((t) => ({

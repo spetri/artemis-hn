@@ -80,7 +80,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
   );
 
   const [baseTypeSize, setBaseTypeSize] = useState<number | undefined>(undefined);
-  const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition ?? 'right');
+  const [buttonJumpText, setButtonJumpText] = useState(jumpButtonPosition ?? 'Right');
   const [buttonThumbnailSize, setButtonThumbnailSize] = useState<string | number>(
     thumbnailSize ?? 'Small'
   );
@@ -231,21 +231,21 @@ export const GeneralSettings: FC<SettingsProps> = () => {
           onPress={() => {
             actionSheet.showActionSheetWithOptions(
               {
-                options: ['left', 'right', 'middle', 'Cancel']
+                options: ['Left', 'Right', 'Middle', 'Cancel']
               },
               (index) => {
                 switch (index) {
                   case 0:
-                    setJumpButtonPosition('left');
-                    setButtonJumpText('left');
+                    setJumpButtonPosition('Left');
+                    setButtonJumpText('Left');
                     break;
                   case 1:
-                    setButtonJumpText('right');
-                    setJumpButtonPosition('right');
+                    setButtonJumpText('Right');
+                    setJumpButtonPosition('Right');
                     break;
                   case 2:
-                    setButtonJumpText('middle');
-                    setJumpButtonPosition('middle');
+                    setButtonJumpText('Middle');
+                    setJumpButtonPosition('Middle');
                     break;
                   case 3:
                     break;
