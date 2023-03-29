@@ -5,15 +5,11 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLayoutEffect, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { colorSystem, createTypeSystem, useDash } from '../../../dash.config';
+import { Position, ThreadReplies } from '../../enums/enums';
 import { type StackParamList } from '../routers';
 
 type ThumbnailSizeType = 55 | 65 | 75;
 type PositionType = 'Left' | 'Right' | 'Middle';
-
-enum Position {
-  LEFT = 'Left',
-  RIGHT = 'Right'
-}
 
 export const preferencesVersion = '1.1';
 export const defaultPreferences: SetThemeType = {
@@ -21,7 +17,7 @@ export const defaultPreferences: SetThemeType = {
   displayLargeThumbnails: false,
   thumbnailSize: 55,
   displaySource: true,
-  displayReplies: false,
+  displayReplies: ThreadReplies.AUTO,
   jumpButtonPosition: Position.RIGHT,
   thumbnailPosition: Position.LEFT,
   showJumpButton: true,
@@ -47,7 +43,7 @@ export const defaultPreferences: SetThemeType = {
 
 export type SetThemeType = {
   cachedThreadId: number | null;
-  displayReplies: boolean;
+  displayReplies: string;
   displayLargeThumbnails: boolean;
   displaySource: boolean;
   openLinkInBrowser: boolean;

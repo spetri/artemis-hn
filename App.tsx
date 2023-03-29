@@ -24,6 +24,7 @@ import { Tab } from './src/screens/routers';
 import { HomeScreen } from './src/screens/Home/HomeScreen';
 import { SearchScreen } from './src/screens/Search/SearchScreen';
 import { SettingScreen } from './src/screens/Settings/SettingScreen';
+import { Theme } from './src/enums/enums';
 
 registerRootComponent(App);
 
@@ -92,12 +93,12 @@ function App() {
 const AppStatusBar = () => {
   const { theme } = useDash();
   let appTheme;
-  if (theme === 'light') {
-    appTheme = 'dark';
-  } else if (theme === 'dark') {
-    appTheme = 'light';
+  if (theme === Theme.LIGHT) {
+    appTheme = Theme.DARK;
+  } else if (theme === Theme.DARK) {
+    appTheme = Theme.LIGHT;
   } else {
-    appTheme = 'auto';
+    appTheme = Theme.AUTO;
   }
   return <StatusBar style={appTheme} />;
 };

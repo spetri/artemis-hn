@@ -13,6 +13,7 @@ import { ComplexStory } from './ComplexStory/ComplexStory';
 import { usePreferencesStore } from '../../contexts/store';
 import { MinimalStory } from './MinimalStory/MinimalStory';
 import { Skeleton } from '../Skeleton/Skeleton';
+import { StoryDatatype } from '../../enums/enums';
 
 export const StoryCard = memo(
   function StoryCard({ index, id }: { index: number; id: number | null }) {
@@ -64,13 +65,13 @@ export const StoryCard = memo(
     }
 
     return (!('url' in story.data) || story.data.url === undefined) &&
-      story.data.type === 'story' ? (
+      story.data.type === StoryDatatype.STORY ? (
       <AskStory data={story.data as HackerNewsAsk} index={index} />
-    ) : story.data.type === 'job' ? (
+    ) : story.data.type === StoryDatatype.JOB ? (
       <JobStory data={story.data} index={index} />
-    ) : story.data.type === 'comment' ? (
+    ) : story.data.type === StoryDatatype.COMMENT ? (
       <CommentStory data={story.data} index={index} />
-    ) : story.data.type === 'poll' ? (
+    ) : story.data.type === StoryDatatype.POLL ? (
       <PollStory data={story.data} index={index} />
     ) : displayLargeThumbnails ? (
       <ComplexStory data={story.data} index={index} />

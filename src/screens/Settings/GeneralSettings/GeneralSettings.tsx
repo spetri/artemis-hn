@@ -27,6 +27,7 @@ import Slider from '@react-native-community/slider';
 import { ListItemType, usePreferencesStore } from '../../../contexts/store';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
+import { ThreadReplies } from '../../../enums/enums';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
@@ -172,17 +173,41 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     {
       id: '2',
       header: 'Display All Replies',
-      subheader: 'When selected, display all replies automatically. This will impact performance.',
+      subheader:
+        'Display threaded, some, or all replies on render. This will impact thread performance.',
       iconName: 'file-tray-outline',
-      onPress: () => setDisplayReplies(!displayReplies),
+      onPress: () => setDisplayReplies(displayReplies),
       type: (
-        <Switch
-          value={displayReplies}
-          color={color.primary}
-          onValueChange={(value) => {
-            setDisplayReplies(!value);
+        <Button
+          type="outline"
+          buttonStyle={buttonStyle()}
+          icon={buttonIcon()}
+          iconRight
+          onPress={() => {
+            actionSheet.showActionSheetWithOptions(
+              {
+                options: ['None', 'Auto (Recommended)', 'Display All Comments', 'Cancel']
+              },
+              (index) => {
+                switch (index) {
+                  case 0:
+                    setDisplayReplies(ThreadReplies.NONE);
+                    break;
+                  case 1:
+                    setDisplayReplies(ThreadReplies.AUTO);
+                    break;
+                  case 2:
+                    setDisplayReplies(ThreadReplies.ALL);
+                    break;
+                  case 3:
+                    break;
+                }
+              }
+            );
           }}
-        />
+        >
+          <Text style={buttonText()}>{displayReplies}</Text>
+        </Button>
       )
     },
     {

@@ -3,6 +3,7 @@ import { StoryFilters } from '../types/hn-api';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { defaultPreferences } from '../screens/Settings/useTheme';
+import { HackerNews } from '../enums/enums';
 
 type ThumbnailSizeType = 55 | 65 | 75;
 export type PositionType = 'Left' | 'Right' | 'Middle';
@@ -19,45 +20,45 @@ export type ListItemType = {
 export const listItems: ListItemType[] = [
   {
     id: '1',
-    header: 'All HN',
+    header: 'All',
     subheader: 'All HNs combined',
     iconName: 'ios-logo-hackernews',
-    filter: 'top'
+    filter: HackerNews.TOP
   },
   {
     id: '2',
-    header: 'Best HN',
+    header: 'Popular',
     subheader: 'Best recent stories',
     iconName: 'star-half-outline',
-    filter: 'best'
+    filter: HackerNews.BEST
   },
   {
     id: '3',
-    header: 'New HN',
+    header: 'New',
     subheader: 'Newest posts',
     iconName: 'ios-time-outline',
-    filter: 'new'
+    filter: HackerNews.NEW
   },
   {
     id: '4',
-    header: 'Show HN',
+    header: 'Show',
     subheader: 'Handmade projects',
     iconName: 'rocket-outline',
-    filter: 'show'
+    filter: HackerNews.SHOW
   },
   {
     id: '5',
-    header: 'Ask HN',
+    header: 'Q&A',
     subheader: 'Questions and answers',
     iconName: 'bulb-outline',
-    filter: 'ask'
+    filter: HackerNews.ASK
   },
   {
     id: '6',
     header: 'Jobs HN',
     subheader: "Who's hiring?",
     iconName: 'file-tray-outline',
-    filter: 'job'
+    filter: HackerNews.JOB
   }
 ];
 
@@ -66,8 +67,8 @@ type PreferencesState = {
   displayLargeThumbnails: boolean;
   setDisplayLargeThumbnails: (displayLargeThumbnails: boolean) => void;
 
-  displayReplies: boolean;
-  setDisplayReplies: (displayReplies: boolean) => void;
+  displayReplies: string;
+  setDisplayReplies: (displayReplies: string) => void;
 
   showJumpButton: boolean;
   setShowJumpButton: (showJumpButton: boolean) => void;
@@ -99,7 +100,7 @@ const preferencesStore = (set) => ({
     set(() => ({ displayLargeThumbnails: !displayLargeThumbnails })),
 
   displayReplies: defaultPreferences.displayReplies,
-  setDisplayReplies: (displayReplies) => set(() => ({ displayReplies: !displayReplies })),
+  setDisplayReplies: (displayReplies) => set(() => ({ displayReplies: displayReplies })),
 
   showJumpButton: defaultPreferences.showJumpButton,
   setShowJumpButton: (showJumpButton) => set(() => ({ showJumpButton: !showJumpButton })),

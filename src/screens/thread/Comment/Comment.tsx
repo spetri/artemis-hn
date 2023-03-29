@@ -8,7 +8,7 @@ import { MixedStyleRecord, RenderersProps, RenderHTML } from 'react-native-rende
 import useSWR from 'swr';
 import Collapsible from 'react-native-collapsible';
 
-import { type FC, memo, useMemo, useState } from 'react';
+import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Share,
@@ -33,24 +33,41 @@ import { linkify } from '../../../utils/util';
 import { usePreferences } from '../../Settings/usePreferences';
 import { defaultPreferences } from '../../Settings/useTheme';
 import { usePreferencesStore } from '../../../contexts/store';
+import { ThreadReplies } from '../../../enums/enums';
 
 type CommentProps = {
   id: number;
   index: number;
   depth: number;
-}
+};
 
 export const Comment: FC<CommentProps> = memo(
   function Comment({ id, depth }) {
     const [collapsed, setCollapsed] = useState(false);
     const actionSheet = useActionSheet();
     const [commentColors] = usePreferences('commentColors', defaultPreferences.commentColors);
-
+    const [showReplies, setShowReplies] = useState<boolean>(false);
+    const [showingReplies, setShowingReplies] = useState(false);
+    const dimensions = useWindowDimensions();
     const {
       theme,
       tokens: { color }
     } = useDash();
-    const displayReplies = usePreferencesStore((state) => state.displayReplies);
+
+    const { displayReplies } = usePreferencesStore((state) => ({
+      displayReplies: state.displayReplies,
+      setDisplayReplies: state.setDisplayReplies
+    }));
+
+    useEffect(() => {
+      if (displayReplies === ThreadReplies.AUTO) {
+        setShowReplies(depth < 2);
+      } else if (displayReplies === ThreadReplies.NONE) {
+        setShowReplies(false);
+      } else {
+        setShowReplies(true);
+      }
+    }, [displayReplies]);
 
     const commentData = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
@@ -60,8 +77,6 @@ export const Comment: FC<CommentProps> = memo(
           headers: { 'Content-Type': 'application/json' }
         }).then(async (res) => await res.json())
     );
-    const dimensions = useWindowDimensions();
-    const [showingReplies, setShowingReplies] = useState(false);
 
     const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
     const htmlRenderersProps = useMemo<Partial<RenderersProps>>(
@@ -105,11 +120,8 @@ export const Comment: FC<CommentProps> = memo(
     };
 
     const rightSwipeActions = (reset) => {
-
       return collapsed ? (
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={() => onCollapse(reset)}
-        >
+        <TouchableHighlight underlayColor={color.accentLight} onPress={() => onCollapse(reset)}>
           <View style={collapsedView()}>
             <Text style={collapsedText()}>
               <MaterialIcon name="arrow-collapse-down" color={color.textPrimary} size={20} />
@@ -117,9 +129,7 @@ export const Comment: FC<CommentProps> = memo(
           </View>
         </TouchableHighlight>
       ) : (
-        <TouchableHighlight underlayColor={color.accentLight}
-          onPress={() => onCollapse(reset)}
-        >
+        <TouchableHighlight underlayColor={color.accentLight} onPress={() => onCollapse(reset)}>
           <View style={openView()}>
             <Text style={openText()}>
               <MaterialIcon name="arrow-collapse-up" color={color.textPrimary} size={30} />
@@ -187,8 +197,11 @@ export const Comment: FC<CommentProps> = memo(
           rightStyle={{ backgroundColor: color.bodyBg }}
           style={noMarginPadding()}
         >
-          <TouchableHighlight underlayColor={color.accentLight}
-            onPress={() => onCollapse(() => collapsed)} style={width100()}>
+          <TouchableHighlight
+            underlayColor={color.accentLight}
+            onPress={() => onCollapse(() => collapsed)}
+            style={width100()}
+          >
             <View
               style={commentContainer({
                 depth,
@@ -197,7 +210,8 @@ export const Comment: FC<CommentProps> = memo(
               })}
             >
               <View style={byLine(depth)}>
-                <TouchableHighlight underlayColor={color.accentLight}
+                <TouchableHighlight
+                  underlayColor={color.accentLight}
                   onPress={() => {
                     navigation.navigate('User', { id: comment.by });
                   }}
@@ -207,7 +221,8 @@ export const Comment: FC<CommentProps> = memo(
                   </View>
                 </TouchableHighlight>
                 <View style={TouchableHighlightThread()}>
-                  <TouchableHighlight underlayColor={color.accentLight}
+                  <TouchableHighlight
+                    underlayColor={color.accentLight}
                     onPress={() => {
                       navigation.push('Thread', {
                         id: comment.id
@@ -220,8 +235,10 @@ export const Comment: FC<CommentProps> = memo(
                       </Text>
                     </View>
                   </TouchableHighlight>
-                  <TouchableHighlight underlayColor={color.accentLight}
-                    onPress={actionSheetOptions}>
+                  <TouchableHighlight
+                    underlayColor={color.accentLight}
+                    onPress={actionSheetOptions}
+                  >
                     <View>
                       <Ionicon name="ellipsis-horizontal" color={color.textPrimary} size={18} />
                     </View>
@@ -248,7 +265,7 @@ export const Comment: FC<CommentProps> = memo(
           </TouchableHighlight>
         </ListItem.Swipeable>
 
-        {(showingReplies || displayReplies) &&
+        {(showingReplies || showReplies) &&
           !collapsed &&
           comment.kids != null &&
           comment.kids.length > 0 &&
@@ -256,7 +273,7 @@ export const Comment: FC<CommentProps> = memo(
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids?.length > 0 && !showingReplies && !displayReplies && !collapsed && (
+        {comment.kids?.length > 0 && !showingReplies && !showReplies && !collapsed && (
           <View
             style={commentContainerReply({
               depth,
@@ -264,7 +281,8 @@ export const Comment: FC<CommentProps> = memo(
                 commentColors != null ? commentColors?.[Math.floor(depth)] : commentColors
             })}
           >
-            <TouchableHighlight underlayColor={color.accentLight}
+            <TouchableHighlight
+              underlayColor={color.accentLight}
               onPress={() => {
                 setShowingReplies((current) => !current);
               }}
@@ -328,22 +346,20 @@ const openText = styles.one<TextStyle>(() => ({
   paddingHorizontal: 50
 }));
 
-const commentContainer = styles.lazy(
-  (obj: { depth: number; commentColors: number }) => (t) => ({
-    width: '100%',
-    padding: t.space.md,
-    paddingBottom: 10,
-    borderTopWidth: t.borderWidth.hairline,
-    borderTopColor: t.color.accent,
-    ...(obj.depth > 1
-      ? ({
+const commentContainer = styles.lazy((obj: { depth: number; commentColors: number }) => (t) => ({
+  width: '100%',
+  padding: t.space.md,
+  paddingBottom: 10,
+  borderTopWidth: t.borderWidth.hairline,
+  borderTopColor: t.color.accent,
+  ...(obj.depth > 1
+    ? ({
         borderLeftWidth: 2,
         borderLeftColor: obj.commentColors,
         marginLeft: t.space.md * (obj.depth - 1)
       } as const)
-      : {})
-  })
-);
+    : {})
+}));
 
 const commentContainerReply = styles.lazy(
   (obj: { depth: number; commentColors: number }) => (t) => ({
@@ -353,10 +369,10 @@ const commentContainerReply = styles.lazy(
     borderTopColor: t.color.accent,
     ...(obj.depth > 0
       ? ({
-        borderLeftWidth: 2,
-        borderLeftColor: obj.commentColors,
-        marginLeft: t.space.md * (obj.depth + 0.5)
-      } as const)
+          borderLeftWidth: 2,
+          borderLeftColor: obj.commentColors,
+          marginLeft: t.space.md * (obj.depth + 0.5)
+        } as const)
       : {})
   })
 );
@@ -367,8 +383,8 @@ const commentContent = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   fontWeight: '300',
   ...(depth > 0
     ? ({
-      marginRight: t.space.md * (depth + 0.5)
-    } as const)
+        marginRight: t.space.md * (depth + 0.5)
+      } as const)
     : {})
 }));
 
@@ -377,8 +393,8 @@ const byLine = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   justifyContent: 'space-between',
   ...(depth > 0
     ? ({
-      marginRight: t.space.md * (depth - 1.5)
-    } as const)
+        marginRight: t.space.md * (depth - 1.5)
+      } as const)
     : {})
 }));
 
@@ -393,7 +409,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
 
 const replies = styles.one<any>((t, depth) => ({
   color: t.color.lightBlue300,
-  fontSize: t.type.size["2xs"],
+  fontSize: t.type.size['2xs'],
   fontWeight: '700',
   padding: t.space.sm,
   paddingTop: t.space.md,
@@ -401,8 +417,8 @@ const replies = styles.one<any>((t, depth) => ({
   width: '100%',
   ...(depth > 0
     ? ({
-      marginLeft: t.space.md * (depth - 2)
-    } as const)
+        marginLeft: t.space.md * (depth - 2)
+      } as const)
     : {})
 }));
 
@@ -426,7 +442,7 @@ const pre = styles.one((t) => ({
   borderRadius: t.radius.xl,
   padding: t.space.lg,
   paddingBottom: t.space.sm,
-  fontSize: t.type.size.xs,
+  fontSize: t.type.size.xs
 }));
 
 const htmlDefaultTextProps: TextProps = {
