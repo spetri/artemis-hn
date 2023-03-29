@@ -1,4 +1,3 @@
-import { useActionSheet } from '@expo/react-native-action-sheet';
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
@@ -7,13 +6,13 @@ import { Dialog, ListItem } from '@rneui/themed';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { styles, useDash } from './../../../dash.config';
 import { HomeStack, type StackParamList } from './../../../src/screens/routers';
-import { Stories } from './../../../src/screens/Stories/Stories';
-import { User } from './../../../src/screens/User/User';
-import { Browser } from './../../../src/screens/Browser/Browser';
-import { Home } from './../../../src/screens/Home/Home';
-import { Thread } from './../../../src/screens/Thread/Thread';
 import { listItems, usePreferencesStore } from './../../../src/contexts/store';
 import { HackerNews } from '../../enums/enums';
+import { Thread } from '../Thread/Thread';
+import { Stories } from '../Stories/Stories';
+import { Home } from './Home';
+import { User } from '../User/User';
+import { Browser } from '../Browser/Browser';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -83,7 +82,7 @@ export const HomeScreen = () => {
     );
   };
 
-  const navigateBackToThread = () => navigation.navigate('Thread', { id: cachedThreadId });
+  const navigateBackToThread = () => navigation.navigate('Thread', { id: cachedThreadId ?? 0 });
 
   return (
     <HomeStack.Navigator
@@ -112,7 +111,7 @@ export const HomeScreen = () => {
         options={{
           headerTitle: () => screenHeader(),
           headerRight: () => (
-            <View style={{ display: 'flex', flexDirection: 'row' }}>
+            <View style={rightIcons()}>
               {!!cachedThreadId && (
                 <TouchableHighlight
                   underlayColor={color.accentLight}
@@ -156,8 +155,9 @@ const switcherIcon = styles.one<ViewStyle>(() => ({
   marginLeft: 3
 }));
 
-const rightIcons = styles.one<ViewStyle>((t) => ({
-  marginRight: t.space.md
+const rightIcons = styles.one<ViewStyle>(() => ({
+  display: 'flex',
+  flexDirection: 'row'
 }));
 
 const borderBottom = styles.one<ViewStyle>((t) => ({
