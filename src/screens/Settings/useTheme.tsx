@@ -58,6 +58,7 @@ export type SetThemeType = {
     | 'dracula'
     | 'nord'
     | 'aurora'
+    | 'ios'
     | null
     | undefined;
   primaryColor: keyof typeof colorSystem;

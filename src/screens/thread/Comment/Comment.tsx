@@ -10,6 +10,7 @@ import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Share,
   Text,
@@ -21,7 +22,7 @@ import {
   type ViewStyle
 } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { ListItem } from '@rneui/themed';
+import { Dialog, ListItem } from '@rneui/themed';
 import { Skeleton } from '../../../components/Skeleton/Skeleton';
 import { styles, useDash } from '../../../../dash.config';
 import { type HackerNewsComment } from '../../../types/hn-api';
@@ -46,7 +47,10 @@ export const Comment: FC<CommentProps> = memo(
     const [collapsed, setCollapsed] = useState(false);
     const actionSheet = useActionSheet();
     const [commentColors] = usePreferences('commentColors', defaultPreferences.commentColors);
-    const [showReplies, setShowReplies] = useState<boolean>(false);
+    const { displayReplies } = usePreferencesStore((state) => ({
+      displayReplies: state.displayReplies,
+      setDisplayReplies: state.setDisplayReplies
+    }));
     const [showingReplies, setShowingReplies] = useState(false);
     const dimensions = useWindowDimensions();
     const {
@@ -54,18 +58,13 @@ export const Comment: FC<CommentProps> = memo(
       tokens: { color }
     } = useDash();
 
-    const { displayReplies } = usePreferencesStore((state) => ({
-      displayReplies: state.displayReplies,
-      setDisplayReplies: state.setDisplayReplies
-    }));
-
     useEffect(() => {
       if (displayReplies === ThreadReplies.AUTO) {
-        setShowReplies(depth < 2);
+        setShowingReplies(depth < 2);
       } else if (displayReplies === ThreadReplies.NONE) {
-        setShowReplies(false);
+        setShowingReplies(false);
       } else {
-        setShowReplies(true);
+        setShowingReplies(true);
       }
     }, [displayReplies]);
 
@@ -265,7 +264,7 @@ export const Comment: FC<CommentProps> = memo(
           </TouchableHighlight>
         </ListItem.Swipeable>
 
-        {(showingReplies || showReplies) &&
+        {showingReplies &&
           !collapsed &&
           comment.kids != null &&
           comment.kids.length > 0 &&
@@ -273,7 +272,7 @@ export const Comment: FC<CommentProps> = memo(
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids?.length > 0 && !showingReplies && !showReplies && !collapsed && (
+        {comment.kids != null && comment.kids?.length > 0 && !showingReplies && !collapsed && (
           <View
             style={commentContainerReply({
               depth,
@@ -284,7 +283,10 @@ export const Comment: FC<CommentProps> = memo(
             <TouchableHighlight
               underlayColor={color.accentLight}
               onPress={() => {
-                setShowingReplies((current) => !current);
+                setShowingReplies((current) => {
+                  console.log(current);
+                  return !current;
+                });
               }}
             >
               <View>

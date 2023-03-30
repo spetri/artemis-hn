@@ -117,11 +117,12 @@ export const HomeScreen = () => {
                   underlayColor={color.accentLight}
                   onPress={navigateBackToThread}
                 >
-                  <View>
+                  <View style={switcherView()}>
+                    <Text style={forwardText()}>Last Viewed</Text>
                     <IoniconIcon
                       name="chevron-forward"
                       style={{ color: color.primary }}
-                      size={30}
+                      size={32}
                     />
                   </View>
                 </TouchableHighlight>
@@ -143,6 +144,11 @@ const switcherView = styles.one<ViewStyle>(() => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center'
+}));
+
+const forwardText = styles.one<TextStyle>((t) => ({
+  color: t.color.primary,
+  fontSize: 16
 }));
 
 const switcherText = styles.one<TextStyle>((t) => ({

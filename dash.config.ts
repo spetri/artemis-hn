@@ -258,6 +258,14 @@ export const colorSystem = {
   solarizedAccent: '#002B36',
   solarizedAccentLight: '#647A82',
 
+  iosPrimary: '#5C8EE6',
+  iosTextPrimary: '#000',
+  iosTextAccent: '#868686',
+  iosBodyBg: '#fff',
+  iosHeaderBg: '#F3F2F7',
+  iosAccent: '#F5F5F5',
+  iosAccentLight: '#F5F5F5',
+
   draculaPrimary: '#ff5555',
   draculaTextPrimary: '#f8f8f2',
   draculaTextAccent: '#bd93f9',
@@ -581,7 +589,7 @@ export const tokens = {
 };
 
 export const themes: Record<
-  'light' | 'dark' | 'black' | 'solarized' | 'dracula' | 'nord' | 'aurora',
+  'light' | 'dark' | 'black' | 'solarized' | 'dracula' | 'nord' | 'aurora' | 'ios',
   {
     color: {
       primary: RN.ColorValue;
@@ -664,6 +672,20 @@ export const themes: Record<
     shadow: createShadowScale(colorSystem.white)
   },
 
+  ios: {
+    color: {
+      primary: colorSystem.iosPrimary,
+      textPrimary: colorSystem.iosTextPrimary,
+      textAccent: colorSystem.iosTextAccent,
+      bodyBg: colorSystem.iosBodyBg,
+      headerBg: colorSystem.iosHeaderBg,
+      accent: colorSystem.iosAccent,
+      accentLight: colorSystem.iosAccentLight
+    },
+
+    shadow: createShadowScale(colorSystem.white)
+  },
+
   nord: {
     color: {
       primary: colorSystem.nordPrimary,
@@ -711,6 +733,7 @@ export type AppTokens =
   | typeof styles.tokens.black
   | typeof styles.tokens.solarized
   | typeof styles.tokens.dracula
+  | typeof styles.tokens.ios
   | typeof styles.tokens.nord
   | typeof styles.tokens.aurora;
 export type AppThemes = typeof themes;
@@ -720,6 +743,7 @@ export type AppColors =
   | keyof typeof styles.tokens.dark.color
   | keyof typeof styles.tokens.black.color
   | keyof typeof styles.tokens.solarized.color
+  | keyof typeof styles.tokens.ios.color
   | keyof typeof styles.tokens.dracula.color
   | keyof typeof styles.tokens.nord.color
   | keyof typeof styles.tokens.aurora.color;

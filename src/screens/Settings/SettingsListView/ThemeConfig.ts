@@ -126,6 +126,12 @@ export const AppColors = {
       displayName: 'Solarized'
     },
     {
+      theme: 'styles.tokens.ios.color',
+      color: 'iosBodyBg',
+      name: 'ios',
+      displayName: 'iOS'
+    },
+    {
       theme: 'styles.tokens.dracula.color',
       color: 'draculaBodyBg',
       name: 'dracula',

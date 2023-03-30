@@ -20,7 +20,7 @@ export type ListItemType = {
 export const listItems: ListItemType[] = [
   {
     id: '1',
-    header: 'All',
+    header: 'Front Page',
     subheader: 'All HNs combined',
     iconName: 'ios-logo-hackernews',
     filter: HackerNews.TOP
@@ -35,7 +35,7 @@ export const listItems: ListItemType[] = [
   {
     id: '3',
     header: 'New',
-    subheader: 'Newest posts',
+    subheader: 'Most recently posted stories',
     iconName: 'ios-time-outline',
     filter: HackerNews.NEW
   },
@@ -55,7 +55,7 @@ export const listItems: ListItemType[] = [
   },
   {
     id: '6',
-    header: 'Jobs HN',
+    header: 'Jobs Board',
     subheader: "Who's hiring?",
     iconName: 'file-tray-outline',
     filter: HackerNews.JOB

@@ -23,9 +23,10 @@ import { FlashList } from '@shopify/flash-list';
 type StoryThreadProps = {
   data: HackerNewsStory | HackerNewsJob | HackerNewsPoll | HackerNewsAsk;
   onRefresh: () => unknown;
+  isLoading: boolean;
 };
 
-export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
+export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh, isLoading }) => {
   const [didMount, setDidMount] = useState(false);
   const {
     tokens: { color }
@@ -34,10 +35,9 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   const [viewportOffsetTopComment, setViewportOffsetTopComment] = useState<[{ index: number }]>();
   const showJumpButton = usePreferencesStore((state) => state.showJumpButton);
   const jumpButtonPosition = usePreferencesStore((state) => state.jumpButtonPosition);
-
   const url = useMemo(() => ('url' in data && data.url ? new URL(data.url) : undefined), [data]);
-
   const metadata = useMetadata(url);
+
   useEffect(() => {
     if (data) {
       setDidMount(true);
@@ -83,7 +83,7 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   );
 
   const renderItem = ({ item, index }: { item: number; index: number }) => {
-    return <Comment id={item} index={index} depth={1} />;
+    return <Comment id={item} index={index} depth={1} isLoading={isLoading} />;
   };
 
   const onViewableItemsChanged = useCallback(
