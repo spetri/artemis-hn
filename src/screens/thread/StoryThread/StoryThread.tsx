@@ -109,7 +109,6 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh, isLoading }
         keyExtractor={keyExtractor}
         estimatedItemSize={266}
         renderItem={renderItem}
-        contentContainerStyle={container()}
         viewabilityConfigCallbackPairs={
           viewabilityConfigCallbackPairs.current as ViewabilityConfigCallbackPair[]
         }

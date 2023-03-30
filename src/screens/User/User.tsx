@@ -78,7 +78,6 @@ export function User(props: UserProps) {
         data={user.data?.submitted ?? fauxStories}
         keyExtractor={keyExtractor}
         renderItem={renderFlatListItem}
-        contentContainerStyle={container()}
       />
     </SafeAreaView>
   );

@@ -10,7 +10,6 @@ import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   Share,
   Text,
@@ -22,7 +21,7 @@ import {
   type ViewStyle
 } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { Dialog, ListItem } from '@rneui/themed';
+import { ListItem } from '@rneui/themed';
 import { Skeleton } from '../../../components/Skeleton/Skeleton';
 import { styles, useDash } from '../../../../dash.config';
 import { type HackerNewsComment } from '../../../types/hn-api';
@@ -284,7 +283,6 @@ export const Comment: FC<CommentProps> = memo(
               underlayColor={color.accentLight}
               onPress={() => {
                 setShowingReplies((current) => {
-                  console.log(current);
                   return !current;
                 });
               }}

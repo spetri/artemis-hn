@@ -85,7 +85,6 @@ export const StoryCard = memo(
 );
 
 function PollStory({ data, index }: { data: HackerNewsPoll; index: number }) {
-  console.log(data, index);
   return null;
 }
 

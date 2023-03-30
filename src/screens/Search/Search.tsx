@@ -1,29 +1,29 @@
-import useSWR from 'swr'
-import { type FC, useMemo, useState } from 'react'
-import { Dimensions, SafeAreaView, View, type ViewStyle } from 'react-native'
-import { SearchBar } from '@rneui/base'
-import { type HackerNewsStory } from '../../types/hn-api'
-import { SEARCH_API } from '../../constants/api'
-import { MinimalStory } from '../../components/StoryCard/MinimalStory/MinimalStory'
-import { styles, useDash } from '../../../dash.config'
+import useSWR from 'swr';
+import { type FC, useMemo, useState } from 'react';
+import { Dimensions, SafeAreaView, View, type ViewStyle } from 'react-native';
+import { type HackerNewsStory } from '../../types/hn-api';
+import { SEARCH_API } from '../../constants/api';
+import { MinimalStory } from '../../components/StoryCard/MinimalStory/MinimalStory';
+import { styles, useDash } from '../../../dash.config';
+import { SearchBar } from '@rneui/themed';
 
 export const Search: FC = () => {
-  useDash()
-  const [search, setSearch] = useState('')
+  useDash();
+  const [search, setSearch] = useState('');
   const {
     tokens: { color }
-  } = useDash()
+  } = useDash();
   const query = useSWR(
     `${SEARCH_API}/search?query=${search}`,
     async (key) =>
       await (!!search &&
-      fetch(key, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      }).then(async (res) => await res.json()))
-  )
+        fetch(key, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        }).then(async (res) => await res.json()))
+  );
 
-  const queryData = useMemo(() => query.data, [query.data])
+  const queryData = useMemo(() => query.data, [query.data]);
 
   return (
     <SafeAreaView style={containerBg()}>
@@ -54,29 +54,24 @@ export const Search: FC = () => {
                 deleted: false,
                 dead: false
               }
-            }
+            };
 
-            return (
-              <MinimalStory
-                data={story.data as HackerNewsStory}
-                index={story.data.id}
-              />
-            )
+            return <MinimalStory data={story.data as HackerNewsStory} index={story.data.id} />;
           })}
         </View>
       )}
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
   height: '100%',
   width: Dimensions.get('screen').width
-}))
+}));
 
 const inputContainerStyle = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.accent,
   height: 40,
   marginLeft: 20
-}))
+}));
