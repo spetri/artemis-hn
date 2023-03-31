@@ -25,6 +25,7 @@ import { HomeScreen } from './src/screens/Home/HomeScreen';
 import { SearchScreen } from './src/screens/Search/SearchScreen';
 import { SettingScreen } from './src/screens/Settings/SettingScreen';
 import { Theme } from './src/enums/enums';
+import { User } from './src/screens/User/User';
 
 registerRootComponent(App);
 
@@ -142,7 +143,7 @@ const Tabs = () => {
             tabBarIcon: () => <IoniconIcon name="ios-browsers" size={25} />
           }}
         />
-        {/* <Tab.Screen
+        <Tab.Screen
           name="User"
           component={User}
           initialParams={{ id: 'pookieinc' }}
@@ -150,7 +151,7 @@ const Tabs = () => {
             tabBarLabel: 'User',
             tabBarIcon: () => <IoniconIcon name="person-circle" size={25} />
           }}
-        /> */}
+        />
         <Tab.Screen
           name="Search"
           component={SearchScreen}

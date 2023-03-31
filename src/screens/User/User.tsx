@@ -7,9 +7,11 @@ import { StoryCard } from '../../components/StoryCard/StoryCard';
 import { styles, useDash } from '../../../dash.config';
 import { type HackerNewsUser } from '../../types/hn-api';
 import { type StackParamList } from '../routers';
-import { HACKER_NEWS_API } from '../../constants/api';
+import { HACKER_NEWS_API, HN, HN_LOGIN } from '../../constants/api';
 import { keyExtractor } from '../../utils/util';
 import { FlashList } from '@shopify/flash-list';
+import { Button, Text } from '@rneui/themed';
+import parse from 'node-html-parser';
 
 export function User(props: UserProps) {
   useDash();
@@ -59,6 +61,54 @@ export function User(props: UserProps) {
     );
   }, [id, props.navigation]);
 
+  const login = (username, password) => {
+    const headers = new Headers({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Access-Control-Allow-Origin': '*'
+    });
+
+    return fetch(HN_LOGIN, {
+      method: 'POST',
+      headers,
+      body: `acct=${username}&pw=${password}&goto=news`,
+      mode: 'no-cors',
+      credentials: 'include'
+    })
+      .then((response) => {
+        return response.text();
+      })
+      .then((responseText) => !/Bad Login/i.test(responseText));
+  };
+
+  const getLogoutUrl = () =>
+    fetch(`${HN}/news`, {
+      mode: 'no-cors',
+      credentials: 'include'
+    })
+      .then((response) => response.text())
+      .then((responseText) => {
+        const document = parse(responseText);
+        return document.querySelector('#logout')?.attrs.href;
+      });
+
+  const logout = () =>
+    getLogoutUrl()
+      .then((logoutUrl) =>
+        fetch(`${HN}/${logoutUrl}`, {
+          mode: 'no-cors',
+          credentials: 'include'
+        })
+      )
+      .then((response) => response.text())
+      .then((responseText) => {
+        console.log('made it', responseText);
+        return true;
+      })
+      .catch((error) => {
+        console.log('error', error);
+        return false;
+      });
+
   const refreshControl = useMemo(
     () => (
       <RefreshControl
@@ -71,6 +121,15 @@ export function User(props: UserProps) {
 
   return (
     <SafeAreaView style={container()}>
+      <Button type="outline" onPress={() => login('pookieinc', 'shasta99')}>
+        <Text>Login</Text>
+      </Button>
+      <Button type="outline" onPress={() => logout()}>
+        <Text>Logout</Text>
+      </Button>
+      <Button type="outline" onPress={() => upvote()}>
+        <Text>Logout</Text>
+      </Button>
       <FlashList
         ListHeaderComponent={listHeaderComponent}
         stickyHeaderIndices={[0]}

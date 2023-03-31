@@ -23,6 +23,8 @@ import { type HackerNewsStory } from '../../../types/hn-api';
 import { ago } from '../../../utils/ago';
 import { usePreferencesStore } from '../../../contexts/store';
 import { Skeleton } from '../../Skeleton/Skeleton';
+import { HN } from '../../../constants/api';
+import parse from 'node-html-parser';
 
 type MinimalStoryProps = {
   data: HackerNewsStory;
@@ -48,6 +50,29 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const {
     tokens: { color }
   } = useDash();
+
+  const getUpvoteUrl = (itemId) =>
+    fetch(`${HN}/item?id=${itemId}`, {
+      mode: 'no-cors',
+      credentials: 'include'
+    })
+      .then((response) => response.text())
+      .then((responseText) => {
+        const document = parse(responseText);
+        return document.querySelector(`#up_${itemId}`)?.attrs.href;
+      });
+
+  const upvote = (itemId) =>
+    getUpvoteUrl(itemId)
+      .then((upvoteUrl) =>
+        fetch(`${HN}/${upvoteUrl}`, {
+          mode: 'no-cors',
+          credentials: 'include'
+        })
+      )
+      .then((response) => response.text())
+      .then((responseText) => true)
+      .catch((error) => false);
 
   useEffect(() => {
     if (data != null && metadata != null) {
@@ -158,8 +183,17 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                 </View>
                 <View style={restText()}>
                   <Text style={rest()}>
-                    <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
-                    <Text>{data.score}</Text>
+                    <>
+                      <TouchableHighlight
+                        underlayColor={color.accentLight}
+                        onPress={() => {
+                          upvote(data.id);
+                        }}
+                      >
+                        <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
+                      </TouchableHighlight>
+                      <Text>{data.score}</Text>
+                    </>
                   </Text>
                   <View>
                     <View style={rest()}>

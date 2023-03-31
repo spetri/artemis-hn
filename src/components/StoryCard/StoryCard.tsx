@@ -33,6 +33,29 @@ export const StoryCard = memo(
       }
     );
 
+    const getUpvoteUrl = (itemId) =>
+      fetch(`${HN}/item?id=${itemId}`, {
+        mode: 'no-cors',
+        credentials: 'include'
+      })
+        .then((response) => response.text())
+        .then((responseText) => {
+          const document = parse(responseText);
+          return document.querySelector(`#up_${itemId}`)?.attrs.href;
+        });
+
+    const upvote = (itemId) =>
+      getUpvoteUrl(itemId)
+        .then((upvoteUrl) =>
+          fetch(`${HN}/${upvoteUrl}`, {
+            mode: 'no-cors',
+            credentials: 'include'
+          })
+        )
+        .then((response) => response.text())
+        .then((responseText) => true)
+        .catch((error) => false);
+
     useEffect(() => {
       if (story.data !== null) {
         Animated.timing(opacity, {
