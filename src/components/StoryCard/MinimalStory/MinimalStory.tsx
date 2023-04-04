@@ -8,6 +8,7 @@ import {
   Animated,
   Dimensions,
   Image,
+  ImageStyle,
   Linking,
   Text,
   type TextStyle,
@@ -219,7 +220,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   );
 };
 
-const storyContainer = styles.lazy<number, ViewStyle>((thumbnailPosition) => (t) => ({
+const storyContainer = styles.lazy<string, ViewStyle>((thumbnailPosition) => (t) => ({
   display: 'flex',
   flexDirection: thumbnailPosition === 'Right' ? 'row-reverse' : 'row',
   height: 85,
@@ -236,7 +237,7 @@ const imageColumn = styles.lazy<number, ViewStyle>(() => () => ({
   justifyContent: 'center'
 }));
 
-const bodyColumn = styles.lazy<number, ViewStyle>((thumbnailPosition) => () => ({
+const bodyColumn = styles.lazy<string, ViewStyle>((thumbnailPosition) => () => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
@@ -295,7 +296,7 @@ const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
   backgroundColor: t.color.accent
 }));
 
-const storyImage = styles.lazy<number, ViewStyle>((size) => () => ({
+const storyImage = styles.lazy<number, ImageStyle>((size) => () => ({
   width: size,
   height: size,
   borderRadius: 4

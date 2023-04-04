@@ -140,24 +140,24 @@ const Tabs = () => {
           component={HomeScreen}
           options={{
             tabBarLabel: 'Hacker News',
-            tabBarIcon: () => <IoniconIcon name="ios-browsers" size={25} />
+            tabBarIcon: () => <IoniconIcon name="ios-browsers" size={28} />
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="User"
           component={User}
           initialParams={{ id: 'pookieinc' }}
           options={{
             tabBarLabel: 'User',
-            tabBarIcon: () => <IoniconIcon name="person-circle" size={25} />
+            tabBarIcon: () => <IoniconIcon name="person-circle" size={28} />
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Search"
           component={SearchScreen}
           options={{
             tabBarLabel: 'Search',
-            tabBarIcon: () => <IoniconIcon name="search" size={25} />
+            tabBarIcon: () => <IoniconIcon name="search" size={28} />
           }}
         />
         <Tab.Screen
@@ -165,7 +165,7 @@ const Tabs = () => {
           component={SettingScreen}
           options={{
             tabBarLabel: 'Settings',
-            tabBarIcon: () => <IoniconIcon name="settings-outline" size={25} />
+            tabBarIcon: () => <IoniconIcon name="settings-outline" size={28} />
           }}
         />
       </Tab.Navigator>
@@ -182,13 +182,6 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
     <SafeAreaView style={tabBar()}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
-
         const isFocused = state.index === index;
 
         return (
@@ -230,7 +223,6 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                     size: 0
                   })}
               </Text>
-              <Text style={navigationText(isFocused)}>{label}</Text>
             </View>
           </TouchableHighlight>
         );
@@ -238,11 +230,6 @@ const TabBarBase = ({ state, descriptors, navigation }: BottomTabBarProps) => {
     </SafeAreaView>
   );
 };
-
-const navigationText = styles.lazy<boolean, TextStyle>((isFocused) => (t) => ({
-  color: isFocused ? t.color.primary : t.color.textPrimary,
-  fontSize: t.type.size['3xs']
-}));
 
 const tabBar = styles.one<ViewStyle>((t) => ({
   flexDirection: 'row',
