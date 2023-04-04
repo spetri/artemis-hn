@@ -1,4 +1,5 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { shallow } from 'zustand/shallow';
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -25,7 +26,8 @@ import { HomeScreen } from './src/screens/Home/HomeScreen';
 import { SearchScreen } from './src/screens/Search/SearchScreen';
 import { SettingScreen } from './src/screens/Settings/SettingScreen';
 import { Theme } from './src/enums/enums';
-import { User } from './src/screens/User/User';
+import { usePreferencesStore } from './src/contexts/store';
+import { UserScreen } from './src/screens/User/UserScreen';
 
 registerRootComponent(App);
 
@@ -110,6 +112,13 @@ const Tabs = () => {
   const {
     tokens: { color }
   } = useDash();
+  const { isLoggedIn, setIsLoggedIn } = usePreferencesStore(
+    (state) => ({
+      isLoggedIn: state.isLoggedIn,
+      setIsLoggedIn: state.setIsLoggedIn
+    }),
+    shallow
+  );
 
   return (
     <View style={sceneContainer()}>
@@ -145,8 +154,8 @@ const Tabs = () => {
         />
         {/* <Tab.Screen
           name="User"
-          component={User}
-          initialParams={{ id: 'pookieinc' }}
+          component={UserScreen}
+          initialParams={{ id: isLoggedIn ? 'pookieinc' : '' }}
           options={{
             tabBarLabel: 'User',
             tabBarIcon: () => <IoniconIcon name="person-circle" size={28} />

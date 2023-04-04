@@ -29,8 +29,7 @@ export const Stories: FC<StoriesProps> = (props) => {
   );
 
   const renderFlatListItem = ({ item, index }: { item: number; index: number }) => {
-
-    return <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />
+    return <StoryCard key={item === -1 ? index : item} index={index + 5} id={item} />;
   };
 
   useEffect(() => {

@@ -59,6 +59,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     })
       .then((response) => response.text())
       .then((responseText) => {
+        console.log('TEST', responseText);
         const document = parse(responseText);
         return document.querySelector(`#up_${itemId}`)?.attrs.href;
       });
@@ -72,8 +73,14 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
         })
       )
       .then((response) => response.text())
-      .then((responseText) => true)
-      .catch((error) => false);
+      .then((responseText) => {
+        const document = parse(responseText);
+        console.log('ZERROR', document);
+        // return document.querySelector();
+      })
+      .catch((error) => {
+        return false;
+      });
 
   useEffect(() => {
     if (data != null && metadata != null) {
@@ -183,19 +190,17 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                   </TouchableHighlight>
                 </View>
                 <View style={restText()}>
-                  <Text style={rest()}>
-                    <>
-                      <TouchableHighlight
-                        underlayColor={color.accentLight}
-                        onPress={() => {
-                          upvote(data.id);
-                        }}
-                      >
-                        <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
-                      </TouchableHighlight>
-                      <Text>{data.score}</Text>
-                    </>
-                  </Text>
+                  <View style={rest()}>
+                    <TouchableHighlight
+                      underlayColor={color.accentLight}
+                      onPress={() => {
+                        upvote(data.id);
+                      }}
+                    >
+                      <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
+                    </TouchableHighlight>
+                    <Text>{data.score}</Text>
+                  </View>
                   <View>
                     <View style={rest()}>
                       <Text style={rotate90}>

@@ -11,7 +11,7 @@ import { HackerNews } from '../../enums/enums';
 import { Thread } from '../Thread/Thread';
 import { Stories } from '../Stories/Stories';
 import { Home } from './Home';
-import { User } from '../User/User';
+import { UserScreen } from '../User/UserScreen';
 import { Browser } from '../Browser/Browser';
 
 export const HomeScreen = () => {
@@ -131,7 +131,7 @@ export const HomeScreen = () => {
           )
         }}
       />
-      <HomeStack.Screen name="User" component={User} />
+      <HomeStack.Screen name="User" component={UserScreen} />
       <HomeStack.Screen name="Thread" component={Thread} />
       <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
         <HomeStack.Screen name="Browser" component={Browser} />

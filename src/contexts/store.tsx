@@ -64,6 +64,9 @@ export const listItems: ListItemType[] = [
 
 type PreferencesState = {
   // BOOLEAN TOGGLES
+  isLoggedIn: boolean;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+
   displayLargeThumbnails: boolean;
   setDisplayLargeThumbnails: (displayLargeThumbnails: boolean) => void;
 
@@ -95,6 +98,9 @@ type PreferencesState = {
 };
 
 const preferencesStore = (set) => ({
+  isLoggedIn: defaultPreferences.isLoggedIn,
+  setIsLoggedIn: (isLoggedIn) => set(() => ({ isLoggedIn: !isLoggedIn })),
+
   displayLargeThumbnails: defaultPreferences.displayLargeThumbnails,
   setDisplayLargeThumbnails: (displayLargeThumbnails) =>
     set(() => ({ displayLargeThumbnails: !displayLargeThumbnails })),

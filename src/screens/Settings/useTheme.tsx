@@ -13,6 +13,7 @@ type PositionType = 'Left' | 'Right' | 'Middle';
 
 export const preferencesVersion = '1.1';
 export const defaultPreferences: SetThemeType = {
+  isLoggedIn: false,
   cachedThreadId: null,
   displayLargeThumbnails: false,
   thumbnailSize: 55,
@@ -42,6 +43,7 @@ export const defaultPreferences: SetThemeType = {
 };
 
 export type SetThemeType = {
+  isLoggedIn: boolean;
   cachedThreadId: number | null;
   displayReplies: string;
   displayLargeThumbnails: boolean;
