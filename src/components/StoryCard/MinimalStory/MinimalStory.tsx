@@ -199,14 +199,14 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                     >
                       <AntDesignIcon size={13} name="arrowup" color={color.textAccent} />
                     </TouchableHighlight>
-                    <Text>{data.score}</Text>
+                    <Text style={footerRestText(index)}>{data.score}</Text>
                   </View>
                   <View>
                     <View style={rest()}>
                       <Text style={rotate90}>
                         <IoniconIcon size={13} name="chatbubble-outline" color={color.textAccent} />
                       </Text>
-                      <Text style={chatText(index)}>{data.descendants}</Text>
+                      <Text style={footerRestText(index)}>{data.descendants}</Text>
                     </View>
                   </View>
                   <View>
@@ -352,7 +352,7 @@ const rest = styles.one<TextStyle>((t) => ({
   flexWrap: 'nowrap'
 }));
 
-const chatText = styles.lazy<number, ViewStyle>(() => (t) => ({
+const footerRestText = styles.lazy<number, ViewStyle>(() => (t) => ({
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
   marginLeft: 3

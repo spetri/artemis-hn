@@ -23,10 +23,9 @@ import { FlashList } from '@shopify/flash-list';
 type StoryThreadProps = {
   data: HackerNewsStory | HackerNewsJob | HackerNewsPoll | HackerNewsAsk;
   onRefresh: () => unknown;
-  isLoading: boolean;
 };
 
-export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh, isLoading }) => {
+export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh }) => {
   const [didMount, setDidMount] = useState(false);
   const {
     tokens: { color }
@@ -83,7 +82,7 @@ export const StoryThread: FC<StoryThreadProps> = ({ data, onRefresh, isLoading }
   );
 
   const renderItem = ({ item, index }: { item: number; index: number }) => {
-    return <Comment id={item} index={index} depth={1} isLoading={isLoading} />;
+    return <Comment id={item} index={index} depth={1} />;
   };
 
   const onViewableItemsChanged = useCallback(

@@ -172,7 +172,7 @@ export const GeneralSettings: FC<SettingsProps> = () => {
     },
     {
       id: '2',
-      header: 'Display All Replies',
+      header: 'Display Replies',
       subheader:
         'Display threaded, some, or all replies on render. This will impact thread performance.',
       iconName: 'file-tray-outline',

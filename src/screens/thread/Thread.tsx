@@ -18,16 +18,13 @@ export type ThreadProps = NativeStackScreenProps<StackParamList, 'Thread'>;
 
 export const Thread: FC<ThreadProps> = ({ route }) => {
   const { id } = route.params;
-  const [isLoading, setIsLoading] = useState(false);
   const { data, mutate } = useSWR<
     HackerNewsStory | HackerNewsJob | HackerNewsPoll | HackerNewsAsk | HackerNewsComment
   >(id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`, async (key) => {
-    setIsLoading(true);
     return await fetch(key, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     }).then(async (res) => {
-      setIsLoading(false);
       return await res.json();
     });
   });
@@ -37,6 +34,6 @@ export const Thread: FC<ThreadProps> = ({ route }) => {
   } else if (data.type === StoryDatatype.COMMENT) {
     return <CommentThread data={data} onRefresh={async () => await mutate()} />;
   } else {
-    return <StoryThread data={data} onRefresh={async () => await mutate()} isLoading={isLoading} />;
+    return <StoryThread data={data} onRefresh={async () => await mutate()} />;
   }
 };

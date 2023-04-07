@@ -149,7 +149,7 @@ const Tabs = () => {
           component={HomeScreen}
           options={{
             tabBarLabel: 'Hacker News',
-            tabBarIcon: () => <IoniconIcon name="ios-browsers" size={28} />
+            tabBarIcon: () => <IoniconIcon name="ios-browsers" size={30} />
           }}
         />
         {/* <Tab.Screen
@@ -158,7 +158,7 @@ const Tabs = () => {
           initialParams={{ id: isLoggedIn ? 'pookieinc' : '' }}
           options={{
             tabBarLabel: 'User',
-            tabBarIcon: () => <IoniconIcon name="person-circle" size={28} />
+            tabBarIcon: () => <IoniconIcon name="person-circle" size={30} />
           }}
         /> */}
         <Tab.Screen
@@ -166,7 +166,7 @@ const Tabs = () => {
           component={SearchScreen}
           options={{
             tabBarLabel: 'Search',
-            tabBarIcon: () => <IoniconIcon name="search" size={28} />
+            tabBarIcon: () => <IoniconIcon name="search" size={30} />
           }}
         />
         <Tab.Screen
@@ -174,7 +174,7 @@ const Tabs = () => {
           component={SettingScreen}
           options={{
             tabBarLabel: 'Settings',
-            tabBarIcon: () => <IoniconIcon name="settings-outline" size={28} />
+            tabBarIcon: () => <IoniconIcon name="settings-outline" size={30} />
           }}
         />
       </Tab.Navigator>

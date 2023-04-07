@@ -10,7 +10,11 @@ import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
+  Animated,
+  Dimensions,
+  Pressable,
   Share,
   Text,
   type TextProps,
@@ -42,7 +46,7 @@ type CommentProps = {
 };
 
 export const Comment: FC<CommentProps> = memo(
-  function Comment({ id, depth }) {
+  function Comment({ id, depth, index }) {
     const [collapsed, setCollapsed] = useState(false);
     const actionSheet = useActionSheet();
     const [commentColors] = usePreferences('commentColors', defaultPreferences.commentColors);
@@ -52,6 +56,7 @@ export const Comment: FC<CommentProps> = memo(
     }));
     const [showingReplies, setShowingReplies] = useState(false);
     const dimensions = useWindowDimensions();
+    const [opacity] = useState(new Animated.Value(0.5));
     const {
       theme,
       tokens: { color }
@@ -59,21 +64,22 @@ export const Comment: FC<CommentProps> = memo(
 
     useEffect(() => {
       if (displayReplies === ThreadReplies.AUTO) {
-        setShowingReplies(depth < 2);
+        setShowingReplies(depth < 3);
       } else if (displayReplies === ThreadReplies.NONE) {
         setShowingReplies(false);
-      } else {
-        setShowingReplies(true);
       }
     }, [displayReplies]);
 
-    const commentData = useSWR<HackerNewsComment>(
+    const { data: commentData } = useSWR<HackerNewsComment>(
       id === -1 ? null : `${HACKER_NEWS_API}/item/${id}.json`,
-      async (key) =>
-        await fetch(key, {
+      async (key) => {
+        return await fetch(key, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
-        }).then(async (res) => await res.json())
+        }).then(async (res) => {
+          return await res.json();
+        });
+      }
     );
 
     const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -92,25 +98,44 @@ export const Comment: FC<CommentProps> = memo(
 
     const htmlSource = useMemo(
       () =>
-        commentData.data != null && {
-          html: linkify(commentData.data.text)
+        commentData != null && {
+          html: linkify(commentData.text)
         },
-      [commentData.data]
+      [commentData]
     );
 
-    if (commentData.data == null) {
+    const comment = commentData;
+
+    useEffect(() => {
+      if (comment !== null) {
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true
+        }).start();
+      }
+    }, [comment, opacity]);
+
+    if (comment == null) {
       return (
         <View>
-          <Skeleton />
+          <ListItem containerStyle={skeletonContainer({ depth })}>
+            <Skeleton style={storySkeletonImage(index)} />
+            <ListItem.Content>
+              <Skeleton style={storySkeletonTitle(index)} />
+              <ListItem containerStyle={skeletonHeaderContainer(index)}>
+                <Skeleton style={storySkeletonBy(index)} />
+                <Skeleton style={storySkeletonMetadata(index)} />
+              </ListItem>
+            </ListItem.Content>
+          </ListItem>
         </View>
       );
     }
 
-    if (commentData.data.dead || commentData.data.deleted) {
+    if (comment.deleted || comment.dead) {
       return null;
     }
-
-    const comment = commentData.data;
 
     const onCollapse = (reset) => {
       collapsed ? setCollapsed(false) : setCollapsed(true);
@@ -195,7 +220,7 @@ export const Comment: FC<CommentProps> = memo(
           rightStyle={{ backgroundColor: color.bodyBg }}
           style={noMarginPadding()}
         >
-          <TouchableHighlight
+          <Pressable
             underlayColor={color.accentLight}
             onPress={() => onCollapse(() => collapsed)}
             style={width100()}
@@ -260,18 +285,18 @@ export const Comment: FC<CommentProps> = memo(
                 </Collapsible>
               )}
             </View>
-          </TouchableHighlight>
+          </Pressable>
         </ListItem.Swipeable>
 
         {showingReplies &&
           !collapsed &&
-          comment.kids != null &&
+          comment?.kids != null &&
           comment.kids.length > 0 &&
           comment.kids.map((id, index) => (
             <Comment key={id} id={id} index={index} depth={depth + 1.5} />
           ))}
 
-        {comment.kids != null && comment.kids?.length > 0 && !showingReplies && !collapsed && (
+        {comment?.kids != null && comment.kids?.length > 0 && !showingReplies && !collapsed && (
           <View
             style={commentContainerReply({
               depth,
@@ -448,3 +473,50 @@ const pre = styles.one((t) => ({
 const htmlDefaultTextProps: TextProps = {
   selectable: true
 };
+
+const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
+  width: Dimensions.get('window').width - 200,
+  height: 15,
+  borderRadius: 10,
+  backgroundColor: t.color.accent
+}));
+
+const storySkeletonBy = styles.lazy<number, ViewStyle>(() => (t) => ({
+  height: 15,
+  width: 30,
+  borderRadius: 10,
+  backgroundColor: t.color.accent
+}));
+
+const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
+  height: 15,
+  width: 90,
+  borderRadius: 10,
+  backgroundColor: t.color.accent
+}));
+
+const skeletonHeaderContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+  backgroundColor: t.color.bodyBg
+}));
+
+const skeletonContainer = styles.lazy((obj: { depth: number }) => (t) => ({
+  backgroundColor: t.color.bodyBg,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight,
+  width: '100%',
+  ...(obj.depth > 1
+    ? ({
+        marginLeft: t.space.md * (obj.depth - 1)
+      } as const)
+    : {})
+}));
+
+const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
+  display: 'flex',
+  borderRadius: 10,
+  flexDirection: 'column',
+  justifyContent: 'center',
+  height: 60,
+  width: 60,
+  backgroundColor: t.color.accent
+}));
