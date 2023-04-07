@@ -75,11 +75,11 @@ export function UserScreen(props: UserScreenProps) {
     );
   }, [id, props.navigation]);
 
-  const getUser = (username) =>
-    fetch(`${HN}/user/${username}.json`)
-      .then((response) => response.json())
-      .then((responseJson) => responseJson)
-      .catch((error) => null);
+  // const getUser = (username) =>
+  //   fetch(`${HN}/user/${username}.json`)
+  //     .then((response) => response.json())
+  //     .then((responseJson) => responseJson)
+  //     .catch((error) => null);
 
   // const login = (username, password) => {
   //   const headers = new Headers({
@@ -110,60 +110,60 @@ export function UserScreen(props: UserScreenProps) {
   //         setIsLoggedIn(false);
   //       }
   //     });
-  const login = (username, password) => {
-    const headers = new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Access-Control-Allow-Origin': '*'
-    });
-    console.log('login', `acct=${username}&pw=${password}&goto=news`);
+  // const login = (username, password) => {
+  //   const headers = new Headers({
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //     'Access-Control-Allow-Origin': '*'
+  //   });
+  //   console.log('login', `acct=${username}&pw=${password}&goto=news`);
 
-    return fetch(`${HN}/login`, {
-      method: 'POST',
-      headers,
-      body: `acct=${username}&pw=${password}&goto=news`,
-      mode: 'no-cors',
-      credentials: 'include'
-    })
-      .then((response) => {
-        return response.text();
-      })
-      .then((responseText) => {
-        console.log('awdwad', responseText);
-        console.log(!/Bad Login/i.test(responseText));
-        return !/Bad Login/i.test(responseText);
-      });
-  };
+  //   return fetch(`${HN}/login`, {
+  //     method: 'POST',
+  //     headers,
+  //     body: `acct=${username}&pw=${password}&goto=news`,
+  //     mode: 'no-cors',
+  //     credentials: 'include'
+  //   })
+  //     .then((response) => {
+  //       return response.text();
+  //     })
+  //     .then((responseText) => {
+  //       console.log('awdwad', responseText);
+  //       console.log(!/Bad Login/i.test(responseText));
+  //       return !/Bad Login/i.test(responseText);
+  //     });
+  // };
 
-  const getLogoutUrl = () =>
-    fetch(`${HN}/news`, {
-      mode: 'no-cors',
-      credentials: 'include'
-    })
-      .then((response) => response.text())
-      .then((responseText) => {
-        const document = cheerio.load(responseText);
-        const test = document('#logout').attr('href');
-        console.log(test);
-      });
+  // const getLogoutUrl = () =>
+  //   fetch(`${HN}/news`, {
+  //     mode: 'no-cors',
+  //     credentials: 'include'
+  //   })
+  //     .then((response) => response.text())
+  //     .then((responseText) => {
+  //       const document = cheerio.load(responseText);
+  //       const test = document('#logout').attr('href');
+  //       console.log(test);
+  //     });
 
-  const logout = () =>
-    getLogoutUrl()
-      .then((logoutUrl) => {
-        console.log('url', `${HN}/${logoutUrl}`);
-        return fetch(`${HN}/${logoutUrl}`, {
-          mode: 'no-cors',
-          credentials: 'include'
-        });
-      })
-      .then((response) => response.text())
-      .then((responseText) => {
-        setIsLoggedIn(false);
-        return true;
-      })
-      .catch((error) => {
-        console.log(error);
-        return false;
-      });
+  // const logout = () =>
+  //   getLogoutUrl()
+  //     .then((logoutUrl) => {
+  //       console.log('url', `${HN}/${logoutUrl}`);
+  //       return fetch(`${HN}/${logoutUrl}`, {
+  //         mode: 'no-cors',
+  //         credentials: 'include'
+  //       });
+  //     })
+  //     .then((response) => response.text())
+  //     .then((responseText) => {
+  //       setIsLoggedIn(false);
+  //       return true;
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       return false;
+  //     });
 
   const refreshControl = useMemo(
     () => (
@@ -177,15 +177,16 @@ export function UserScreen(props: UserScreenProps) {
 
   return (
     <SafeAreaView style={container()}>
-      <Button type="outline" onPress={() => login('pookieinc', 'shasta99')}>
+      {/* <Button type="outline" onPress={() => login('pookieinc', 'shasta99')}>
         <Text>Login</Text>
       </Button>
       <Button type="outline" onPress={() => logout()}>
         <Text>Logout</Text>
-      </Button>
+      </Button> */}
       <FlashList
         ListHeaderComponent={listHeaderComponent}
         stickyHeaderIndices={[0]}
+        estimatedItemSize={94}
         refreshControl={refreshControl}
         data={user.data?.submitted ?? fauxStories}
         keyExtractor={keyExtractor}

@@ -10,7 +10,6 @@ import Collapsible from 'react-native-collapsible';
 
 import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   Animated,
   Dimensions,
@@ -107,25 +106,23 @@ export const Comment: FC<CommentProps> = memo(
     const comment = commentData;
 
     useEffect(() => {
-      if (comment !== null) {
+      if (comment != null) {
         Animated.timing(opacity, {
           toValue: 1,
-          duration: 150,
+          duration: 300,
           useNativeDriver: true
         }).start();
       }
-    }, [comment, opacity]);
+    }, [comment?.text, opacity]);
 
     if (comment == null) {
       return (
         <View>
           <ListItem containerStyle={skeletonContainer({ depth })}>
-            <Skeleton style={storySkeletonImage(index)} />
             <ListItem.Content>
               <Skeleton style={storySkeletonTitle(index)} />
               <ListItem containerStyle={skeletonHeaderContainer(index)}>
                 <Skeleton style={storySkeletonBy(index)} />
-                <Skeleton style={storySkeletonMetadata(index)} />
               </ListItem>
             </ListItem.Content>
           </ListItem>
@@ -220,72 +217,76 @@ export const Comment: FC<CommentProps> = memo(
           rightStyle={{ backgroundColor: color.bodyBg }}
           style={noMarginPadding()}
         >
-          <Pressable
-            underlayColor={color.accentLight}
-            onPress={() => onCollapse(() => collapsed)}
-            style={width100()}
-          >
-            <View
-              style={commentContainer({
-                depth,
-                commentColors:
-                  commentColors != null ? color[commentColors?.[Math.floor(depth)]] : commentColors
-              })}
+          <Animated.View style={{ opacity }}>
+            <Pressable
+              underlayColor={color.accentLight}
+              onPress={() => onCollapse(() => collapsed)}
+              style={width100()}
             >
-              <View style={byLine(depth)}>
-                <TouchableHighlight
-                  underlayColor={color.accentLight}
-                  onPress={() => {
-                    navigation.navigate('User', { id: comment.by });
-                  }}
-                >
-                  <View>
-                    <Text style={byStyle()}>{comment.by}</Text>
-                  </View>
-                </TouchableHighlight>
-                <View style={TouchableHighlightThread()}>
+              <View
+                style={commentContainer({
+                  depth,
+                  commentColors:
+                    commentColors != null
+                      ? color[commentColors?.[Math.floor(depth)]]
+                      : commentColors
+                })}
+              >
+                <View style={byLine(depth)}>
                   <TouchableHighlight
                     underlayColor={color.accentLight}
                     onPress={() => {
-                      navigation.push('Thread', {
-                        id: comment.id
-                      });
+                      navigation.navigate('User', { id: comment.by });
                     }}
                   >
                     <View>
-                      <Text style={agoStyle()}>
-                        {ago.format(new Date(comment.time * 1000), 'mini')}
-                      </Text>
+                      <Text style={byStyle()}>{comment.by}</Text>
                     </View>
                   </TouchableHighlight>
-                  <TouchableHighlight
-                    underlayColor={color.accentLight}
-                    onPress={actionSheetOptions}
-                  >
-                    <View>
-                      <Ionicon name="ellipsis-horizontal" color={color.textPrimary} size={18} />
-                    </View>
-                  </TouchableHighlight>
+                  <View style={TouchableHighlightThread()}>
+                    <TouchableHighlight
+                      underlayColor={color.accentLight}
+                      onPress={() => {
+                        navigation.push('Thread', {
+                          id: comment.id
+                        });
+                      }}
+                    >
+                      <View>
+                        <Text style={agoStyle()}>
+                          {ago.format(new Date(comment.time * 1000), 'mini')}
+                        </Text>
+                      </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                      underlayColor={color.accentLight}
+                      onPress={actionSheetOptions}
+                    >
+                      <View>
+                        <Ionicon name="ellipsis-horizontal" color={color.textPrimary} size={18} />
+                      </View>
+                    </TouchableHighlight>
+                  </View>
                 </View>
-              </View>
 
-              {htmlSource != null && (
-                <Collapsible collapsed={collapsed}>
-                  <RenderHTML
-                    contentWidth={dimensions.width}
-                    source={htmlSource}
-                    baseStyle={commentContent(depth)}
-                    tagsStyles={htmlTagStyles}
-                    defaultTextProps={htmlDefaultTextProps}
-                    renderersProps={htmlRenderersProps}
-                    enableExperimentalBRCollapsing
-                    enableExperimentalGhostLinesPrevention
-                    enableExperimentalMarginCollapsing
-                  />
-                </Collapsible>
-              )}
-            </View>
-          </Pressable>
+                {htmlSource != null && (
+                  <Collapsible collapsed={collapsed}>
+                    <RenderHTML
+                      contentWidth={dimensions.width}
+                      source={htmlSource}
+                      baseStyle={commentContent(depth)}
+                      tagsStyles={htmlTagStyles}
+                      defaultTextProps={htmlDefaultTextProps}
+                      renderersProps={htmlRenderersProps}
+                      enableExperimentalBRCollapsing
+                      enableExperimentalGhostLinesPrevention
+                      enableExperimentalMarginCollapsing
+                    />
+                  </Collapsible>
+                )}
+              </View>
+            </Pressable>
+          </Animated.View>
         </ListItem.Swipeable>
 
         {showingReplies &&
@@ -474,35 +475,11 @@ const htmlDefaultTextProps: TextProps = {
   selectable: true
 };
 
-const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
-  width: Dimensions.get('window').width - 200,
-  height: 15,
-  borderRadius: 10,
-  backgroundColor: t.color.accent
-}));
-
-const storySkeletonBy = styles.lazy<number, ViewStyle>(() => (t) => ({
-  height: 15,
-  width: 30,
-  borderRadius: 10,
-  backgroundColor: t.color.accent
-}));
-
-const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
-  height: 15,
-  width: 90,
-  borderRadius: 10,
-  backgroundColor: t.color.accent
-}));
-
-const skeletonHeaderContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
-  backgroundColor: t.color.bodyBg
-}));
-
 const skeletonContainer = styles.lazy((obj: { depth: number }) => (t) => ({
   backgroundColor: t.color.bodyBg,
   borderBottomWidth: t.borderWidth.hairline,
   borderBottomColor: t.color.accentLight,
+  height: 60,
   width: '100%',
   ...(obj.depth > 1
     ? ({
@@ -511,12 +488,21 @@ const skeletonContainer = styles.lazy((obj: { depth: number }) => (t) => ({
     : {})
 }));
 
-const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
-  display: 'flex',
+const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
+  marginTop: 40,
+  width: 30,
+  height: 10,
   borderRadius: 10,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  height: 60,
-  width: 60,
   backgroundColor: t.color.accent
+}));
+
+const storySkeletonBy = styles.lazy<number, ViewStyle>(() => (t) => ({
+  height: 10,
+  width: Dimensions.get('window').width - 200,
+  borderRadius: 10,
+  backgroundColor: t.color.accent
+}));
+
+const skeletonHeaderContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+  backgroundColor: t.color.bodyBg
 }));
