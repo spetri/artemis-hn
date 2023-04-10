@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import useSWR from 'swr';
-import { type FC, useEffect, useState } from 'react';
+import { type FC } from 'react';
 import {
   type HackerNewsAsk,
   type HackerNewsComment,

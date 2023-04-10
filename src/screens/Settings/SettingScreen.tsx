@@ -26,7 +26,7 @@ export const SettingScreen = () => {
       }}
     >
       <SettingsStack.Screen name="Settings" component={SettingsListView} />
-      <SettingsStack.Screen name="General" component={GeneralSettings} />
+      <SettingsStack.Screen name="GeneralSettings" component={GeneralSettings} />
       <SettingsStack.Screen
         name="ThemeColorSection"
         component={ThemeColorSection}

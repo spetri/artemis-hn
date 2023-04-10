@@ -231,14 +231,14 @@ const storyContainer = styles.lazy<string, ViewStyle>((thumbnailPosition) => (t)
   height: 85,
   width: Dimensions.get('window').width,
   borderBottomColor: t.color.accent,
-  borderBottomWidth: t.borderWidth.hairline
+  borderBottomWidth: t.borderWidth.hairline,
+  paddingHorizontal: 10
 }));
 
 const imageColumn = styles.lazy<number, ViewStyle>(() => () => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
-  marginHorizontal: 15,
   justifyContent: 'center'
 }));
 
@@ -251,7 +251,8 @@ const bodyColumn = styles.lazy<string, ViewStyle>((thumbnailPosition) => () => (
       ? -Dimensions.get('window').width
       : Dimensions.get('window').width,
   justifyContent: 'space-around',
-  flex: 1
+  flex: 1,
+  marginHorizontal: thumbnailPosition === 'Right' ? 0 : 15
 }));
 
 const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({

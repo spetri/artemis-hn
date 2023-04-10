@@ -489,7 +489,7 @@ const skeletonContainer = styles.lazy((obj: { depth: number }) => (t) => ({
 }));
 
 const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
-  marginTop: 40,
+  marginTop: 35,
   width: 30,
   height: 10,
   borderRadius: 10,
@@ -498,7 +498,7 @@ const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
 
 const storySkeletonBy = styles.lazy<number, ViewStyle>(() => (t) => ({
   height: 10,
-  width: Dimensions.get('window').width - 200,
+  width: Dimensions.get('window').width - 100,
   borderRadius: 10,
   backgroundColor: t.color.accent
 }));
