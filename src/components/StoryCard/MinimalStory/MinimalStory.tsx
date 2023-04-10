@@ -264,44 +264,6 @@ const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({
   width: Dimensions.get('window').width - 100
 }));
 
-const skeletonTitleContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
-  backgroundColor: t.color.bodyBg,
-  borderBottomWidth: t.borderWidth.hairline,
-  borderBottomColor: t.color.accentLight
-}));
-
-const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
-  backgroundColor: t.color.bodyBg
-}));
-
-const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
-  display: 'flex',
-  borderRadius: 10,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  height: 60,
-  width: 60,
-  backgroundColor: t.color.accent
-}));
-
-const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
-  width: Dimensions.get('window').width - 200,
-  height: 15,
-  backgroundColor: t.color.accent
-}));
-
-const storySkeletonBy = styles.lazy<number, ViewStyle>(() => (t) => ({
-  height: 15,
-  width: 30,
-  backgroundColor: t.color.accent
-}));
-
-const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
-  height: 15,
-  width: 90,
-  backgroundColor: t.color.accent
-}));
-
 const storyImage = styles.lazy<number, ImageStyle>((size) => () => ({
   width: size,
   height: size,
@@ -362,3 +324,41 @@ const footerRestText = styles.lazy<number, ViewStyle>(() => (t) => ({
 const rotate90 = {
   transform: [{ rotateY: '180deg' }]
 };
+
+const skeletonTitleContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+  backgroundColor: t.color.bodyBg,
+  borderBottomWidth: t.borderWidth.hairline,
+  borderBottomColor: t.color.accentLight
+}));
+
+const skeletonContainer = styles.lazy<number, ViewStyle>(() => (t) => ({
+  backgroundColor: t.color.bodyBg
+}));
+
+const storySkeletonImage = styles.lazy<number, ViewStyle>(() => (t) => ({
+  display: 'flex',
+  borderRadius: 10,
+  flexDirection: 'column',
+  justifyContent: 'center',
+  height: 60,
+  width: 60,
+  backgroundColor: t.color.accent
+}));
+
+const storySkeletonTitle = styles.lazy<number, ViewStyle>(() => (t) => ({
+  width: Dimensions.get('window').width - 200,
+  height: 15,
+  backgroundColor: t.color.accent
+}));
+
+const storySkeletonBy = styles.lazy<number, ViewStyle>(() => (t) => ({
+  height: 15,
+  width: 30,
+  backgroundColor: t.color.accent
+}));
+
+const storySkeletonMetadata = styles.lazy<number, ViewStyle>(() => (t) => ({
+  height: 15,
+  width: 90,
+  backgroundColor: t.color.accent
+}));

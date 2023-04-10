@@ -374,8 +374,8 @@ const openText = styles.one<TextStyle>(() => ({
 
 const commentContainer = styles.lazy((obj: { depth: number; commentColors: number }) => (t) => ({
   width: '100%',
-  padding: t.space.md,
-  paddingBottom: 10,
+  paddingHorizontal: t.space.md,
+  paddingTop: t.space.md,
   borderTopWidth: t.borderWidth.hairline,
   borderTopColor: t.color.accent,
   ...(obj.depth > 1
