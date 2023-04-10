@@ -86,7 +86,7 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
         >
           <View style={imageLink()}>
             <Image
-              style={storyImage()}
+              style={storyUrlImage()}
               source={{ uri: image ?? <IoniconIcon name="md-newspaper-outline" size={40} /> }}
             />
 
@@ -101,6 +101,8 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
 
   return !data ? null : (
     <View>
+      <View>{urlBar()}</View>
+
       <TouchableHighlight
         underlayColor={color.accentLight}
         onPress={() => {
@@ -118,8 +120,6 @@ export const StoryThreadHeader: FC<StoryThreadHeaderProps> = ({ data, metadata, 
           </Text>
         </View>
       </TouchableHighlight>
-
-      <View>{urlBar()}</View>
 
       {htmlSource && (
         <RenderHTML
@@ -184,7 +184,6 @@ const hostContainerStyle = styles.one<ViewStyle>((t) => ({
   alignItems: 'center',
   paddingRight: t.space.lg,
   paddingLeft: t.space.lg,
-  paddingTop: t.space.md,
   paddingBottom: t.space.md
 }));
 
@@ -192,16 +191,14 @@ const imageLink = styles.one<ViewStyle>((t) => ({
   flexDirection: 'row',
   alignItems: 'center',
   marginHorizontal: t.space.lg,
-  marginVertical: t.space.md,
-  backgroundColor: t.color.accent,
+  marginTop: t.space.md,
   borderRadius: 8
 }));
 
-const storyImage = styles.one<ImageStyle>(() => ({
-  width: 45,
-  height: 45,
-  borderTopLeftRadius: 8,
-  borderBottomLeftRadius: 8
+const storyUrlImage = styles.one<ImageStyle>(() => ({
+  width: 20,
+  height: 20,
+  borderRadius: 20
 }));
 
 const hostname = styles.one<TextStyle>((t) => ({

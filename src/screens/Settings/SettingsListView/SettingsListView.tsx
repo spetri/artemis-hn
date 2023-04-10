@@ -123,8 +123,3 @@ const listItemSeparatorStyle = styles.one<TextStyle>((t) => ({
   width: '100%',
   backgroundColor: t.color.textAccent
 }));
-
-const colorListItem = styles.one<TextStyle>((t) => ({
-  fontSize: t.type.size.sm,
-  color: t.color.textPrimary
-}));

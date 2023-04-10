@@ -373,7 +373,7 @@ const openText = styles.one<TextStyle>(() => ({
 }));
 
 const commentContainer = styles.lazy((obj: { depth: number; commentColors: number }) => (t) => ({
-  width: '100%',
+  width: Dimensions.get('window').width,
   paddingHorizontal: t.space.md,
   paddingTop: t.space.md,
   borderTopWidth: t.borderWidth.hairline,
@@ -409,7 +409,8 @@ const commentContent = styles.lazy<number, ViewStyle>((depth) => (t) => ({
   fontWeight: '300',
   ...(depth > 0
     ? ({
-        marginRight: t.space.md * (depth + 0.5)
+        marginRight: t.space.md * (depth + 0.5),
+        paddingBottom: t.space.md
       } as const)
     : {})
 }));
@@ -483,7 +484,9 @@ const skeletonContainer = styles.lazy((obj: { depth: number }) => (t) => ({
   width: '100%',
   ...(obj.depth > 1
     ? ({
-        marginLeft: t.space.md * (obj.depth - 1)
+        marginLeft: t.space.md * (obj.depth - 1),
+        borderLeftWidth: 2,
+        borderLeftColor: t.color.bodyBg
       } as const)
     : {})
 }));

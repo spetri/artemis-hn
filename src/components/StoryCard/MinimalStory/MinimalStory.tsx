@@ -117,6 +117,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       });
     };
     const systemBrowser = async () => await Linking.openURL(url.toString());
+
     if (metadata?.image) {
       return (
         <TouchableHighlight

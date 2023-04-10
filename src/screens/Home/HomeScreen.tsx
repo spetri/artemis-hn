@@ -13,6 +13,7 @@ import { Stories } from '../Stories/Stories';
 import { Home } from './Home';
 import { UserScreen } from '../User/UserScreen';
 import { Browser } from '../Browser/Browser';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -51,14 +52,49 @@ export const HomeScreen = () => {
   };
 
   const screenHeader = () => {
+    const actionSheet = useActionSheet();
+
+    const actionSheetOptions = () => {
+      actionSheet.showActionSheetWithOptions(
+        {
+          options: listItems.map((topic) => topic.header),
+          userInterfaceStyle: 'dark',
+          tintIcons: true
+        },
+        (buttonIndex) => {
+          switch (buttonIndex) {
+            case 0: {
+              navigation.navigate('Stories', { filter: HackerNews.HOME });
+              return;
+            }
+            case 1: {
+              navigation.navigate('Stories', { filter: HackerNews.BEST });
+              return;
+            }
+            case 2: {
+              navigation.navigate('Stories', { filter: HackerNews.NEW });
+              return;
+            }
+            case 3: {
+              navigation.navigate('Stories', { filter: HackerNews.SHOW });
+              return;
+            }
+            case 4: {
+              navigation.navigate('Stories', { filter: HackerNews.ASK });
+              return;
+            }
+            case 5: {
+              navigation.navigate('Stories', { filter: HackerNews.JOB });
+              return;
+            }
+          }
+        }
+      );
+    };
+
     return (
       <>
-        <TouchableHighlight
-          underlayColor={color.accentLight}
-          onPress={() => {
-            setSwitcher(true);
-          }}
-        >
+        <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
           <View style={switcherView()}>
             <Text style={switcherText()}>Stories</Text>
             <IoniconIcon
@@ -69,15 +105,6 @@ export const HomeScreen = () => {
             />
           </View>
         </TouchableHighlight>
-        <Dialog
-          isVisible={switcher}
-          onBackdropPress={() => {
-            setSwitcher(false);
-          }}
-        >
-          <Dialog.Title title="Switch HN" />
-          {listItems.map((topic) => Items(topic))}
-        </Dialog>
       </>
     );
   };
@@ -99,11 +126,7 @@ export const HomeScreen = () => {
         gestureResponseDistance: 100
       }}
     >
-      <HomeStack.Screen
-        name="Select"
-        component={Home}
-        initialParams={{ filter: HackerNews.HOME }}
-      />
+      <HomeStack.Screen name="Select" component={Home} />
       <HomeStack.Screen
         name="Stories"
         component={Stories}
