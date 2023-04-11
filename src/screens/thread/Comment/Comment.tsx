@@ -228,7 +228,7 @@ export const Comment: FC<CommentProps> = memo(
                   depth,
                   commentColors:
                     commentColors != null
-                      ? color[commentColors?.[Math.floor(depth)]]
+                      ? color[commentColors?.[Math.floor(depth - 2)]]
                       : commentColors
                 })}
               >
@@ -384,7 +384,7 @@ const commentContainer = styles.lazy((obj: { depth: number; commentColors: numbe
         borderLeftColor: obj.commentColors,
         marginLeft: t.space.md * (obj.depth - 1)
       } as const)
-    : {})
+    : { borderLeftColor: t.color.primary, borderLeftWidth: 2 })
 }));
 
 const commentContainerReply = styles.lazy(
@@ -399,7 +399,7 @@ const commentContainerReply = styles.lazy(
           borderLeftColor: obj.commentColors,
           marginLeft: t.space.md * (obj.depth + 0.5)
         } as const)
-      : {})
+      : { borderLeftColor: t.color.primary, borderLeftWidth: 2 })
   })
 );
 
@@ -412,7 +412,7 @@ const commentContent = styles.lazy<number, ViewStyle>((depth) => (t) => ({
         marginRight: t.space.md * (depth + 0.5),
         paddingBottom: t.space.md
       } as const)
-    : {})
+    : { borderLeftColor: t.color.primary, borderLeftWidth: 2 })
 }));
 
 const byLine = styles.lazy<number, ViewStyle>((depth) => (t) => ({
@@ -484,7 +484,7 @@ const skeletonContainer = styles.lazy((obj: { depth: number }) => (t) => ({
   width: '100%',
   ...(obj.depth > 1
     ? ({
-        marginLeft: t.space.md * (obj.depth - 1),
+        marginLeft: t.space.md * obj.depth,
         borderLeftWidth: 2,
         borderLeftColor: t.color.bodyBg
       } as const)

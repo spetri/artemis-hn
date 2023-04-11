@@ -108,7 +108,7 @@ export const HomeScreen = () => {
         gestureResponseDistance: 100
       }}
     >
-      <HomeStack.Screen name="Select" component={Home} />
+      <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen
         name="Stories"
         component={Stories}
