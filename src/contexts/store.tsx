@@ -63,6 +63,10 @@ export const listItems: ListItemType[] = [
 ];
 
 type PreferencesState = {
+  // STRING TOGGLES
+  storyTitle: string;
+  setStoryTitle: (storyTitle: string) => void;
+
   // BOOLEAN TOGGLES
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
@@ -98,6 +102,9 @@ type PreferencesState = {
 };
 
 const preferencesStore = (set) => ({
+  storyTitle: defaultPreferences.storyTitle,
+  setStoryTitle: (storyTitle) => set(() => ({ storyTitle: storyTitle })),
+
   isLoggedIn: defaultPreferences.isLoggedIn,
   setIsLoggedIn: (isLoggedIn) => set(() => ({ isLoggedIn: !isLoggedIn })),
 

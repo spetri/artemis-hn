@@ -1,4 +1,5 @@
 import Icon from 'react-native-vector-icons/Ionicons';
+import { shallow } from 'zustand/shallow';
 import { type FC, useEffect, useState } from 'react';
 import { SafeAreaView, type TextStyle, TouchableHighlight, type ViewStyle } from 'react-native';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,7 +10,8 @@ import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content';
 import { type StackParamList } from '../routers';
 import { styles, useDash } from '../../../dash.config';
 import { usePreferences } from '../Settings/usePreferences';
-import { listItems, ListItemType } from '../../contexts/store';
+import { listItems, ListItemType, usePreferencesStore } from '../../contexts/store';
+import { hackerNewsConverter } from '../../utils/util';
 
 export const Home: FC<ListItemType> = () => {
   useDash();
@@ -17,6 +19,13 @@ export const Home: FC<ListItemType> = () => {
 
   const [homeOrderList, setHomeOrderList] = usePreferences('homeOrderList', listItems);
   const [homeItems, setHomeItems] = useState(homeOrderList != null ? homeOrderList[0] : listItems);
+  const { setStoryTitle } = usePreferencesStore(
+    (state) => ({
+      setStoryTitle: state.setStoryTitle
+    }),
+    shallow
+  );
+
   const {
     tokens: { color }
   } = useDash();
@@ -33,26 +42,35 @@ export const Home: FC<ListItemType> = () => {
   }, [homeOrderList]);
 
   const Item = (item, drag) => {
-
-    return <ScaleDecorator>
-      <TouchableHighlight underlayColor={color.accentLight}
-        onLongPress={drag}
-        onPress={() => {
-          navigation.navigate('Stories', item?.filter ? {
-            filter: item?.filter
-          } : { filter: "home" });
-        }}
-      >
-        <ListItem containerStyle={content()}>
-          <Icon name={item.iconName} color={color.textPrimary} size={30} />
-          <ListItemContent>
-            <ListItem.Title style={header()}>{item.header}</ListItem.Title>
-            <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
-          </ListItemContent>
-        </ListItem>
-      </TouchableHighlight>
-    </ScaleDecorator>
-  }
+    return (
+      <ScaleDecorator>
+        <TouchableHighlight
+          underlayColor={color.accentLight}
+          onLongPress={drag}
+          onPress={() => {
+            const filter = hackerNewsConverter(item?.filter);
+            setStoryTitle(filter);
+            navigation.navigate(
+              'Stories',
+              item?.filter
+                ? {
+                    filter: item?.filter
+                  }
+                : { filter: 'home' }
+            );
+          }}
+        >
+          <ListItem containerStyle={content()}>
+            <Icon name={item.iconName} color={color.textPrimary} size={30} />
+            <ListItemContent>
+              <ListItem.Title style={header()}>{item.header}</ListItem.Title>
+              <ListItem.Subtitle style={subheader()}>{item.subheader}</ListItem.Subtitle>
+            </ListItemContent>
+          </ListItem>
+        </TouchableHighlight>
+      </ScaleDecorator>
+    );
+  };
 
   return (
     <SafeAreaView style={containerBg()}>
@@ -63,7 +81,7 @@ export const Home: FC<ListItemType> = () => {
         onDragEnd={({ data }) => {
           persistOrder(data);
         }}
-        renderItem={({ item, drag }) => (Item(item, drag))}
+        renderItem={({ item, drag }) => Item(item, drag)}
       ></DraggableFlatList>
     </SafeAreaView>
   );
@@ -71,7 +89,7 @@ export const Home: FC<ListItemType> = () => {
 
 const containerBg = styles.one<ViewStyle>((t) => ({
   backgroundColor: t.color.bodyBg,
-  height: '100%',
+  height: '100%'
 }));
 
 const content = styles.one<ViewStyle>((t) => ({
@@ -84,7 +102,7 @@ const content = styles.one<ViewStyle>((t) => ({
 
 const subheader = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontSize: t.type.size.xs,
+  fontSize: t.type.size.xs
 }));
 
 const header = styles.one<TextStyle>((t) => ({

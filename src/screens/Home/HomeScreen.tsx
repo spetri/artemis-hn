@@ -1,8 +1,8 @@
 import IoniconIcon from 'react-native-vector-icons/Ionicons';
+import { shallow } from 'zustand/shallow';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
-import { Dialog, ListItem } from '@rneui/themed';
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { styles, useDash } from './../../../dash.config';
 import { HomeStack, type StackParamList } from './../../../src/screens/routers';
@@ -17,42 +17,22 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const [switcher, setSwitcher] = useState(false);
-  const cachedThreadId = usePreferencesStore((state) => state.cachedThreadId);
+  const { cachedThreadId, storyTitle } = usePreferencesStore(
+    (state) => ({
+      cachedThreadId: state.cachedThreadId,
+      storyTitle: state.storyTitle
+    }),
+    shallow
+  );
   const {
     tokens: { color }
   } = useDash();
 
-  const Items = (topic) => {
-    return (
-      <TouchableHighlight
-        underlayColor={color.accentLight}
-        key={topic.id}
-        onPress={() => {
-          setSwitcher(false);
-          navigation.navigate(
-            'Stories',
-            topic?.filter
-              ? {
-                  filter: topic?.filter
-                }
-              : { filter: HackerNews.HOME }
-          );
-        }}
-      >
-        <View>
-          <ListItem style={borderBottom()}>
-            <ListItem.Content>
-              <ListItem.Title>{topic.header}</ListItem.Title>
-            </ListItem.Content>
-          </ListItem>
-        </View>
-      </TouchableHighlight>
-    );
-  };
+  const navigateBackToThread = () => navigation.navigate('Thread', { id: cachedThreadId ?? 0 });
 
   const screenHeader = () => {
     const actionSheet = useActionSheet();
+    const [filter, setFilter] = useState('');
 
     const actionSheetOptions = () => {
       actionSheet.showActionSheetWithOptions(
@@ -65,26 +45,32 @@ export const HomeScreen = () => {
           switch (buttonIndex) {
             case 0: {
               navigation.navigate('Stories', { filter: HackerNews.HOME });
+              setFilter('Front Page');
               return;
             }
             case 1: {
               navigation.navigate('Stories', { filter: HackerNews.BEST });
+              setFilter('Popular');
               return;
             }
             case 2: {
               navigation.navigate('Stories', { filter: HackerNews.NEW });
+              setFilter('New');
               return;
             }
             case 3: {
               navigation.navigate('Stories', { filter: HackerNews.SHOW });
+              setFilter('Show');
               return;
             }
             case 4: {
               navigation.navigate('Stories', { filter: HackerNews.ASK });
+              setFilter('Ask');
               return;
             }
             case 5: {
               navigation.navigate('Stories', { filter: HackerNews.JOB });
+              setFilter('Jobs');
               return;
             }
           }
@@ -93,23 +79,19 @@ export const HomeScreen = () => {
     };
 
     return (
-      <>
-        <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
-          <View style={switcherView()}>
-            <Text style={switcherText()}>Stories</Text>
-            <IoniconIcon
-              color={color.textPrimary}
-              size={16}
-              style={switcherIcon()}
-              name="chevron-down-outline"
-            />
-          </View>
-        </TouchableHighlight>
-      </>
+      <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
+        <View style={switcherView()}>
+          <Text style={switcherText()}>{filter ? filter : storyTitle}</Text>
+          <IoniconIcon
+            color={color.textPrimary}
+            size={16}
+            style={switcherIcon()}
+            name="chevron-down-outline"
+          />
+        </View>
+      </TouchableHighlight>
     );
   };
-
-  const navigateBackToThread = () => navigation.navigate('Thread', { id: cachedThreadId ?? 0 });
 
   return (
     <HomeStack.Navigator

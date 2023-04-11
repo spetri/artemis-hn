@@ -1,5 +1,4 @@
 import 'react-native-url-polyfill/auto';
-import { shallow } from 'zustand/shallow';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Animated, LogBox, RefreshControl, type ViewStyle } from 'react-native';

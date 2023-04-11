@@ -5,7 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLayoutEffect, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { colorSystem, createTypeSystem, useDash } from '../../../dash.config';
-import { Position, ThreadReplies } from '../../enums/enums';
+import { HackerNews, Position, ThreadReplies } from '../../enums/enums';
 import { type StackParamList } from '../routers';
 
 type ThumbnailSizeType = 55 | 65 | 75;
@@ -13,6 +13,7 @@ type PositionType = 'Left' | 'Right' | 'Middle';
 
 export const preferencesVersion = '1.1';
 export const defaultPreferences: SetThemeType = {
+  storyTitle: HackerNews.HOME,
   isLoggedIn: false,
   cachedThreadId: null,
   displayLargeThumbnails: false,
@@ -43,6 +44,7 @@ export const defaultPreferences: SetThemeType = {
 };
 
 export type SetThemeType = {
+  storyTitle: string;
   isLoggedIn: boolean;
   cachedThreadId: number | null;
   displayReplies: string;
