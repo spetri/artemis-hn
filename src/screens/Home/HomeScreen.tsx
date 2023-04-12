@@ -17,6 +17,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const [filter, setFilter] = useState('');
   const { cachedThreadId, storyTitle } = usePreferencesStore(
     (state) => ({
       cachedThreadId: state.cachedThreadId,
@@ -32,7 +33,6 @@ export const HomeScreen = () => {
 
   const screenHeader = () => {
     const actionSheet = useActionSheet();
-    const [filter, setFilter] = useState('');
 
     const actionSheetOptions = () => {
       actionSheet.showActionSheetWithOptions(
@@ -81,12 +81,11 @@ export const HomeScreen = () => {
     return (
       <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
         <View style={switcherView()}>
-          <Text style={switcherText()}>{filter ? filter : storyTitle}</Text>
           <IoniconIcon
             color={color.textPrimary}
-            size={16}
-            style={switcherIcon()}
-            name="chevron-down-outline"
+            size={32}
+            style={filterIcon()}
+            name="ios-filter-outline"
           />
         </View>
       </TouchableHighlight>
@@ -114,16 +113,16 @@ export const HomeScreen = () => {
         component={Stories}
         initialParams={{ filter: HackerNews.TOP }}
         options={{
-          headerTitle: () => screenHeader(),
+          headerTitle: () => <Text style={switcherText()}>{filter ? filter : storyTitle}</Text>,
           headerRight: () => (
             <View style={rightIcons()}>
+              {screenHeader()}
               {!!cachedThreadId && (
                 <TouchableHighlight
                   underlayColor={color.accentLight}
                   onPress={navigateBackToThread}
                 >
                   <View style={switcherView()}>
-                    <Text style={forwardText()}>Last Viewed</Text>
                     <IoniconIcon
                       name="chevron-forward"
                       style={{ color: color.primary }}
@@ -151,19 +150,10 @@ const switcherView = styles.one<ViewStyle>(() => ({
   alignItems: 'center'
 }));
 
-const forwardText = styles.one<TextStyle>((t) => ({
-  color: t.color.primary,
-  fontSize: 16
-}));
-
 const switcherText = styles.one<TextStyle>((t) => ({
   fontSize: t.type.size.base,
   fontWeight: '600',
   color: t.color.textPrimary
-}));
-
-const switcherIcon = styles.one<ViewStyle>(() => ({
-  marginLeft: 3
 }));
 
 const rightIcons = styles.one<ViewStyle>(() => ({
@@ -171,7 +161,7 @@ const rightIcons = styles.one<ViewStyle>(() => ({
   flexDirection: 'row'
 }));
 
-const borderBottom = styles.one<ViewStyle>((t) => ({
-  borderBottomWidth: t.borderWidth.hairline,
-  borderBottomColor: t.color.accentLight
+const filterIcon = styles.one<ViewStyle>((t) => ({
+  color: t.color.primary,
+  marginHorizontal: 6
 }));
