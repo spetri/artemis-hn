@@ -16,7 +16,7 @@ import {
   View,
   type ViewStyle
 } from 'react-native';
-import { ListItem } from '@rneui/themed';
+import { Badge, ListItem } from '@rneui/themed';
 import { styles, useDash } from '../../../../dash.config';
 import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
@@ -159,6 +159,16 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
     return navigation.push('Thread', { id: threadId });
   };
 
+  const displayBadge = (title) => {
+    if (title.startsWith('Show HN:')) {
+      return <Badge badgeStyle={{ borderRadius: 4 }} value="Show HN" status="success" />;
+    } else if (title.startsWith('Ask HN:')) {
+      return <Badge badgeStyle={{ borderRadius: 4 }} value="Ask HN" status="success" />;
+    }
+  };
+
+  const checkTitle = (title) => title.replace('Show HN: ', '');
+
   return (
     metadata && (
       <TouchableHighlight
@@ -171,16 +181,29 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
             <View style={bodyColumn(thumbnailPosition)}>
               <View>
                 <Text style={storyTitle(index)} numberOfLines={4}>
-                  {data.title}&nbsp;
-                  {displaySource ? (
-                    <Text style={appName()}>
-                      ({metadata.applicationName || url.host.replace(/^www\./, '')})
-                    </Text>
-                  ) : null}
+                  <>
+                    {checkTitle(data.title)}
+                    {displaySource ? (
+                      <Text style={appName()}>
+                        ({metadata.applicationName || url.host.replace(/^www\./, '')})
+                      </Text>
+                    ) : null}
+                  </>
                 </Text>
               </View>
               <View style={footerText()}>
-                <View>
+                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                  {data.title.startsWith('Show HN:') || data.title.startsWith('Ask HN:') ? (
+                    <TouchableHighlight
+                      underlayColor={color.accentLight}
+                      style={{ marginRight: 10 }}
+                      onPress={() => {
+                        navigation.push('User', { id: data.by });
+                      }}
+                    >
+                      <Text>{displayBadge(data.title)}</Text>
+                    </TouchableHighlight>
+                  ) : null}
                   <TouchableHighlight
                     underlayColor={color.accentLight}
                     onPress={() => {

@@ -73,6 +73,9 @@ export const HomeScreen = () => {
               setFilter('Jobs');
               return;
             }
+            case 6: {
+              return;
+            }
           }
         }
       );

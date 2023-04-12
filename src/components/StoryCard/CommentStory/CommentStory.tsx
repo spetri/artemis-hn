@@ -15,7 +15,7 @@ import { Skeleton } from '../../Skeleton/Skeleton';
 type CommentStoryProps = {
   data: HackerNewsComment;
   index: number;
-}
+};
 
 export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -35,7 +35,8 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
 
   return (
     <View style={storyContainer(index)}>
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Thread', {
             id: parentData.id
@@ -46,7 +47,8 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
           <Text style={commentStoryTitle()}>{parentData.title}</Text>
         </View>
       </TouchableHighlight>
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Thread', {
             id: data.id
@@ -61,7 +63,8 @@ export const CommentStory: FC<CommentStoryProps> = ({ data, index }) => {
       </TouchableHighlight>
 
       <View style={byLine}>
-        <TouchableHighlight underlayColor={color.accentLight}
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Thread', {
               id: data.id

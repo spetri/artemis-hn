@@ -12,6 +12,7 @@ import { pluralize } from '../../../utils/pluralize';
 import { type HackerNewsAsk } from '../../../types/hn-api';
 import { usePreferencesStore } from '../../../contexts/store';
 import { shallow } from 'zustand/shallow';
+import { Badge } from '@rneui/themed';
 
 type AskStoryProps = {
   data: HackerNewsAsk;
@@ -20,9 +21,12 @@ type AskStoryProps = {
 
 export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { setCachedThreadId } = usePreferencesStore((state) => ({
-    setCachedThreadId: state.setCachedThreadId,
-  }), shallow);
+  const { setCachedThreadId } = usePreferencesStore(
+    (state) => ({
+      setCachedThreadId: state.setCachedThreadId
+    }),
+    shallow
+  );
   const {
     tokens: { color }
   } = useDash();
@@ -30,22 +34,34 @@ export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
   const navigateToThread = (threadId) => {
     setCachedThreadId(threadId);
     return navigation.push('Thread', { id: threadId });
-  }
+  };
+
+  const displayBadge = (title) => {
+    if (title.startsWith('Ask HN:')) {
+      return <Badge badgeStyle={{ borderRadius: 4 }} value="Ask HN" status="success" />;
+    } else if (title.startsWith('Show HN:')) {
+      return <Badge badgeStyle={{ borderRadius: 4 }} value="Show HN" status="success" />;
+    }
+  };
+
+  const checkTitle = (title) => title.replace('Show HN: ', '');
 
   return (
     <View style={storyContainer(index)}>
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => navigateToThread(data.id)}
       >
         <View>
           <Text style={storyTitle(index)} adjustsFontSizeToFit numberOfLines={index === 0 ? 5 : 7}>
-            {data.title}
+            {checkTitle(data.title)}
           </Text>
         </View>
       </TouchableHighlight>
 
       {data.text && (
-        <TouchableHighlight underlayColor={color.accentLight}
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Thread', {
               id: data.id
@@ -58,36 +74,37 @@ export const AskStory: FC<AskStoryProps> = ({ data, index }) => {
             </Text>
           </View>
         </TouchableHighlight>
-      )
-      }
+      )}
 
       <View>
-        <View style={byLine}>
-          <TouchableHighlight underlayColor={color.accentLight}
-            onPress={() => {
-              navigation.push('User', { id: data.by });
-            }}
-          >
-            <View>
-              <Text style={byStyle()}>{data.by}</Text>
-            </View>
-          </TouchableHighlight>
-          <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
-        </View>
-
-        <TouchableHighlight underlayColor={color.accentLight}
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Thread', { id: data.id });
           }}
         >
           <View style={footerText()}>
-            <AntDesignIcon size={13} name="arrowup" color={color.primary} />
-            <Text style={score()}>{data.score}&bull;{' '}</Text>
-            <Text style={commentsStyle()}>{pluralize(data.descendants, 'comment')}</Text>
+            <View style={byLine}>
+              <Text style={badgeStyle()}>{displayBadge(data.title)}</Text>
+              <TouchableHighlight
+                underlayColor={color.accentLight}
+                onPress={() => {
+                  navigation.push('User', { id: data.by });
+                }}
+              >
+                <Text>
+                  <Text style={byStyle()}>{data.by} &bull; </Text>
+                  <AntDesignIcon size={15} name="arrowup" color={color.primary} />
+                  <Text style={score()}>{data.score}</Text>
+                </Text>
+              </TouchableHighlight>
+            </View>
+            <Text style={commentsStyle()}> &bull; {pluralize(data.descendants, 'comment')}</Text>
+            <Text style={agoStyle()}> &bull; {ago.format(new Date(data.time * 1000), 'mini')}</Text>
           </View>
         </TouchableHighlight>
-      </View >
-    </View >
+      </View>
+    </View>
   );
 };
 
@@ -99,8 +116,12 @@ const storyContainer = styles.lazy<number, ViewStyle>((index) => (t) => ({
 }));
 
 const score = styles.one<TextStyle>((t) => ({
-  color: t.color.primary,
-  fontWeight: '700'
+  color: t.color.primary
+}));
+
+const badgeStyle = styles.one<TextStyle>((t) => ({
+  marginRight: 10,
+  marginTop: 2
 }));
 
 const storyTitle = styles.lazy<number, TextStyle>((index: number) => (t) => ({
@@ -121,18 +142,17 @@ const storyText = styles.one<TextStyle>((t) => ({
 }));
 
 const byLine: ViewStyle = {
-  width: '100%',
   flexDirection: 'row',
   justifyContent: 'space-between'
 };
 
 const byStyle = styles.one<TextStyle>((t) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
-  fontWeight: '300',
-  padding: t.space.sm,
-  paddingTop: 0,
-  paddingLeft: 0
+  fontWeight: '300'
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
@@ -145,11 +165,12 @@ const footerText = styles.one<TextStyle>((t) => ({
   fontWeight: '600',
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
-  display: "flex",
-  flexDirection: "row"
+  display: 'flex',
+  flexDirection: 'row',
+  marginTop: 8
 }));
 
 const commentsStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontWeight: '300',
+  fontWeight: '300'
 }));

@@ -145,7 +145,7 @@ const Tabs = () => {
         )}
       >
         <Tab.Screen
-          name="Home"
+          name="HomeScreen"
           component={HomeScreen}
           options={{
             tabBarLabel: 'Hacker News',

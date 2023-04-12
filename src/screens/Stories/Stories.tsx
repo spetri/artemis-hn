@@ -60,7 +60,6 @@ export const Stories: FC<StoriesProps> = (props) => {
   return (
     <Animated.FlatList
       ListHeaderComponent={listHeaderComponent}
-      stickyHeaderIndices={[0]}
       refreshControl={refreshControl}
       data={flatListData ?? fauxFlatStories}
       keyExtractor={keyExtractor}

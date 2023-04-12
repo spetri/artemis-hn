@@ -24,15 +24,18 @@ import { shallow } from 'zustand/shallow';
 type JobsStory = {
   data: HackerNewsJob;
   index: number;
-}
+};
 
 export const JobStory: FC<JobsStory> = ({ data, index }) => {
   const url = data.url ? new URL(data.url) : undefined;
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
-  const { setCachedThreadId } = usePreferencesStore((state) => ({
-    setCachedThreadId: state.setCachedThreadId,
-  }), shallow);
+  const { setCachedThreadId } = usePreferencesStore(
+    (state) => ({
+      setCachedThreadId: state.setCachedThreadId
+    }),
+    shallow
+  );
 
   const {
     tokens: { color }
@@ -49,12 +52,13 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
   const navigateToThread = (threadId) => {
     setCachedThreadId(threadId);
     return navigation.push('Thread', { id: threadId });
-  }
+  };
 
   return (
     <View style={storyContainer(index)}>
       {url != null && metadata?.image ? (
-        <TouchableHighlight underlayColor={color.accentLight}
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Browser', {
               title: data.title,
@@ -69,7 +73,8 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
       ) : null}
 
       {url != null && (
-        <TouchableHighlight underlayColor={color.accentLight}
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Browser', {
               title: metadata.applicationName || url.hostname,
@@ -87,7 +92,8 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
         </TouchableHighlight>
       )}
 
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => {
           if (url != null) {
             navigation.push('Browser', {
@@ -111,7 +117,8 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
       </TouchableHighlight>
 
       {data.text && (
-        <TouchableHighlight underlayColor={color.accentLight}
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             if (url != null) {
               navigation.push('Browser', {
@@ -133,7 +140,8 @@ export const JobStory: FC<JobsStory> = ({ data, index }) => {
 
       <View>
         <View style={byLine}>
-          <TouchableHighlight underlayColor={color.accentLight}
+          <TouchableHighlight
+            underlayColor={color.accentLight}
             onPress={() => {
               navigation.push('User', { id: data.by });
             }}
