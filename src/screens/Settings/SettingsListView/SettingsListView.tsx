@@ -35,7 +35,7 @@ export const SettingsListView: FC = () => {
       header: 'General',
       iconName: 'ios-settings-outline',
       navigate: () => {
-        navigation.push('GeneralSettings', {});
+        navigation.push('General', {});
       }
     }
     // {

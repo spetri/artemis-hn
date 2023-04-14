@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useDash } from '../../../dash.config';
 import { ThemeGridList } from '../../components/ThemeGridList/ThemeGridList';
 import { SettingsStack } from '../routers';
-import { GeneralSettings } from './GeneralSettings/GeneralSettings';
+import { General } from './General/General';
 import { SettingsListView } from './SettingsListView/SettingsListView';
 import { AppColors } from './SettingsListView/ThemeConfig';
 
@@ -21,12 +21,11 @@ export const SettingScreen = () => {
         },
         headerTitleStyle: {
           color: color.textPrimary as string
-        },
-        gestureResponseDistance: 100
+        }
       }}
     >
       <SettingsStack.Screen name="Settings" component={SettingsListView} />
-      <SettingsStack.Screen name="GeneralSettings" component={GeneralSettings} />
+      <SettingsStack.Screen name="General" component={General} />
       <SettingsStack.Screen
         name="ThemeColorSection"
         component={ThemeColorSection}

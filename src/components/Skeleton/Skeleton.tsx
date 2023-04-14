@@ -11,19 +11,24 @@ export type SkeletonVariant = 'text' | 'rect' | 'circle';
 
 export const Skeleton: FC<SkeletonProps> = (props) => {
   useDash();
-  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [fadeAnim] = useState(() => new Animated.Value(0.7));
 
   useLayoutEffect(() => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(fadeAnim, {
-          toValue: 0.5,
-          duration: 670,
+          toValue: 0.7,
+          duration: 450,
           useNativeDriver: true
         }),
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 670,
+          duration: 450,
+          useNativeDriver: true
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0.7,
+          duration: 450,
           useNativeDriver: true
         })
       ])

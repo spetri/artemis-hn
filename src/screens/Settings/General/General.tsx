@@ -31,7 +31,7 @@ import { ThreadReplies } from '../../../enums/enums';
 
 export type SettingsProps = NativeStackScreenProps<StackParamList, 'User'>;
 
-export const GeneralSettings: FC<SettingsProps> = () => {
+export const General: FC<SettingsProps> = () => {
   const actionSheet = useActionSheet();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const {
