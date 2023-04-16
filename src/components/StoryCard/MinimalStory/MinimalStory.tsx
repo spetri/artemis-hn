@@ -242,6 +242,19 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
                 </View>
               </View>
             </View>
+            <View>
+              <View style={votingColumn()}>
+                <TouchableHighlight
+                  underlayColor={color.accentLight}
+                  onPress={() => {
+                    upvote(data.id);
+                  }}
+                >
+                  <IoniconIcon size={25} name="arrow-up-outline" color={color.textAccent} />
+                </TouchableHighlight>
+                <IoniconIcon size={25} name="arrow-down-outline" color={color.textAccent} />
+              </View>
+            </View>
           </View>
         </Animated.View>
       </TouchableHighlight>
@@ -273,10 +286,16 @@ const bodyColumn = styles.lazy<string, ViewStyle>((thumbnailPosition) => () => (
   width:
     thumbnailPosition === 'Right'
       ? -Dimensions.get('window').width
-      : Dimensions.get('window').width,
+      : Dimensions.get('window').width - 130,
   justifyContent: 'space-around',
-  flex: 1,
   marginHorizontal: thumbnailPosition === 'Right' ? 0 : 15
+}));
+
+const votingColumn = styles.lazy<string, ViewStyle>((thumbnailPosition) => () => ({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  justifyContent: 'space-between'
 }));
 
 const storyTitle = styles.lazy<number, TextStyle>(() => (t) => ({

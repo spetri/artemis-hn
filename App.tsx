@@ -152,15 +152,14 @@ const Tabs = () => {
             tabBarIcon: () => <IoniconIcon name="ios-browsers" size={30} />
           }}
         />
-        {/* <Tab.Screen
+        <Tab.Screen
           name="User"
           component={UserScreen}
-          initialParams={{ id: isLoggedIn ? 'pookieinc' : '' }}
           options={{
             tabBarLabel: 'User',
             tabBarIcon: () => <IoniconIcon name="person-circle" size={30} />
           }}
-        /> */}
+        />
         <Tab.Screen
           name="Search"
           component={SearchScreen}
