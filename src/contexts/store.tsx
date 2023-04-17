@@ -99,11 +99,17 @@ type PreferencesState = {
   // NUMBER
   cachedThreadId: number | null;
   setCachedThreadId: (cachedThreadId: number) => void;
+
+  storyCount: number;
+  setStoryCount: (storyCount: number) => void;
 };
 
 const preferencesStore = (set) => ({
   storyTitle: defaultPreferences.storyTitle,
   setStoryTitle: (storyTitle) => set(() => ({ storyTitle: storyTitle })),
+
+  storyCount: defaultPreferences.storyCount,
+  setStoryCount: (storyCount) => set(() => ({ storyCount: storyCount })),
 
   isLoggedIn: defaultPreferences.isLoggedIn,
   setIsLoggedIn: (isLoggedIn) => set(() => ({ isLoggedIn: !isLoggedIn })),

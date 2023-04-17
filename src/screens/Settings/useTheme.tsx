@@ -18,6 +18,7 @@ export const defaultPreferences: SetThemeType = {
   cachedThreadId: null,
   displayLargeThumbnails: false,
   thumbnailSize: 55,
+  storyCount: 0,
   displaySource: true,
   displayReplies: ThreadReplies.AUTO,
   jumpButtonPosition: Position.RIGHT,
@@ -50,6 +51,7 @@ export type SetThemeType = {
   displayReplies: string;
   displayLargeThumbnails: boolean;
   displaySource: boolean;
+  storyCount: number;
   openLinkInBrowser: boolean;
   jumpButtonPosition: PositionType;
   thumbnailPosition: PositionType;

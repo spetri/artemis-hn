@@ -384,7 +384,7 @@ const commentContainer = styles.lazy((obj: { depth: number; commentColors: numbe
         borderLeftColor: obj.commentColors,
         marginLeft: t.space.md * (obj.depth - 1)
       } as const)
-    : { borderLeftColor: t.color.primary, borderLeftWidth: 2 })
+    : {})
 }));
 
 const commentContainerReply = styles.lazy(

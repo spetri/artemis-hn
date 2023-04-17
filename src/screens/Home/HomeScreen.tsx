@@ -18,10 +18,11 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [filter, setFilter] = useState('');
-  const { cachedThreadId, storyTitle } = usePreferencesStore(
+  const { cachedThreadId, storyTitle, storyCount } = usePreferencesStore(
     (state) => ({
       cachedThreadId: state.cachedThreadId,
-      storyTitle: state.storyTitle
+      storyTitle: state.storyTitle,
+      storyCount: state.storyCount
     }),
     shallow
   );
@@ -139,7 +140,11 @@ export const HomeScreen = () => {
         }}
       />
       <HomeStack.Screen name="User" component={UserScreen} />
-      <HomeStack.Screen name="Thread" component={Thread} />
+      <HomeStack.Screen
+        name="Thread"
+        component={Thread}
+        options={{ headerTitle: () => <Text style={switcherText()}>{storyCount} Comments</Text> }}
+      />
       <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
         <HomeStack.Screen name="Browser" component={Browser} />
       </HomeStack.Group>

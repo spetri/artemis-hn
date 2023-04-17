@@ -40,9 +40,10 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const thumbnailSize = usePreferencesStore((state) => state.thumbnailSize);
   const thumbnailPosition = usePreferencesStore((state) => state.thumbnailPosition);
   const openLinkInBrowser = usePreferencesStore((state) => state.openLinkInBrowser);
-  const { setCachedThreadId } = usePreferencesStore(
+  const { setCachedThreadId, setStoryCount } = usePreferencesStore(
     (state) => ({
-      setCachedThreadId: state.setCachedThreadId
+      setCachedThreadId: state.setCachedThreadId,
+      setStoryCount: state.setStoryCount
     }),
     shallow
   );
@@ -156,6 +157,7 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
 
   const navigateToThread = (threadId) => {
     setCachedThreadId(threadId);
+    setStoryCount(data.descendants);
     return navigation.push('Thread', { id: threadId });
   };
 
