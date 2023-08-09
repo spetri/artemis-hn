@@ -3,14 +3,7 @@ import { shallow } from 'zustand/shallow';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { type FC } from 'react';
-import {
-  Image,
-  type ImageStyle,
-  Text,
-  type TextStyle,
-  View,
-  type ViewStyle
-} from 'react-native';
+import { Image, type ImageStyle, Text, type TextStyle, View, type ViewStyle } from 'react-native';
 import { styles, useDash } from '../../../../dash.config';
 import { useMetadata } from '../../../hooks/use-metadata';
 import { type StackParamList } from '../../../screens/routers';
@@ -30,9 +23,12 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
   const url = new URL(data.url);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const metadata = useMetadata(url);
-  const { setCachedThreadId } = usePreferencesStore((state) => ({
-    setCachedThreadId: state.setCachedThreadId,
-  }), shallow);
+  const { setCachedThreadId } = usePreferencesStore(
+    (state) => ({
+      setCachedThreadId: state.setCachedThreadId
+    }),
+    shallow
+  );
   const {
     tokens: { color }
   } = useDash();
@@ -48,13 +44,14 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
   const navigateToThread = (threadId) => {
     setCachedThreadId(threadId);
     return navigation.push('Thread', { id: threadId });
-  }
+  };
 
   return (
     <View style={storyContainer(index)}>
       {/* image */}
       {metadata?.image ? (
-        <TouchableHighlight underlayColor={color.accentLight}
+        <TouchableHighlight
+          underlayColor={color.accentLight}
           onPress={() => {
             navigation.push('Browser', {
               title: data.title,
@@ -69,7 +66,8 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
       ) : null}
 
       {/* url */}
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Browser', {
             title: metadata.applicationName || url.hostname,
@@ -87,7 +85,8 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
       </TouchableHighlight>
 
       {/* titles */}
-      <TouchableHighlight underlayColor={color.accentLight}
+      <TouchableHighlight
+        underlayColor={color.accentLight}
         onPress={() => {
           navigation.push('Browser', {
             title: data.title,
@@ -109,7 +108,8 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
       {/* secondary info */}
       <View>
         <View style={byLine}>
-          <TouchableHighlight underlayColor={color.accentLight}
+          <TouchableHighlight
+            underlayColor={color.accentLight}
             onPress={() => {
               navigation.push('User', { id: data.by });
             }}
@@ -121,11 +121,14 @@ export const ComplexStory: FC<ComplexStoryProps> = ({ data, index }) => {
           <Text style={agoStyle()}>{ago.format(new Date(data.time * 1000), 'mini')}</Text>
         </View>
 
-        <TouchableHighlight underlayColor={color.accentLight} onPress={() => navigateToThread(data.id)}>
+        <TouchableHighlight
+          underlayColor={color.accentLight}
+          onPress={() => navigateToThread(data.id)}
+        >
           <View style={footerText()}>
             <Text style={score()}>
               <AntDesignIcon size={13} name="arrowup" color={color.primary} />
-              <Text>{data.score} &bull;{' '}</Text>
+              <Text>{data.score} &bull; </Text>
             </Text>
             <View>
               <Text style={commentsStyle()}>{pluralize(data.descendants, 'comment')}</Text>
@@ -205,7 +208,7 @@ const byStyle = styles.one<TextStyle>((t) => ({
   fontWeight: '300',
   padding: t.space.sm,
   paddingTop: 0,
-  paddingLeft: 0,
+  paddingLeft: 0
 }));
 
 const agoStyle = styles.one<TextStyle>((t) => ({
@@ -218,11 +221,11 @@ const footerText = styles.one<TextStyle>((t) => ({
   fontWeight: '600',
   color: t.color.textAccent,
   fontSize: t.type.size.xs,
-  display: "flex",
-  flexDirection: "row",
+  display: 'flex',
+  flexDirection: 'row'
 }));
 
 const commentsStyle = styles.one<TextStyle>((t) => ({
   color: t.color.textAccent,
-  fontWeight: '300',
+  fontWeight: '300'
 }));

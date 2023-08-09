@@ -45,7 +45,7 @@ export const HomeScreen = () => {
         (buttonIndex) => {
           switch (buttonIndex) {
             case 0: {
-              navigation.navigate('Stories', { filter: HackerNews.HOME });
+              navigation.navigate('Stories', { filter: HackerNews.TOP });
               setFilter('Front Page');
               return;
             }
@@ -85,12 +85,8 @@ export const HomeScreen = () => {
     return (
       <TouchableHighlight underlayColor={color.accentLight} onPress={actionSheetOptions}>
         <View style={switcherView()}>
-          <IoniconIcon
-            color={color.textPrimary}
-            size={32}
-            style={filterIcon()}
-            name="ios-filter-outline"
-          />
+          <Text style={switcherText()}>{filter ? filter : storyTitle}</Text>
+          <IoniconIcon size={24} style={filterIcon()} name="ios-chevron-down" />
         </View>
       </TouchableHighlight>
     );
@@ -117,10 +113,9 @@ export const HomeScreen = () => {
         component={Stories}
         initialParams={{ filter: HackerNews.TOP }}
         options={{
-          headerTitle: () => <Text style={switcherText()}>{filter ? filter : storyTitle}</Text>,
+          headerTitle: () => <Text style={switcherText()}>{screenHeader()}</Text>,
           headerRight: () => (
             <View style={rightIcons()}>
-              {screenHeader()}
               {!!cachedThreadId && (
                 <TouchableHighlight
                   underlayColor={color.accentLight}
@@ -171,5 +166,5 @@ const rightIcons = styles.one<ViewStyle>(() => ({
 
 const filterIcon = styles.one<ViewStyle>((t) => ({
   color: t.color.primary,
-  marginHorizontal: 6
+  marginHorizontal: 2
 }));

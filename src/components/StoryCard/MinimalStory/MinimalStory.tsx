@@ -184,12 +184,14 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
               <View>
                 <Text style={storyTitle(index)} numberOfLines={4}>
                   <>
-                    {checkTitle(data.title)}
-                    {displaySource ? (
-                      <Text style={appName()}>
-                        ({metadata.applicationName || url.host.replace(/^www\./, '')})
-                      </Text>
-                    ) : null}
+                    <Text>{checkTitle(data.title)}</Text>&nbsp;
+                    <Text style={appName()}>
+                      {displaySource ? (
+                        <Text style={appName()}>
+                          ({metadata.applicationName || url.host.replace(/^www\./, '')})
+                        </Text>
+                      ) : null}
+                    </Text>
                   </>
                 </Text>
               </View>
