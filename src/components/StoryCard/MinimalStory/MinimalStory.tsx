@@ -40,6 +40,8 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
   const thumbnailSize = usePreferencesStore((state) => state.thumbnailSize);
   const thumbnailPosition = usePreferencesStore((state) => state.thumbnailPosition);
   const openLinkInBrowser = usePreferencesStore((state) => state.openLinkInBrowser);
+  const [storyHasImage, setStoryHasImage] = useState(true);
+
   const { setCachedThreadId, setStoryCount } = usePreferencesStore(
     (state) => ({
       setCachedThreadId: state.setCachedThreadId,
@@ -118,26 +120,33 @@ export const MinimalStory: FC<MinimalStoryProps> = ({ data, index }) => {
       });
     };
     const systemBrowser = async () => await Linking.openURL(url.toString());
-
-    if (metadata?.image) {
+    if (metadata?.image && storyHasImage) {
       return (
         <TouchableHighlight
           underlayColor={color.accentLight}
           onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}
         >
           <View>
-            <Image style={storyImage(thumbnailSize)} source={{ uri: metadata?.image }} />
+            <Image
+              style={storyImage(thumbnailSize)}
+              onError={() => setStoryHasImage(false)}
+              source={{ uri: metadata?.image }}
+            />
           </View>
         </TouchableHighlight>
       );
-    } else if (metadata?.favicon) {
+    } else if (metadata?.favicon && storyHasImage) {
       return (
         <TouchableHighlight
           underlayColor={color.accentLight}
           onPress={openLinkInBrowser ? inAppBrowser : systemBrowser}
         >
           <View>
-            <Image style={storyImage(thumbnailSize)} source={{ uri: metadata.favicon }} />
+            <Image
+              onError={() => setStoryHasImage(false)}
+              style={storyImage(thumbnailSize)}
+              source={{ uri: metadata.favicon }}
+            />
           </View>
         </TouchableHighlight>
       );
@@ -328,7 +337,7 @@ const icon = styles.lazy<number, ViewStyle>((size) => (t) => ({
   borderRadius: 4,
   width: size,
   height: size,
-  color: t.color.accentLight,
+  color: t.color.accent,
   padding: 6
 }));
 
