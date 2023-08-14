@@ -102,6 +102,8 @@ type PreferencesState = {
 
   storyCount: number;
   setStoryCount: (storyCount: number) => void;
+
+  reset: () => void;
 };
 
 const preferencesStore = (set) => ({
@@ -143,7 +145,11 @@ const preferencesStore = (set) => ({
     set(() => ({ openLinkInBrowser: !openLinkInBrowser })),
 
   cachedThreadId: defaultPreferences.cachedThreadId,
-  setCachedThreadId: (cachedThreadId) => set(() => ({ cachedThreadId: cachedThreadId }))
+  setCachedThreadId: (cachedThreadId) => set(() => ({ cachedThreadId: cachedThreadId })),
+
+  reset: () => {
+    set(defaultPreferences);
+  }
 });
 
 export const usePreferencesStore = create(

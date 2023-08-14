@@ -5,3 +5,5 @@ export const SEARCH_API = 'http://hn.algolia.com/api/v1/';
 export const HN = 'https://news.ycombinator.com';
 
 export const HN_LOGIN = `${HN}/login`;
+
+export const HN_LOGOUT = `${HN}/logout`;
