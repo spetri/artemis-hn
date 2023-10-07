@@ -6,3 +6,5 @@ This is a side project Hacker News app built in React Native. It has support for
 - Sharing comments, posts, etc
 - Lots of user settings to adjust views
 - Much more
+
+I've built this mostly for self-use since I can't stand any of the current HN apps on the iOS store (which is why I focused on iOS for this project and not Android).
