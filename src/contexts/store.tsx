@@ -1,4 +1,6 @@
-import { create } from 'zustand';
+import { createWithEqualityFn } from 'zustand/traditional';
+import { shallow } from 'zustand/shallow';
+
 import { StoryFilters } from '../types/hn-api';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -152,11 +154,12 @@ const preferencesStore = (set) => ({
   }
 });
 
-export const usePreferencesStore = create(
+export const usePreferencesStore = createWithEqualityFn(
   persist<PreferencesState>(preferencesStore, {
     name: 'preferences',
     storage: createJSONStorage(() => AsyncStorage)
-  })
+  }),
+  shallow
 );
 
 export function useMulti(useFunc, ...items) {
